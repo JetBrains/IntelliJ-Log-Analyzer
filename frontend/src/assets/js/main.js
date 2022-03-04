@@ -15,6 +15,7 @@ const render = async () => {
     })
     filters[0].innerHTML = await window.go.main.App.GetFilters()
     editor.setValue(await window.go.main.App.GetLogs());
+    editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
     editor.clearSelection();
     editor.execCommand('find');
 };

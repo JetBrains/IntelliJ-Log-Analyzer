@@ -1,12 +1,1 @@
-{{range .}}{{.Time.Format "02 Jan 2006 15:04:05"}} {{.Severity}} {{.Text}}
-{{end}}
-{{/*
-{{range .}}
-        <div class="log-entry">
-            <div class="time">{{.Time.Format "02 Jan 2006 15:04:05"}}</div>
-            <div class="severity {{.Severity}}"> {{.Severity}}</div>
-            <div class="text"><p> {{.Text | replaceNewline}}</p></div>
-        </div>
-{{end}}
-
-*/}}
+{{range .}}{{.Time.Format "02 Jan 2006 15:04:05"}} {{.Severity}} {{.Text}}{{end}}

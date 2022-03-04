@@ -65,7 +65,7 @@ func (logs *Logs) IsEmpty() bool {
 }
 
 func (logs Logs) SortByTime() {
-	sort.Slice(logs, func(i, j int) bool { return logs[i].Time.After(logs[j].Time) })
+	sort.Slice(logs, func(i, j int) bool { return logs[i].Time.Before(logs[j].Time) })
 }
 
 func (logs Logs) ApplyFilters(filters *Filters) {
