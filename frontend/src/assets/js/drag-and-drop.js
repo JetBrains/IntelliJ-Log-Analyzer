@@ -2,6 +2,8 @@
 $(document).ready(function () {
     let zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
     let dropzone = $("body>div#dropzone")[0];
+    let loader = $("#dropzone .loader");
+    let disclamer = $("#dropzone .disclaimer");
     let lastTarget = null;
 
     //Adds all the content of a directory to zipWriter (object that contains zip archive to send to the backend)
@@ -60,6 +62,8 @@ $(document).ready(function () {
     window.addEventListener('drop', async function (e) {
         e.preventDefault();
         e.stopPropagation();
+        loader.show();
+        disclamer.hide();
         zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
         let items = e.dataTransfer.items
 
@@ -80,7 +84,8 @@ $(document).ready(function () {
             $("#file-analyzer").show();
             render()
         }
-
+        loader.hide();
+        disclamer.show();
         dropzone.style.visibility = "hidden";
         dropzone.style.opacity = 0;
         return false;
