@@ -1,0 +1,59 @@
+<html lang="en">
+
+<head>
+    <title>wailsLogAnalyzer</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+<div style="visibility:hidden; opacity:0" id="dropzone">
+    <div class="disclaimer">
+        <img height="110px" src="assets/images/archive.svg">
+        <p class="sub-header"> Drag&Drop .zip </p>
+        <p> by Collect Logs And Diagnostic Data</p>
+    </div>
+</div>
+<div id="file-uploader">
+    <div id="select-dir">
+        <img height="110px" src="assets/images/logfolder.svg">
+        <p class="sub-header"><b>Select directoiry</b></p>
+        <p> contains idea.log, Thread Dumps etc </p>
+    </div>
+    <div id="select-archive">
+        <img height="110px" src="assets/images/archive.svg">
+        <p class="sub-header"> Select .zip </p>
+        <p> by Collect Logs And Diagnostic Data</p>
+    </div>
+    <div id="select-running-ide">
+        <p>Select running IDE instance</p>
+        <div class="dropdown">Intellij IDEA 2021.3</div>
+    </div>
+</div>
+
+<div id="file-analyzer">
+    <div class="container">
+        <div id="filters">
+            Loading...
+        </div>
+        <div id="log-holder">
+            <div id="search-box">
+            </div>
+            <div id="editor">
+                Loading...
+            </div>
+        </div>
+        <div class="static-info">
+
+        </div>
+    </div>
+</div>
+<script src="assets/js/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="assets/js/lib/jquery.min.js"></script>
+<!--<script src="assets/js/lib/jszip.min.js"></script>-->
+<script src="assets/js/lib/zip.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/drag-and-drop.js"></script>
+
+</body>
+
+</html>

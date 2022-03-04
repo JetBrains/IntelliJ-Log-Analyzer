@@ -1,0 +1,107 @@
+=== About ===
+Build version: PyCharm 2021.3.1 Build: #PY-213.6461.77 December 28, 2021
+Theme: Darcula
+JRE: 11.0.13+7-b1751.21, JetBrains s.r.o.
+JVM: 11.0.13+7-b1751.21, OpenJDK 64-Bit Server VM, JetBrains s.r.o.
+Operating System: Windows 10 10.0 (amd64)
+idea.config.path=C:\Users\sedalh\AppData\Roaming\JetBrains\PyCharm2021.3
+idea.system.path=C:\Users\sedalh\AppData\Local\JetBrains\PyCharm2021.3
+idea.plugins.path=C:\Users\sedalh\AppData\Local\JetBrains\Toolbox\apps\PyCharm-P\ch-0\213.6461.77.plugins
+idea.log.path=C:\Users\sedalh\AppData\Local\JetBrains\PyCharm2021.3\log
+
+=== System ===
+Number of CPU: 12
+Used memory: 732Mb 
+Free memory: 298Mb 
+Total memory: 1031Mb 
+Maximum available memory: 2048Mb
+
+=== Displays ===
+Displays: 
+Display 0: 1920x1080; scale: 1,00
+Display 1: 1920x1080; scale: 1,00
+Display 2: 1920x1080; scale: 1,00
+
+=== Plugins ===
+Custom plugins: [Foldable ProjectView (1.1.1), CodeGlance (1.5.4), CSV (2.18.2), Mario Progress Bar (1.6), Diagrams.net Integration (0.1.12), KDE Keymap (213.4250.391), GitHub Actions (1.1.9), GitToolBox (212.8.4), .ignore (4.3.0), Vue.js (213.6461.23), Prettier (213.6461.6), GraphQL (3.1.2), Node.js (213.6461.6), Azure DevOps (1.162.0), .env files support (2021.3.0.213)]
+Disabled plugins:[Vagrant (213.6461.77), Puppet (213.6461.77), Datalore (0.1.14-212), Markdown Navigator Enhanced (3.0.202.112)]
+
+=== Project ===
+Project trusted: true
+
+=====DEPLOYMENT SETTINGS=====
+Default Server : null
+=====ADDITIONAL SETTINGS=====
+Exclude items by name : .svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc
+Operations logging : DETAILS
+Overwrite up-to-date files : true
+Preserve file timestamps : true
+Delete target items when source do not exist : false
+Create empty directories : false
+Prompt when overwriting or deleting local items : true
+Upload changed files automatically : Never
+Upload external changes : false
+Delete remote files on automatic upload : false
+Override default permissions on files : -1
+Override default permissions on folders : -1
+Warn when uploading over newer file : NONE
+Notify of remote changes : false
+
+=====PERFORMANCE SUMMARY=====
+Filesystem Info:
+File system is case sensitive: false
+File is case sensitive: true
+Are there symlinks: true
+Number of files: 424937
+
+Project Info:
+Number of opened files: 10
+File size (in lines): 306
+File size in characters: 9844
+Number of injections: 0
+
+=== Code With Me Editors ===
+FOLLOW ME:
+
+ALL EDITORS:
+          |||theme.tsx|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(5461,5461) 541, logical pos: LogicalPosition: (247, 37), visual pos: VisualPosition: (229, 37), visual line start: 5424, visual line end: 5462, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (247, 37), rangeMarker end position: VisualPosition: (247, 37), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||VariablesTableIterator.tsx|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(2173,2173) 535, logical pos: LogicalPosition: (75, 18), visual pos: VisualPosition: (75, 18), visual line start: 2155, visual line end: 2174, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (75, 18), rangeMarker end position: VisualPosition: (75, 18), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||defaultTheme.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(1929,1929) 532, logical pos: LogicalPosition: (62, 23), visual pos: VisualPosition: (61, 23), visual line start: 1906, visual line end: 1930, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (62, 23), rangeMarker end position: VisualPosition: (62, 23), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||overrides.d.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(5438,5438) 548, logical pos: LogicalPosition: (105, 2), visual pos: VisualPosition: (5, 2), visual line start: 5436, visual line end: 5457, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (105, 2), rangeMarker end position: VisualPosition: (105, 2), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||App.tsx|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(118,118) 547, logical pos: LogicalPosition: (7, 11), visual pos: VisualPosition: (7, 11), visual line start: 107, visual line end: 119, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (7, 11), rangeMarker end position: VisualPosition: (7, 11), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||Layout.tsx|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(5935,5935) 530, logical pos: LogicalPosition: (186, 38), visual pos: VisualPosition: (186, 38), visual line start: 5897, visual line end: 5938, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: RangeMarker(5924,5935) 192, rangeMarker start position: VisualPosition: (186, 27), rangeMarker end position: VisualPosition: (186, 38), rangeMarker end position is lead: false, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||types.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(10740,10740) 531, logical pos: LogicalPosition: (415, 50), visual pos: VisualPosition: (404, 50), visual line start: 10690, visual line end: 10752, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (415, 50), rangeMarker end position: VisualPosition: (415, 50), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||types.d.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(12169,12169) 542, logical pos: LogicalPosition: (325, 4), visual pos: VisualPosition: (319, 4), visual line start: 12165, visual line end: 12198, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (325, 4), rangeMarker end position: VisualPosition: (325, 4), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||en.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(616,616) 540, logical pos: LogicalPosition: (25, 13), visual pos: VisualPosition: (25, 13), visual line start: 603, visual line end: 617, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: RangeMarker(616,653) 372, rangeMarker start position: VisualPosition: (25, 13), rangeMarker end position: VisualPosition: (26, 36), rangeMarker end position is lead: false, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+          |||sv.ts|||
+PHYSICAL EDITOR
+Caret dump: [in update: false, update counter: 0, perform caret merging: false, current caret: null, all carets: [{valid: true, update counter: 0, position: RangeMarker(1000,1000) 538, logical pos: LogicalPosition: (40, 34), visual pos: VisualPosition: (9, 34), visual line start: 966, visual line end: 1003, skip change requests: false, desired selection start column: -1, desired selection end column: -1, desired x: -1, selection marker: null, rangeMarker start position: VisualPosition: (40, 34), rangeMarker end position: VisualPosition: (40, 34), rangeMarker end position is lead: true, unknown direction: false, logical column adjustment: 0, visual column adjustment: 0}]]
+=============================
+

@@ -1,0 +1,20 @@
+{
+  "name": "JetBrains Log Analyzer",
+  "frontend:build": "",
+  "frontend:install": "",
+  "frontend:dev": "",
+  "wailsjsdir": "./frontend",
+  "version": "2",
+  "Path": "",
+  "BuildDir": "",
+  "outputfilename": "wailsLogAnalyzer",
+  "OutputType": "",
+  "Platform": "",
+  "Author": {
+    "name": "konstantin.annikov",
+    "email": "konstantin.annikov@jetbrains.com"
+  },
+  "debounceMS": 100,
+  "devserverurl": "http://localhost:34115",
+  "appargs": ""
+}

@@ -1,0 +1,13 @@
+{{ range $key, $value := . }}
+    <div class="input-group">
+        <p class="group-label">{{$key}}</p>
+        {{range $value}}
+            <div>
+                <input id="{{.ID}}" name="{{.ID}}" type="checkbox" value="{{.ID}}" {{if .Checked}}checked{{end}}/>
+                <label class="inline" for="{{.ID}}">{{.EntryLabel}}</label>
+            </div>
+        {{end}}
+    </div>
+{{end}}
+
+

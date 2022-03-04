@@ -1,0 +1,219 @@
+html {
+    text-align: center;
+    color: black;
+}
+
+@font-face {
+    font-family: "Nunito";
+    font-style: normal;
+    font-weight: 400;
+    src: local(""),
+    url("assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    overscroll-behavior: none;
+    overflow: auto;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    width: 100%;
+    height: 100vh;
+    /*justify-content: flex-start;*/
+    background-color: #f1f1f1;
+    font-size: 28px;
+    align-items: stretch;
+}
+
+#dropzone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999999999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: visibility 175ms, opacity 175ms;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    place-content: center;
+}
+
+#dropzone .disclaimer {
+    padding: 40px 16px;
+    background-color: #f9f9f9;
+    border: 1px solid #C4C4C4;
+    border-radius: 16px ;
+    font-size: 14px;
+}
+#dropzone .disclaimer:hover {
+    background-color: #7fdbf1;
+}
+
+#file-analyzer {
+    position: relative;
+    display: none;
+    padding: 40px 20px 20px 20px;
+    height: 100%;
+    width: 100%;
+}
+
+#file-analyzer .container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    min-width: 100%;
+    align-items: flex-start;
+    justify-content: space-around;
+    position: relative;
+}
+
+#file-analyzer #filters {
+    flex-basis: 10%;
+}
+
+#file-analyzer #log-holder {
+    flex-basis: 80%;
+    max-width: 80%;
+    position: relative;
+}
+
+#file-analyzer .static-info {
+    flex-basis: 10%;
+}
+
+#file-analyzer #log-holder .input-group {
+    position: relative;
+
+}
+
+#file-analyzer #search-hint {
+    position: absolute;
+    font-size: 13px;
+    right: 8px;
+    bottom: 9px;
+    color: darkgray;
+}
+
+#file-analyzer #search-box {
+    width: 100%;
+    font-family: SF Pro Text;
+    font-size: 13px;
+    line-height: 16px;
+    background: #FFFFFF;
+    border: 1px solid #C4C4C4;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-style: normal;
+    font-weight: 500;
+    color: #000000;
+}
+
+#file-analyzer #log-frame .log-entry .stacktrace {
+    color: #ab0404;
+    font-style: italic;
+}
+
+#file-analyzer #log-frame .log-entry .info {
+    color: #55ab04;
+}
+
+#file-analyzer #log-frame .log-entry .warn {
+    color: #ab9d04;
+}
+
+#file-analyzer #log-frame .log-entry .err {
+    color: #ab0404;
+}
+
+#file-analyzer #log-frame .log-entry {
+    display: flex;
+    gap: 10px;
+}
+
+#file-analyzer #editor {
+    font-family: "JetBrains Mono", ui-monospace;
+    overflow: auto;
+    font-size: 14px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(99% - 16px);
+    white-space: nowrap;
+    text-align: left;
+    line-height: 1;
+    border: 1px solid #e1e1e1;
+    padding-left: 8px;
+    padding-top: 16px;
+    user-select: all;
+}
+
+#file-analyzer #filters .input-group {
+    margin-bottom: 8px;
+}
+
+#file-analyzer #filters .group-label {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+#file-analyzer #filters {
+    text-align: left;
+    font-size: 14px;
+}
+
+#file-uploader {
+    display: grid;
+    grid-template-columns: [first] 290px [second] 290px;
+    grid-template-rows: [row1-start] 250px [row1-end] 150px;
+    justify-items: stretch;
+    align-items: end;
+    place-content: center;
+    gap: 8px 24px;
+    width: 100%;
+    height: 100%;
+}
+
+#file-uploader > div {
+    cursor: pointer;
+    padding: 24px 24px;
+    border: 1px solid #C4C4C4;
+    border-radius: 16px;
+    color: #C4C4C4;
+    font-size: 14px;
+}
+
+#file-uploader #select-running-ide {
+    display: flex;
+    flex-direction: row;
+    grid-column: 1 / 3;
+    width: 100%;
+    align-self: start;
+}
+
+#file-uploader #select-running-ide .dropdown {
+
+}
+
+
+#filters input {
+    cursor: pointer;
+}
+
+.sub-header {
+    padding-top: 16px;
+    padding-bottom: 4px;
+    font-size: 18px;
+    color: #192033;
+    font-weight: bold;
+}
