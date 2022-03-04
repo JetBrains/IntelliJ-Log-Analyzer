@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"log_analyzer/backend"
 	"log_analyzer/backend/analyzer"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -66,19 +68,18 @@ func (b *App) OpenFolder() string {
 	}
 }
 
-var files []interface{}
+func (b *App) UploadArchive(DataURIScheme string) string {
 
-func (b *App) CollectFiles(file interface{}) string {
-	log.Println(file)
-	files = append(files, file)
-	return ""
-}
-func (b *App) UploadArchive(file []byte) string {
+	b64data := DataURIScheme[strings.IndexByte(DataURIScheme, ',')+1:]
+	data, err := base64.StdEncoding.DecodeString(b64data)
+	if err != nil {
+		log.Println("Could not convert Data URI scheme to base64 file")
+	}
 	f, err := os.CreateTemp("", "logs.zip")
 	if err != nil {
 		log.Println("Could not create temp file: " + err.Error())
 	}
-	_, err = f.Write(file)
+	_, err = f.Write(data)
 	if err != nil {
 		log.Println("Could not write to temp file:" + err.Error())
 	}

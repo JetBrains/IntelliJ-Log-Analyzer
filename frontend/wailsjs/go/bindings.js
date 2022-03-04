@@ -5,14 +5,6 @@ const go = {
   "main": {
     "App": {
       /**
-       * CollectFiles
-       * @param {number} arg1 - Go Type: interface {}
-       * @returns {Promise<string>}  - Go Type: string
-       */
-      "CollectFiles": (arg1) => {
-        return window.go.main.App.CollectFiles(arg1);
-      },
-      /**
        * FilterUpdate
        * @param {number} arg1 - Go Type: interface {}
        * @returns {Promise<string>}  - Go Type: string
@@ -58,7 +50,7 @@ const go = {
       },
       /**
        * UploadArchive
-       * @param {Array<number>} arg1 - Go Type: []uint8
+       * @param {string} arg1 - Go Type: string
        * @returns {Promise<string>}  - Go Type: string
        */
       "UploadArchive": (arg1) => {
