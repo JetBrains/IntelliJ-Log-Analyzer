@@ -7,7 +7,6 @@ import (
 	"log"
 	"reflect"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -33,12 +32,6 @@ func (logs *Logs) ConvertToJSON() string {
 func (logs Logs) ConvertToHTML() string {
 	var tpl bytes.Buffer
 	t := template.Must(template.New("Logs.gohtml").
-		Funcs(
-			template.FuncMap{
-				"replaceNewline": func(s string) template.HTML {
-					return template.HTML(strings.Replace(template.HTMLEscapeString(s), "\n", "</p><p>", -1))
-				},
-			}).
 		ParseFiles("./backend/analyzer/Logs.gohtml"))
 	err := t.Execute(&tpl, logs)
 	if err != nil {

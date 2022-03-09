@@ -50,7 +50,7 @@ func parseIdeaLog(path string) analyzer.Logs {
 			logToPass = append(logToPass, analyzer.LogEntry{
 				Severity: currentEntry.Severity,
 				Time:     currentEntry.DateAndTime,
-				Text:     currentEntry.Class + " " + currentEntry.Header + " " + currentEntry.Body,
+				Text:     currentEntry.Class + " " + currentEntry.Header + " " + currentEntry.Body + "\n",
 			})
 		} else if len(logToPass) > 0 {
 			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + currentString
@@ -93,7 +93,8 @@ func parseLogString(logEntryAsString string) (currentEntry LogEntry) {
 	trimFoundPart(&logEntryAsString, rawTimeSinceStart)
 	currentEntry.Severity = getSeverity(&logEntryAsString)
 	trimFoundPart(&logEntryAsString, currentEntry.Severity)
-
+	//logEntryAsString = strings.TrimSpace(logEntryAsString)
+	//currentEntry.Body = logEntryAsString[0:]
 	//todo make that without for loop and unify
 	for i := range logEntryAsString {
 		if currentEntry.Class == "" && getClass(logEntryAsString[0:i]) != "" {
@@ -143,14 +144,14 @@ func getTimeSinceStart(s string) string {
 func getClass(s string) string {
 	s = strings.TrimSpace(s)
 	if len(s) > 2 && s[0] == '-' && s[len(s)-1] == '-' {
-		return strings.TrimSpace(s[1 : len(s)-1])
+		return strings.TrimSpace(s[0:len(s)])
 	}
 	return ""
 }
 
 func getSeverity(s *string) string {
 	*s = strings.TrimSpace(*s)
-	severities := []string{"INFO", "ERROR", "DEBUG", "WARN"}
+	severities := []string{"INFO", "ERROR", "DEBUG", "WARN", "SEVERE"}
 	for _, severity := range severities {
 		if strings.HasPrefix(*s, severity) {
 			return severity

@@ -76,7 +76,7 @@ func UnzipToTempFodler(src string) (dest string) {
 
 		if f.FileInfo().IsDir() {
 			err = os.MkdirAll(path, 0755)
-			log.Println(err)
+			//log.Println(err)
 		} else {
 			err = os.MkdirAll(filepath.Dir(path), 0755)
 			if err != nil {
