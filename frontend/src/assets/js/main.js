@@ -6,11 +6,12 @@ const render = async () => {
     var editor = ace.edit("editor");
     editor.setOptions({
         mode: 'ace/mode/idea_log',
-        theme: "ace/theme/vscode",
+        theme: "ace/theme/light",
         readOnly: true,
         selectionStyle: "text",
         showLineNumbers: false,
         showGutter: false,
+        showPrintMargin: false,
         highlightSelectedWord: true,
     })
     filters[0].innerHTML = await window.go.main.App.GetFilters()

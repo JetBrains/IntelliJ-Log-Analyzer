@@ -72,7 +72,6 @@ $(document).ready(function () {
             let entry = e.dataTransfer.items[i].webkitGetAsEntry();
             if (entry.isFile) {
                 result = await processFile(entry);
-                console.log(result)
             } else if (entry.isDirectory) {
                 await scanDir(entry);
                 let zipFile = await zipWriter.close();

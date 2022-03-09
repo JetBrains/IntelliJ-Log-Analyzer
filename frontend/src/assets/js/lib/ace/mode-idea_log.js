@@ -1,26 +1,26 @@
-define('ace/mode/idea_log', [], function(require, exports, module) {
+define('ace/mode/idea_log', [], function (require, exports, module) {
     var oop = require("ace/lib/oop");
     var TextMode = require("ace/mode/text").Mode;
     var Tokenizer = require("ace/tokenizer").Tokenizer;
     var CustomHighlightRules = require("ace/mode/idea_log_highlight_rules").CustomHighlightRules;
 
-    var Mode = function() {
+    var Mode = function () {
         this.HighlightRules = CustomHighlightRules;
     };
     oop.inherits(Mode, TextMode);
 
-    (function() {
+    (function () {
 
     }).call(Mode.prototype);
 
     exports.Mode = Mode;
 });
 
-define('ace/mode/idea_log_highlight_rules', [], function(require, exports, module) {
+define('ace/mode/idea_log_highlight_rules', [], function (require, exports, module) {
     var oop = require("ace/lib/oop");
     var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
-    var CustomHighlightRules = function() {
+    var CustomHighlightRules = function () {
 
         var keywordMapper = this.createKeywordMapper({
             "variable.language": "this",
@@ -31,20 +31,29 @@ define('ace/mode/idea_log_highlight_rules', [], function(require, exports, modul
         }, "text", true);
 
         this.$rules = {
-            "start" : [{
-                token : "empty_line",
-                regex : '^$'
-            },{
+            "start": [{
+                token: "empty_line",
+                regex: '^$'
+            }, {
                 regex: "INFO",
-                token: "support.constant",
-            },{
+                token: "loglevel.info",
+            }, {
                 regex: "WARN",
-                token: "support.constant",
-            },{
+                token: "loglevel.warn",
+            }, {
+                regex: "ERROR",
+                token: "loglevel.error",
+            }, {
                 regex: "\\d{2} (Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC) \\d{4} \\d{1,2}:\\d{2}:\\d{2}",
-                token: "keyword.control"
-            },{
-                defaultToken : "text"
+                token: "date"
+            }, {
+                regex: "^\\s*at.*$",
+                token: "loglevel.warn"
+            }, {
+                regex: " - (.*) - ",
+                token: "variable.class"
+            }, {
+                    defaultToken: "text"
             }]
         };
         this.normalizeRules()
