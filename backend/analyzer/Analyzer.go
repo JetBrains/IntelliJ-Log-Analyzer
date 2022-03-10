@@ -135,6 +135,9 @@ func (a *Analyzer) Clear() {
 	a.AggregatedLogs = Logs{}
 	a.Filters = Filters{}
 	a.AggregatedStaticInfo = AggregatedStaticInfo{}
+	for i, _ := range a.StaticEntities {
+		a.StaticEntities[i].CollectedInfo = StaticInfo{}
+	}
 	for i, _ := range a.DynamicEntities {
 		a.DynamicEntities[i].entityInstances = make(map[string]string)
 	}
