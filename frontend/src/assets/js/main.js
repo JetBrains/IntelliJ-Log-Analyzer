@@ -9,8 +9,8 @@ const render = async () => {
         theme: "ace/theme/light",
         readOnly: true,
         selectionStyle: "text",
-        showLineNumbers: false,
-        showGutter: false,
+        showLineNumbers: true,
+        showGutter: true,
         showPrintMargin: false,
         highlightSelectedWord: true,
     })
@@ -18,6 +18,7 @@ const render = async () => {
     editor.setValue(await window.go.main.App.GetLogs());
     editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
     editor.clearSelection();
+    editor.session.foldAll(0,editor.session.getLength()-4,1);
     editor.execCommand('find');
 };
 
