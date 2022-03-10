@@ -10,14 +10,15 @@ html {
     src: local(""),
     url("/assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
 }
-
+:root {
+    --border-color: #d5d5d5;
+}
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     user-select: none;
 }
-
 body {
     margin: 0;
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
@@ -64,13 +65,70 @@ body {
 #file-analyzer {
     position: relative;
     display: none;
-    padding: 40px 20px 20px 20px;
+    padding: 0px 0px 20px 0px;
     height: 100%;
     width: 100%;
 }
-
-#file-analyzer .container {
+#file-analyzer #sidebar {
+    width: 20%;
+    display: flex;
     height: 100%;
+    flex-direction: row;
+    font-size: 14px;
+    position: relative;
+}
+#file-analyzer #sidebar #toolWindows #filters{
+    height: 60%;
+    overflow: auto;
+}
+#file-analyzer #sidebar #toolWindows #static-info{
+    flex: 1;
+    height: 40%;
+    overflow: auto;
+    white-space: nowrap;
+}
+#file-analyzer #sidebar #toolWindows {
+    width: calc(100% - 25px);
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-bottom: 8px;
+    padding-top: 8px;
+}
+#file-analyzer #sidebar #toolWindows #static-info {
+
+}
+#file-analyzer #sidebar #toolWindows #static-info {
+    text-align: left;
+    padding-left: 16px;
+}
+#file-analyzer #sidebar #toolWindows-buttons {
+    border-right: 2px var(--border-color) solid;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    /*background-color: red;*/
+    height: 100%;
+    width: 25px !important;
+}
+#file-analyzer #sidebar #toolWindows-buttons .top {
+
+}
+#file-analyzer #sidebar .title{
+    font-size: 16px;
+    height: auto;
+    white-space: nowrap;
+    background-color: #fafafa;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    cursor: pointer;
+    transform: rotate(180deg);
+    writing-mode: vertical-lr;
+}
+#file-analyzer .container {
+    border-top: 2px var(--border-color) solid;
+    height: calc(100vh - 2px);
     display: flex;
     flex-direction: row;
     min-width: 100%;
@@ -79,23 +137,18 @@ body {
     position: relative;
 }
 
-#file-analyzer #filters {
-    flex-basis: 10%;
+#file-analyzer #filters .checkboxes {
+    padding-left: 4px;
 }
 
 #file-analyzer #log-holder {
-    flex-basis: 80%;
-    max-width: 80%;
+    flex: 1;
+    width: 80%;
     position: relative;
-}
-
-#file-analyzer .static-info {
-    flex-basis: 10%;
 }
 
 #file-analyzer #log-holder .input-group {
     position: relative;
-
 }
 
 #file-analyzer #search-hint {
@@ -112,7 +165,7 @@ body {
     font-size: 13px;
     line-height: 16px;
     background: #FFFFFF;
-    border: 1px solid #C4C4C4;
+    /*border: 1px solid #C4C4C4;*/
     box-sizing: border-box;
     border-radius: 3px;
     font-style: normal;
@@ -142,13 +195,13 @@ body {
     gap: 10px;
 }
 
-#file-analyzer #editor {
+#file-analyzer #log-holder #editor {
     font-family: "JetBrains Mono", ui-monospace;
     overflow: hidden;
     font-size: 14px;
     width: 100%;
     max-width: 100%;
-    height: calc(99% - 16px);
+    height: calc(100% - 36px);
     white-space: nowrap;
     text-align: left;
     line-height: 1;
@@ -163,13 +216,14 @@ body {
 }
 
 #file-analyzer #filters .group-label {
-    font-size: 16px;
-    margin-bottom: 12px;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
 #file-analyzer #filters {
     text-align: left;
     font-size: 14px;
+    padding-left: 16px;
 }
 
 #file-uploader {

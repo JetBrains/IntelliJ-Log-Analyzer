@@ -1,4 +1,5 @@
 const filters = $("#filters");
+const staticinfo = $("#static-info");
 const selectarchive = document.getElementById('select-archive');
 const selectdir = document.getElementById('select-dir');
 
@@ -15,6 +16,7 @@ const render = async () => {
         highlightSelectedWord: true,
     })
     filters[0].innerHTML = await window.go.main.App.GetFilters()
+    staticinfo[0].innerHTML = await window.go.main.App.GetStaticInfo()
     editor.setValue(await window.go.main.App.GetLogs());
     editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
     editor.clearSelection();
