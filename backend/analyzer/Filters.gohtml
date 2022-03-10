@@ -2,7 +2,7 @@
     <div class="input-group">
         <p class="group-label">{{$key}}</p>
         {{range $value}}
-            <div>
+            <div class="checkboxes">
                 <input id="{{.ID}}" name="{{.ID}}" type="checkbox" value="{{.ID}}" {{if .Checked}}checked{{end}}/>
                 <label class="inline" for="{{.ID}}">{{.EntryLabel}}</label>
             </div>
