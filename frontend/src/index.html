@@ -3,6 +3,7 @@
 <head>
     <title>wailsLogAnalyzer</title>
     <link rel="stylesheet" href="assets/css/main.min.css">
+    <link rel="stylesheet" href="assets/css/resizer.min.css">
 </head>
 
 <body>
@@ -33,16 +34,34 @@
 
 <div id="file-analyzer">
     <div class="container">
-        <div id="filters">
-            Loading...
-        </div>
-        <div id="log-holder">
-            <div id="search-box"></div>
-            <div id="editor"><div class="loader">Loading...</div></div>
-        </div>
-        <div class="static-info">
+        <div id="sidebar">
+            <div id="toolWindows-buttons">
+                <div class="top">
+                    <div class="title" target="filters">Filters</div>
+                </div>
+                <div class="bot">
+                    <div class="title" target="static-info">IDE Info</div>
+                </div>
+            </div>
+            <div id="toolWindows">
+                <div id="filters">
+                    Loading...
+                </div>
+                <div class="resizer" data-direction="vertical"></div>
+                <div id="static-info">
+                    Loading...
+                </div>
+            </div>
 
         </div>
+        <div class="resizer" data-direction="horizontal"></div>
+        <div id="log-holder">
+            <div id="search-box"></div>
+            <div id="editor">
+                <div class="loader">Loading...</div>
+            </div>
+        </div>
+
     </div>
 </div>
 <script src="assets/js/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>

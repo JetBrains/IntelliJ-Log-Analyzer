@@ -12,13 +12,19 @@ import (
 var writeSyncer = sync.Mutex{}
 
 type Analyzer struct {
-	FolderToWorkWith string
-	IsFolderTemp     bool
-	DynamicEntities  []DynamicEntity
-	//StaticEntities       []StaticEntity
-	AggregatedLogs Logs
-	Filters        Filters
-	//AggregatedStaticInfo StaticInfo
+	FolderToWorkWith     string
+	IsFolderTemp         bool
+	DynamicEntities      []DynamicEntity
+	StaticEntities       []StaticEntity
+	Filters              Filters
+	AggregatedLogs       Logs
+	AggregatedStaticInfo AggregatedStaticInfo
+}
+type StaticEntity struct {
+	Name                string
+	ConvertToStaticInfo func(path string) StaticInfo
+	CheckPath           func(path string) bool
+	CollectedInfo       StaticInfo
 }
 
 type DynamicEntity struct {
@@ -28,15 +34,20 @@ type DynamicEntity struct {
 	CheckPath       func(path string) bool
 }
 
-func (e *DynamicEntity) addEntityInstance(path string) {
+func (e *DynamicEntity) addDynamicEntityInstance(path string) {
 	if e.entityInstances == nil {
 		e.entityInstances = make(map[string]string)
 	}
 	e.entityInstances[path] = getHash(path)
 }
 
-//AddEntity adds new Entity to the list of known Entities. Should be Called within the application start.
-func (a *Analyzer) AddEntity(entity DynamicEntity) {
+//AddStaticEntity adds new static Entity to the list of known Entities. Should be Called within the application start.
+func (a *Analyzer) AddStaticEntity(entity StaticEntity) {
+	a.StaticEntities = append(a.StaticEntities, entity)
+}
+
+//AddDynamicEntity adds new dynamic Entity to the list of known Entities. Should be Called within the application start.
+func (a *Analyzer) AddDynamicEntity(entity DynamicEntity) {
 	a.DynamicEntities = append(a.DynamicEntities, entity)
 }
 
@@ -48,6 +59,7 @@ func (a *Analyzer) ParseLogDirectory(path string) {
 		go func() {
 			defer wg.Done()
 			a.CollectLogsFromDynamicEntities(path)
+			a.CollectStaticInfoFromStaticEntities(path)
 		}()
 		return nil
 	}
@@ -67,11 +79,27 @@ func (a *Analyzer) GetLogs() *Logs {
 	return nil
 }
 
+func (a *Analyzer) GetStaticInfo() *AggregatedStaticInfo {
+	if !(len(a.AggregatedStaticInfo) == 0) {
+		return &a.AggregatedStaticInfo
+	}
+	a.AggregatedStaticInfo = aggregateStaticInfo(a.StaticEntities)
+	return a.GetStaticInfo()
+}
+
 func (a *Analyzer) GetFilters() *Filters {
 	if !a.Filters.IsEmpty() {
 		return &a.Filters
 	}
 	return nil
+}
+
+func (a *Analyzer) CollectStaticInfoFromStaticEntities(path string) {
+	for i, entity := range a.StaticEntities {
+		if entity.CheckPath(path) == true {
+			a.StaticEntities[i].CollectedInfo = entity.ConvertToStaticInfo(path)
+		}
+	}
 }
 
 // CollectLogsFromDynamicEntities Checks if path fulfil the Entity requirements and Adds all the Entity's logEntries to the aggregated logs
@@ -80,7 +108,7 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
 		if entity.CheckPath(path) == true {
 			logEntries := entity.ConvertToLogs(path)
 			writeSyncer.Lock()
-			a.DynamicEntities[i].addEntityInstance(path)
+			a.DynamicEntities[i].addDynamicEntityInstance(path)
 			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[path], logEntries)
 			writeSyncer.Unlock()
 		}
@@ -97,6 +125,7 @@ func (a *Analyzer) GenerateFilters() {
 	}
 	filter.SortByFilename()
 }
+
 func (a *Analyzer) InitFilter() *Filters {
 	a.Filters = make(Filters)
 	return &a.Filters
@@ -108,6 +137,14 @@ func (a *Analyzer) Clear() {
 	for i, _ := range a.DynamicEntities {
 		a.DynamicEntities[i].entityInstances = make(map[string]string)
 	}
+}
+
+func aggregateStaticInfo(entity []StaticEntity) (a AggregatedStaticInfo) {
+	a = make(AggregatedStaticInfo)
+	for _, staticEntity := range entity {
+		a[staticEntity.Name] = staticEntity.CollectedInfo
+	}
+	return a
 }
 
 func getHash(s string) string {

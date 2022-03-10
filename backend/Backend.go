@@ -40,6 +40,9 @@ func InitLogDirectory(path string) (err error) {
 func GetLogs() *analyzer.Logs {
 	return entities.CurrentAnalyzer.GetLogs()
 }
+func GetStaticInfo() *analyzer.AggregatedStaticInfo {
+	return entities.CurrentAnalyzer.GetStaticInfo()
+}
 func GetFilters() *analyzer.Filters {
 	return entities.CurrentAnalyzer.GetFilters()
 }

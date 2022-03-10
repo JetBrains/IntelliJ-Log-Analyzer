@@ -1,0 +1,11 @@
+{{ range $key, $value := . }}
+    <ul>{{$key}}:
+        <li>{{$value.Build}}</li>
+        <li>{{$value.JRE}}</li>
+        <li> Custom plugins:
+            {{range $value.PluginsList}}
+                <p>{{.Name}}({{.Version}})</p>
+            {{end}}
+        </li>
+    </ul>
+{{end}}

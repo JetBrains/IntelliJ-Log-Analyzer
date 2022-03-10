@@ -11,13 +11,9 @@ import (
 	"time"
 )
 
-var (
-	entityName = "Idea Log"
-)
-
 func init() {
-	CurrentAnalyzer.AddEntity(analyzer.DynamicEntity{
-		Name:          entityName,
+	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
+		Name:          "Idea Log",
 		ConvertToLogs: parseIdeaLog,
 		CheckPath:     isIdeaLog,
 	})

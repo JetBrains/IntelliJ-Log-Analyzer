@@ -27,6 +27,13 @@ const go = {
         return window.go.main.App.GetLogs();
       },
       /**
+       * GetStaticInfo
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetStaticInfo": () => {
+        return window.go.main.App.GetStaticInfo();
+      },
+      /**
        * OpenArchive
        * @returns {Promise<string>}  - Go Type: string
        */

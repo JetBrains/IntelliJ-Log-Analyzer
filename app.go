@@ -9,7 +9,6 @@ import (
 	"log_analyzer/backend/analyzer"
 	"os"
 	"strings"
-	"time"
 )
 
 // App struct
@@ -38,11 +37,6 @@ func (b *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
 }
 
-// FilterUpdate reads the values of filter area on the left of frontend window
-func (b *App) FilterUpdate(value interface{}) string {
-	return ""
-}
-
 func (b *App) OpenFolder() string {
 	path, _ := runtime.OpenDirectoryDialog(b.ctx, runtime.OpenDialogOptions{
 		DefaultDirectory: "",
@@ -67,7 +61,6 @@ func (b *App) OpenFolder() string {
 		return ""
 	}
 }
-
 func (b *App) UploadArchive(DataURIScheme string) string {
 
 	b64data := DataURIScheme[strings.IndexByte(DataURIScheme, ',')+1:]
@@ -121,24 +114,32 @@ func (b *App) OpenArchive() string {
 		return ""
 	}
 }
+
 func (b *App) GetLogs() string {
 	logs := *backend.GetLogs()
-	timeStart := time.Now()
 	logsToDisplay := analyzer.Logs{}
 	for i, entry := range logs {
 		if entry.Visible == true {
 			logsToDisplay = append(logsToDisplay, logs[i])
 		}
 	}
-	log.Println("Backend started log directory parsing at " + timeStart.String())
 	html := logsToDisplay.ConvertToHTML()
-	log.Println("Backend parsed logs in " + time.Now().Sub(timeStart).String())
+	return html
+}
+func (b *App) GetStaticInfo() string {
+	staticInfo := *backend.GetStaticInfo()
+	html := staticInfo.ConvertToHTML()
 	return html
 }
 
 // FilterGet returns the values of the filter area
 func (b *App) GetFilters() string {
 	return backend.GetFilters().ConvertToHTML()
+}
+
+// FilterUpdate reads the values of filter area on the left of frontend window
+func (b *App) FilterUpdate(value interface{}) string {
+	return ""
 }
 func (b *App) SetFilters(a map[string]bool) string {
 	err := backend.SetFilters(a)
