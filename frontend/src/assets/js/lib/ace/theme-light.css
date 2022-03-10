@@ -1,5 +1,23 @@
 /* CSS style content from github's default pygments highlighter template.
    Cursor and selection styles from textmate.css. */
+.ace_line .ace_fold:after {
+    content: "IDE START";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /*background-color: red;*/
+    top: 0;
+    color: black;
+    left: 4px;
+    font-size: 9px;
+    line-height: 1;
+}
+.ace_line .ace_fold {
+    position: relative;
+    background-image: none !important;
+    width: 60px !important;
+
+}
 .ace-github .ace_gutter {
     background: #e8e8e8;
     color: #AAA;
