@@ -1,7 +1,17 @@
 
 const render = async () => {
     clearToolWindows();
+    clearEditors();
     await renderMainScreen();
+    function clearToolWindows() {
+        let tabs = $("#toolWindows-buttons").find(".toolWindowButton")
+        let toolWindows = $("#toolWindows").find(".toolWindow")
+        toolWindows.remove();
+        tabs.remove();
+    }
+    function clearEditors() {
+        $("#editors>div").remove();
+    }
 }
 function renderMainScreen() {
     showToolWindow("Filters", "top", "Main Editor", window.go.main.App.GetFilters())
@@ -11,14 +21,14 @@ function renderMainScreen() {
 
 async function showEditor(name, content) {
     let id  = name.toLowerCase().replace(" ","-");
+    let editors = $("#editors")
     if (!$(`#${id}`).length) {
         if (content) await cerateEditor()
     }
     $("#editors>div").hide()
-    $("#editors").find(`.${id}`).show()
-
+    editors.find(`.${id}`).show()
     async function cerateEditor() {
-        $("#editors").append(
+        editors.append(
             `    
             <div class=${id}>
                 <div class="search-box" linked-editor="${id}"></div>
@@ -113,12 +123,7 @@ function showToolWindow(name, position, linkededitor, fillFunction) {
         selector.append("<div class='toolWindow' id='" + id + "'>" + content + "</div>")
     }
 }
-function clearToolWindows() {
-    let tabs = $("#toolWindows-buttons").find(".toolWindowButton")
-    let toolWindows = $("#toolWindows").find(".toolWindow")
-    toolWindows.remove();
-    tabs.remove();
-}
+
 
 $(document).ready(function () {
     $("#select-dir").on('click', async () => {

@@ -9,7 +9,7 @@ define("ace/ext/threadDumpPresenter", [],function() {
         }
 
     }
-    ace.edit("main-editor").on("click", handler)
+    editor.on("click", handler)
 });
 
 async function openThreadDump(path) {
