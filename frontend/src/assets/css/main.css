@@ -77,11 +77,15 @@ body {
     font-size: 14px;
     position: relative;
 }
-#file-analyzer #sidebar #toolWindows #filters{
+
+#file-analyzer #sidebar #toolWindows .top{
     height: 60%;
     overflow: auto;
+    padding-left: 8px;
 }
-#file-analyzer #sidebar #toolWindows #static-info{
+#file-analyzer #sidebar #toolWindows #filters{
+}
+#file-analyzer #sidebar #toolWindows .bot{
     flex: 1;
     height: 40%;
     overflow: auto;
@@ -115,7 +119,7 @@ body {
 #file-analyzer #sidebar #toolWindows-buttons .top {
 
 }
-#file-analyzer #sidebar .title{
+#file-analyzer #sidebar .toolWindowButton{
     font-size: 16px;
     height: auto;
     white-space: nowrap;
@@ -125,6 +129,9 @@ body {
     cursor: pointer;
     transform: rotate(180deg);
     writing-mode: vertical-lr;
+}
+#file-analyzer #sidebar .toolWindowButton.active{
+    background-color: #7fdbf1;
 }
 #file-analyzer .container {
     border-top: 2px var(--border-color) solid;
@@ -138,7 +145,7 @@ body {
 }
 
 #file-analyzer #filters .checkboxes {
-    padding-left: 4px;
+    padding-left: 8px;
 }
 
 #file-analyzer #log-holder {
@@ -159,7 +166,7 @@ body {
     color: darkgray;
 }
 
-#file-analyzer #search-box {
+#file-analyzer .search-box {
     width: 100%;
     font-family: SF Pro Text;
     font-size: 13px;
@@ -195,7 +202,7 @@ body {
     gap: 10px;
 }
 
-#file-analyzer #log-holder #editor {
+#file-analyzer #log-holder .editor {
     font-family: "JetBrains Mono", ui-monospace;
     overflow: hidden;
     font-size: 14px;
@@ -223,7 +230,6 @@ body {
 #file-analyzer #filters {
     text-align: left;
     font-size: 14px;
-    padding-left: 16px;
 }
 
 #file-uploader {

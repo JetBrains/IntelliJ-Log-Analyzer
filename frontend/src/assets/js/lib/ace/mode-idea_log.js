@@ -2,6 +2,7 @@ define('ace/mode/idea_log', [], function (require, exports, module) {
     let oop = require("ace/lib/oop");
     let TextMode = require("ace/mode/text").Mode;
     let IdeaStyleFoldMode = require("./folding/idea-style").FoldMode;
+    require("ace/ext/threadDumpPresenter");
     let Tokenizer = require("ace/tokenizer").Tokenizer;
     let CustomHighlightRules = require("ace/mode/idea_log_highlight_rules").CustomHighlightRules;
 
@@ -24,14 +25,6 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
 
     var CustomHighlightRules = function () {
 
-        var keywordMapper = this.createKeywordMapper({
-            "variable.language": "this",
-            "keyword": "Mark|Ben|Bill",
-            "constant.language": "true|false|null",
-            // it is also possible to use css, but that may conflict with themes
-            // "customTokenName": "problem"
-        }, "text", true);
-
         this.$rules = {
             "start": [{
                 token: "empty_line",
@@ -45,6 +38,12 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
             }, {
                 regex: "ERROR",
                 token: "loglevel.error",
+            },{
+                regex: "FREEZE",
+                token: "loglevel.error",
+            },{
+                regex: "(threadDump\\S*(?=\\s)*)",
+                token: "hyperlink",
             }, {
                 regex: "\\d{2} (Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC) \\d{4} \\d{1,2}:\\d{2}:\\d{2}",
                 token: "date"

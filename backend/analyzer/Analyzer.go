@@ -3,22 +3,25 @@ package analyzer
 import (
 	"crypto/sha1"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"sync"
 )
 
 var writeSyncer = sync.Mutex{}
 
 type Analyzer struct {
-	FolderToWorkWith     string
-	IsFolderTemp         bool
-	DynamicEntities      []DynamicEntity
-	StaticEntities       []StaticEntity
-	Filters              Filters
-	AggregatedLogs       Logs
-	AggregatedStaticInfo AggregatedStaticInfo
+	FolderToWorkWith      string
+	IsFolderTemp          bool
+	DynamicEntities       []DynamicEntity
+	StaticEntities        []StaticEntity
+	Filters               Filters
+	AggregatedLogs        Logs
+	AggregatedThreadDumps AggregatedThreadDumps
+	AggregatedStaticInfo  AggregatedStaticInfo
 }
 type StaticEntity struct {
 	Name                string
@@ -32,13 +35,14 @@ type DynamicEntity struct {
 	Name            string            // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
 	ConvertToLogs   func(path string) Logs
 	CheckPath       func(path string) bool
+	GetDisplayName  func(path string) string
 }
 
 func (e *DynamicEntity) addDynamicEntityInstance(path string) {
 	if e.entityInstances == nil {
 		e.entityInstances = make(map[string]string)
 	}
-	e.entityInstances[path] = getHash(path)
+	e.entityInstances[e.GetDisplayName(path)] = getHash(path)
 }
 
 //AddStaticEntity adds new static Entity to the list of known Entities. Should be Called within the application start.
@@ -87,6 +91,16 @@ func (a *Analyzer) GetStaticInfo() *AggregatedStaticInfo {
 	return a.GetStaticInfo()
 }
 
+//GetThreadDump returns Analyzed ThreadDumps folder as AggregatedThreadDumps entity. Analyzes it if it was not done already.
+func (a *Analyzer) GetThreadDump(threadDumpsFolder string) *ThreadDump {
+	t := a.AggregatedThreadDumps[threadDumpsFolder]
+	if len(t) > 0 {
+		return &t
+	}
+	a.AggregatedThreadDumps[threadDumpsFolder] = make(ThreadDump)
+	a.AggregatedThreadDumps[threadDumpsFolder] = analyzeThreadDumpsFolder(a.FolderToWorkWith, threadDumpsFolder)
+	return a.GetThreadDump(threadDumpsFolder)
+}
 func (a *Analyzer) GetFilters() *Filters {
 	if !a.Filters.IsEmpty() {
 		return &a.Filters
@@ -109,7 +123,7 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
 			logEntries := entity.ConvertToLogs(path)
 			writeSyncer.Lock()
 			a.DynamicEntities[i].addDynamicEntityInstance(path)
-			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[path], logEntries)
+			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[entity.GetDisplayName(path)], logEntries)
 			writeSyncer.Unlock()
 		}
 	}
@@ -135,12 +149,30 @@ func (a *Analyzer) Clear() {
 	a.AggregatedLogs = Logs{}
 	a.Filters = Filters{}
 	a.AggregatedStaticInfo = AggregatedStaticInfo{}
+	a.AggregatedThreadDumps = AggregatedThreadDumps{}
 	for i, _ := range a.StaticEntities {
 		a.StaticEntities[i].CollectedInfo = StaticInfo{}
 	}
 	for i, _ := range a.DynamicEntities {
 		a.DynamicEntities[i].entityInstances = make(map[string]string)
 	}
+	if a.IsFolderTemp {
+		err := os.RemoveAll(a.FolderToWorkWith)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}
+
+func (a *Analyzer) GetThreadDumps(dir string) Logs {
+	for _, entity := range a.DynamicEntities {
+		for path, _ := range entity.entityInstances {
+			if strings.Contains(path, dir) {
+				return entity.ConvertToLogs(path)
+			}
+		}
+	}
+	return nil
 }
 
 func aggregateStaticInfo(entity []StaticEntity) (a AggregatedStaticInfo) {

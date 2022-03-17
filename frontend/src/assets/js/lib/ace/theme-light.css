@@ -33,6 +33,13 @@
 .ace-github .ace_date{
     color: #0000ff;
 }
+.ace-github .ace_hyperlink{
+    color: #00bbff;
+    text-decoration: underline;
+    cursor: pointer !important;
+    pointer-events: auto;
+    /*position: absolute;*/
+}
 .ace-github .ace_loglevel.ace_error{
     font-weight: bold;
     color: #d15151;

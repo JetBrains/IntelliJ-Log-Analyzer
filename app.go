@@ -137,6 +137,13 @@ func (b *App) GetFilters() string {
 	return backend.GetFilters().ConvertToHTML()
 }
 
+func (b *App) GetThreadDumps(dir string) string {
+	return backend.GetThreadDump(dir).ConvertToHTML()
+}
+func (b *App) GetThreadDumpsFilters() string {
+	return "filters"
+}
+
 // FilterUpdate reads the values of filter area on the left of frontend window
 func (b *App) FilterUpdate(value interface{}) string {
 	return ""

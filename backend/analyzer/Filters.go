@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"html/template"
 	"log"
-	"path/filepath"
 	"reflect"
 	"sort"
 	"strconv"
@@ -43,13 +42,11 @@ func (f *Filters) ConvertToHTML() string {
 
 // Append adds generated filter to slice of filters
 func (f Filters) Append(entity DynamicEntity, entityEntryPath string, entityEntryId string) {
-	entryLabel := filepath.Base(entityEntryPath)
 	f[entity.Name] = append(f[entity.Name], FilterEntry{
 		Checked:    true,
 		GroupLabel: entity.Name,
 		ID:         entityEntryId,
-		//EntryPath:  entityEntryPath,
-		EntryLabel: entryLabel,
+		EntryLabel: entity.GetDisplayName(entityEntryPath),
 	})
 }
 

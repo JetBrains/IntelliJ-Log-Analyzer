@@ -34,6 +34,21 @@ const go = {
         return window.go.main.App.GetStaticInfo();
       },
       /**
+       * GetThreadDumps
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetThreadDumps": (arg1) => {
+        return window.go.main.App.GetThreadDumps(arg1);
+      },
+      /**
+       * GetThreadDumpsFilters
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetThreadDumpsFilters": () => {
+        return window.go.main.App.GetThreadDumpsFilters();
+      },
+      /**
        * OpenArchive
        * @returns {Promise<string>}  - Go Type: string
        */

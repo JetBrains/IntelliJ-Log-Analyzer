@@ -6,6 +6,7 @@ import (
 	"log"
 	"log_analyzer/backend/analyzer"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -13,9 +14,10 @@ import (
 
 func init() {
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
-		Name:          "Idea Log",
-		ConvertToLogs: parseIdeaLog,
-		CheckPath:     isIdeaLog,
+		Name:           "Idea Log",
+		ConvertToLogs:  parseIdeaLog,
+		CheckPath:      isIdeaLog,
+		GetDisplayName: getDisplayName,
 	})
 }
 func isIdeaLog(path string) bool {
@@ -35,13 +37,16 @@ type LogEntry struct {
 	Body           string
 }
 
+func getDisplayName(path string) string {
+	return filepath.Base(path)
+}
 func parseIdeaLog(path string) analyzer.Logs {
 	reader, _ := os.Open(path)
 	bufReader := bufio.NewReader(reader)
 	logToPass := []analyzer.LogEntry{}
 	for {
 		currentString, err := bufReader.ReadString('\n')
-		if !getTimeStampFromString(currentString).IsZero() {
+		if !getTimeStampFromIdeaLog(currentString).IsZero() {
 			currentEntry := parseLogString(currentString)
 			logToPass = append(logToPass, analyzer.LogEntry{
 				Severity: currentEntry.Severity,
@@ -62,15 +67,15 @@ func parseIdeaLog(path string) analyzer.Logs {
 	return logToPass
 }
 
-func getTimeStampFromString(str string) (logTime time.Time) {
-	str = getTimeStringFromString(str)
+func getTimeStampFromIdeaLog(str string) (logTime time.Time) {
+	str = getTimeStringFromIdeaLog(str)
 	str = strings.Replace(str, " ", "T", 1)
 	str = strings.Replace(str, ",", ".", 1)
 	str = str + "Z"
 	logTime, _ = time.Parse(time.RFC3339Nano, str)
 	return logTime
 }
-func getTimeStringFromString(str string) string {
+func getTimeStringFromIdeaLog(str string) string {
 	dateMatcher := regexp.MustCompile("^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[.,]\\d{3})")
 	if !dateMatcher.MatchString(str) {
 		return ""
@@ -82,8 +87,8 @@ func parseLogString(logEntryAsString string) (currentEntry LogEntry) {
 	logEntryAsString = strings.TrimLeft(logEntryAsString, "\n")
 	classEndPosition := 0
 	HeaderEndPosition := 0
-	currentEntry.DateAndTime = getTimeStampFromString(logEntryAsString)
-	trimFoundPart(&logEntryAsString, getTimeStringFromString(logEntryAsString))
+	currentEntry.DateAndTime = getTimeStampFromIdeaLog(logEntryAsString)
+	trimFoundPart(&logEntryAsString, getTimeStringFromIdeaLog(logEntryAsString))
 	rawTimeSinceStart := getRawTimeSinceStart(&logEntryAsString)
 	currentEntry.TimeSinceStart = getTimeSinceStart(rawTimeSinceStart)
 	trimFoundPart(&logEntryAsString, rawTimeSinceStart)

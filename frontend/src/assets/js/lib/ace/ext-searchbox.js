@@ -57,7 +57,9 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
     (function () {
         this.setEditor = function (editor) {
             editor.searchBox = this;
-            $("#search-box")[0].appendChild(this.element);
+            let editorID = editor.container.id
+            let editorSearchBox = $("#editors").find(`[linked-editor='${editorID}']`)[0]
+            editorSearchBox.appendChild(this.element);
             // editor.renderer.scroller.appendChild(this.element);
             this.editor = editor;
         };

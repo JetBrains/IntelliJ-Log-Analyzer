@@ -18,12 +18,7 @@ import (
 //InitLogDirectory creates an instance of analyzed directory (all entities combined) and parses them
 func InitLogDirectory(path string) (err error) {
 	entities.CurrentAnalyzer.Clear()
-	if entities.CurrentAnalyzer.IsFolderTemp {
-		err := os.RemoveAll(entities.CurrentAnalyzer.FolderToWorkWith)
-		if err != nil {
-			log.Println(err)
-		}
-	}
+	entities.CurrentAnalyzer.FolderToWorkWith = path
 	timeStart := time.Now()
 	entities.CurrentAnalyzer.ParseLogDirectory(path)
 	log.Printf("Parsed Logs in %s", time.Now().Sub(timeStart).String())
@@ -46,6 +41,10 @@ func GetStaticInfo() *analyzer.AggregatedStaticInfo {
 func GetFilters() *analyzer.Filters {
 	return entities.CurrentAnalyzer.GetFilters()
 }
+func GetThreadDump(dir string) *analyzer.ThreadDump {
+	return entities.CurrentAnalyzer.GetThreadDump(dir)
+}
+
 func UnzipToTempFodler(src string) (dest string) {
 	dest, err := ioutil.TempDir("", "prefix")
 	r, err := zip.OpenReader(src)

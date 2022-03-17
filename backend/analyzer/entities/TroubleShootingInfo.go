@@ -60,6 +60,9 @@ func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) 
 	s = strings.TrimPrefix(s, "[")
 	s = strings.TrimSuffix(s, "]")
 	pluginsListAsString := strings.Split(s, ",")
+	if len(pluginsListAsString) < 2 {
+		return nil
+	}
 	for _, plugin := range pluginsListAsString {
 		version := plugin[strings.LastIndex(plugin, "(") : strings.LastIndex(plugin, ")")+1]
 		plugin = strings.Replace(plugin, version, "", -1)
