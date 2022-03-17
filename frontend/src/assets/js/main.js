@@ -20,7 +20,7 @@ function renderMainScreen() {
 }
 
 async function showEditor(name, content) {
-    let id  = name.toLowerCase().replace(" ","-");
+    let id  = name.toLowerCase().replaceAll(" ","");
     let editors = $("#editors")
     if (!$(`#${id}`).length) {
         if (content) await cerateEditor()
@@ -28,16 +28,14 @@ async function showEditor(name, content) {
     $("#editors>div").hide()
     editors.find(`.${id}`).show()
     async function cerateEditor() {
-        editors.append(
-            `    
+        editors.append(`    
             <div class=${id}>
                 <div class="search-box" linked-editor="${id}"></div>
                 <div id="${id}" class="editor">
                     <div class="loader">Loading...</div>
                 </div>
             </div>
-            `
-        )
+            `)
         const editor = ace.edit(id);
         editor.setOptions({
             mode: 'ace/mode/idea_log',
@@ -54,6 +52,7 @@ async function showEditor(name, content) {
         editor.clearSelection();
         editor.session.foldAll(0, editor.session.getLength() - 4, 1);
         editor.execCommand('find');
+        editor.on("click", ThreadDumpLinkHandler)
     }
 
 }
@@ -66,7 +65,7 @@ function showToolWindow(name, position, linkededitor, fillFunction) {
     let tabs = $("#toolWindows-buttons ." + position);
     let tabsElements = tabs.find(`.toolWindowButton`);
     let toolWindows = $("#toolWindows ." + position + " .toolWindow")
-    let id = name.toLowerCase().replace(" ", "-");
+    let id = name.toLowerCase().replaceAll(" ", "");
     if (!getToolWindowTabElement()) {
         createToolWindowTabElement()
         createToolWindowContent()
