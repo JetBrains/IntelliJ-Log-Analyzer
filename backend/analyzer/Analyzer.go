@@ -123,7 +123,7 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
 			logEntries := entity.ConvertToLogs(path)
 			writeSyncer.Lock()
 			a.DynamicEntities[i].addDynamicEntityInstance(path)
-			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[entity.GetDisplayName(path)], logEntries)
+			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[path], logEntries)
 			writeSyncer.Unlock()
 		}
 	}
