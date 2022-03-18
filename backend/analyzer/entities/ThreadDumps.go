@@ -29,16 +29,18 @@ func isThreadDump(path string) bool {
 }
 
 func getThreadDumpDisplayName(path string) string {
-	return filepath.Base(path)
+	info := getRegexNamedCapturedGroups(`(?P<Date>\d{8})-(?P<Time>\d{6})`, path)
+	return info["Time"]
 }
 
 //getLogEntry represents ThreadDump folder as a Log entry.
 func getLogEntry(path string) analyzer.Logs {
 	logToPass := []analyzer.LogEntry{}
+	fileName := filepath.Base(path)
 	logToPass = append(logToPass, analyzer.LogEntry{
 		Severity: "FREEZE",
 		Time:     getTimeStampFromThreadDump(path).Add(-5 * time.Second),
-		Text:     "Freeze started: " + getThreadDumpDisplayName(path) + "\n",
+		Text:     "Freeze started: " + fileName + "\n",
 	})
 	return logToPass
 }
@@ -55,4 +57,23 @@ func getTimeStampFromThreadDump(str string) time.Time {
 		log.Println(err)
 	}
 	return t
+}
+
+/**
+ * Parses string s with the given regular expression and returns the
+ * group values defined in the expression.
+ *
+ */
+func getRegexNamedCapturedGroups(regEx, s string) (paramsMap map[string]string) {
+
+	var compRegEx = regexp.MustCompile(regEx)
+	match := compRegEx.FindStringSubmatch(s)
+	paramsMap = make(map[string]string)
+
+	for i, name := range compRegEx.SubexpNames() {
+		if i > 0 && i <= len(match) {
+			paramsMap[name] = match[i]
+		}
+	}
+	return paramsMap
 }

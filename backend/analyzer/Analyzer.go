@@ -42,7 +42,7 @@ func (e *DynamicEntity) addDynamicEntityInstance(path string) {
 	if e.entityInstances == nil {
 		e.entityInstances = make(map[string]string)
 	}
-	e.entityInstances[e.GetDisplayName(path)] = getHash(path)
+	e.entityInstances[path] = getHash(path)
 }
 
 //AddStaticEntity adds new static Entity to the list of known Entities. Should be Called within the application start.
