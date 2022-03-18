@@ -6,7 +6,6 @@ import (
 	"log"
 	"log_analyzer/backend/analyzer"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -71,12 +70,11 @@ func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) 
 }
 
 func findJRE(currentString string) string {
-	r, _ := regexp.Compile("^JRE.*")
-	s := r.FindString(currentString)
-	return strings.TrimPrefix(s, "JRE:")
+	s := getRegexNamedCapturedGroups(`^JRE:\s*(?P<JRE>.*)`, currentString)["JRE"]
+	return s
 }
 
 func findBuild(currentString string) string {
-	r, _ := regexp.Compile("Build:\\s#([[:alnum:]|\\.|\\-]*)")
-	return strings.TrimPrefix(r.FindString(currentString), "Build:")
+	s := getRegexNamedCapturedGroups(`Build:\s(?P<Build>#.*)`, currentString)["Build"]
+	return s
 }
