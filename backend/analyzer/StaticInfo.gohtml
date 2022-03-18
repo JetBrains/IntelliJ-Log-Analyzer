@@ -3,9 +3,9 @@
         <li>{{$value.Build}}</li>
         <li>{{$value.OS}}</li>
         <li>{{$value.JRE}}</li>
-        <li> Custom plugins:
+        <li> Custom plugins:<br/>
             {{range $value.PluginsList}}
-                <p>{{.Name}}({{.Version}})</p>
+                <a href="#" onclick='window.runtime.BrowserOpenURL({{.Link}})'>{{.Name}}</a> ({{.Version}})<br/>
             {{end}}
         </li>
     </ul>

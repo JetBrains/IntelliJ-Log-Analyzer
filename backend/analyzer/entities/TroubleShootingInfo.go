@@ -58,14 +58,14 @@ func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) 
 	}
 	pluginsListAsSlice := strings.Split(s, ",")
 	for _, pluginAsString := range pluginsListAsSlice {
-		s := getRegexNamedCapturedGroups(`^\s*(?P<Plugin>.*)\s*\((?P<Version>.*)\)$`, pluginAsString)
+		s := getRegexNamedCapturedGroups(`^\s*(?P<Plugin>.*)\s+\((?P<Version>.*)\)$`, pluginAsString)
 		version := s["Version"]
-		plugin := s["Plugin"]
+		name := s["Plugin"]
 		//todo: retreive plugin's link
 		pluginsList = append(pluginsList, analyzer.IDEPlugin{
 			Version: version,
-			Name:    plugin,
-			Link:    "https://plugins.jetbrains.com",
+			Name:    name,
+			Link:    "https://plugins.jetbrains.com/search?search=" + name,
 		})
 	}
 
