@@ -38,6 +38,9 @@ func parseTroubleshootingInfo(path string) (a analyzer.StaticInfo) {
 		if customPLuginsList := findCustomPlugins(currentString); len(customPLuginsList) > 0 {
 			a.PluginsList = customPLuginsList
 		}
+		if os := findOS(currentString); len(os) > 0 {
+			a.OS = os
+		}
 		if err == io.EOF {
 			break
 		}
@@ -76,5 +79,10 @@ func findJRE(currentString string) string {
 
 func findBuild(currentString string) string {
 	s := getRegexNamedCapturedGroups(`Build:\s(?P<Build>#.*)`, currentString)["Build"]
+	return s
+}
+
+func findOS(currentString string) string {
+	s := getRegexNamedCapturedGroups(`^Operating System:\s*(?P<OS>.*)`, currentString)["OS"]
 	return s
 }

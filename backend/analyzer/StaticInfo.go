@@ -10,6 +10,7 @@ type StaticInfo struct {
 	IDE         string
 	Build       string
 	JRE         string
+	OS          string
 	PluginsList []IDEPlugin
 }
 type IDEPlugin struct {
