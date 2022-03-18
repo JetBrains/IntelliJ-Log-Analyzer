@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"fmt"
 	"log"
 	"log_analyzer/backend/analyzer"
 	"os"
@@ -29,8 +30,14 @@ func isThreadDump(path string) bool {
 }
 
 func getThreadDumpDisplayName(path string) string {
-	info := getRegexNamedCapturedGroups(`(?P<Date>\d{8})-(?P<Time>\d{6})`, path)
-	return info["Time"]
+	t := getTimeStampFromThreadDump(path)
+	duration := getRegexNamedCapturedGroups(`(?P<Duration>\d{2})sec$`, path)["Duration"]
+	if len(duration) > 0 {
+		duration = fmt.Sprintf("(%ss)", duration)
+	}
+
+	s := fmt.Sprintf("%s %s", t.Format("2006.01.02 15:04:05"), duration)
+	return s
 }
 
 //getLogEntry represents ThreadDump folder as a Log entry.
@@ -44,15 +51,14 @@ func getLogEntry(path string) analyzer.Logs {
 	})
 	return logToPass
 }
-func getTimeStampFromThreadDump(str string) time.Time {
-	dateMatcher := regexp.MustCompile("(\\d{8}-\\d{6})")
-	if !dateMatcher.MatchString(str) {
-		log.Println("Error parsing time from Thread Dump path: " + str)
+func getTimeStampFromThreadDump(filename string) time.Time {
+	timeStamp := getRegexNamedCapturedGroups(`(?P<Year>\d{4})(?P<Month>\d{2})(?P<Day>\d{2})-(?P<Hours>\d{2})(?P<Minutes>\d{2})(?P<Seconds>\d{2})`, filename)
+	if len(timeStamp) == 0 {
+		log.Println("Error parsing time from Thread Dump path: " + filename)
 		return time.Time{}
 	}
-	str = dateMatcher.FindString(str)
-	str = str[:4] + "-" + str[4:6] + "-" + str[6:8] + "T" + str[9:11] + ":" + str[11:13] + ":" + str[13:] + "Z"
-	t, err := time.Parse(time.RFC3339, str)
+	s := fmt.Sprintf("%s-%s-%sT%s:%s:%sZ", timeStamp["Year"], timeStamp["Month"], timeStamp["Day"], timeStamp["Hours"], timeStamp["Minutes"], timeStamp["Seconds"])
+	t, err := time.Parse(time.RFC3339, s)
 	if err != nil {
 		log.Println(err)
 	}
