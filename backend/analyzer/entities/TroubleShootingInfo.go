@@ -50,26 +50,15 @@ func parseTroubleshootingInfo(path string) (a analyzer.StaticInfo) {
 }
 
 func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) {
-	r, _ := regexp.Compile("^Custom plugins:.*")
-	s := r.FindString(currentString)
-	if len(s) < 1 {
+	s := getRegexNamedCapturedGroups(`^Custom plugins: \[(?P<PluginsString>.*)\]`, currentString)["PluginsString"]
+	if len(s) == 0 {
 		return nil
 	}
-	s = strings.TrimPrefix(s, "Custom plugins:")
-	s = strings.TrimSpace(s)
-	s = strings.TrimPrefix(s, "[")
-	s = strings.TrimSuffix(s, "]")
-	pluginsListAsString := strings.Split(s, ",")
-	if len(pluginsListAsString) < 2 {
-		return nil
-	}
-	for _, plugin := range pluginsListAsString {
-		version := plugin[strings.LastIndex(plugin, "(") : strings.LastIndex(plugin, ")")+1]
-		plugin = strings.Replace(plugin, version, "", -1)
-		plugin = strings.TrimSpace(plugin)
-		version = strings.TrimPrefix(version, "(")
-		version = strings.TrimSuffix(version, ")")
-		log.Println(plugin + version)
+	pluginsListAsSlice := strings.Split(s, ",")
+	for _, pluginAsString := range pluginsListAsSlice {
+		s := getRegexNamedCapturedGroups(`^\s*(?P<Plugin>.*)\s*\((?P<Version>.*)\)$`, pluginAsString)
+		version := s["Version"]
+		plugin := s["Plugin"]
 		//todo: retreive plugin's link
 		pluginsList = append(pluginsList, analyzer.IDEPlugin{
 			Version: version,
