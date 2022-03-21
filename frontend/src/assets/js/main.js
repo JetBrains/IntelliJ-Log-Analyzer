@@ -1,6 +1,6 @@
 const render = async () => {
-    clearToolWindows();
-    redrawEditors()
+    await clearToolWindows();
+    await redrawEditors()
 }
 const redrawEditors = async () => {
     $("#editors>div").remove();
@@ -12,9 +12,11 @@ const clearToolWindows = async () => {
     toolWindows.remove();
     tabs.remove();
 }
-function renderMainScreen() {
-    showToolWindow("Filters", "filters", "top", "Main Editor", window.go.main.App.GetFilters())
-    showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
+async function renderMainScreen() {
+    await showToolWindow("Filters", "filters", "top", "Main Editor", window.go.main.App.GetFilters())
+    if (await window.go.main.App.GetStaticInfo()) {
+        await showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
+    }
     showEditor("Main Editor", window.go.main.App.GetLogs());
 }
 

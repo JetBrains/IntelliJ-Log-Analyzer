@@ -80,7 +80,7 @@ body {
 }
 
 #file-analyzer #sidebar #toolWindows .top{
-    height: 60%;
+    height: 50%;
     overflow: auto;
     padding-left: 8px;
 }
@@ -88,7 +88,6 @@ body {
 }
 #file-analyzer #sidebar #toolWindows .bot{
     flex: 1;
-    height: 40%;
     overflow: auto;
     white-space: nowrap;
 }
@@ -100,9 +99,16 @@ body {
     padding-bottom: 8px;
     padding-top: 8px;
 }
+#file-analyzer #sidebar #toolWindows .staticinfo li:before {
+    content: "- ";
+}
+#file-analyzer #sidebar #toolWindows .staticinfo li {
+    list-style-type: none;
+    padding-left: 8px;
+}
 #file-analyzer #sidebar #toolWindows .staticinfo {
     text-align: left;
-    padding-left: 16px;
+    padding-left: 8px;
 }
 #file-analyzer #sidebar #toolWindows-buttons {
     border-right: 2px var(--border-color) solid;
@@ -178,27 +184,6 @@ body {
     color: #000000;
 }
 
-#file-analyzer #log-frame .log-entry .stacktrace {
-    color: #ab0404;
-    font-style: italic;
-}
-
-#file-analyzer #log-frame .log-entry .info {
-    color: #55ab04;
-}
-
-#file-analyzer #log-frame .log-entry .warn {
-    color: #ab9d04;
-}
-
-#file-analyzer #log-frame .log-entry .err {
-    color: #ab0404;
-}
-
-#file-analyzer #log-frame .log-entry {
-    display: flex;
-    gap: 10px;
-}
 
 #file-analyzer #log-holder .editor {
     font-family: "JetBrains Mono", ui-monospace;
