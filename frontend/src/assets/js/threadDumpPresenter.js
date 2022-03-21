@@ -18,9 +18,9 @@ async function openThreadDump(path) {
     await showToolWindow(name, cssClass, "top", editorName, window.go.main.App.GetThreadDumpsFilters(path))
     let files = $("#" + id).children()
     files.bind('click', async function () {
-        let filename = this.getAttribute("filename");
+        let filename = $(this).attr("filename");
         files.removeClass("active")
-        this.classList.add("active")
+        $(this).addClass("active")
         await showEditor(editorName, window.go.main.App.GetThreadDumpFileContent(path, filename))
         let editor = ace.edit(editorName);
         editor.setValue(await window.go.main.App.GetThreadDumpFileContent(path, filename))
