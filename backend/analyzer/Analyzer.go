@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strings"
 	"sync"
 )
@@ -189,4 +190,23 @@ func getHash(s string) string {
 	bs := h.Sum(nil)
 	sh := fmt.Sprintf("%x\n", bs)
 	return sh
+}
+
+/**
+ * Parses string s with the given regular expression and returns the
+ * group values defined in the expression.
+ *
+ */
+func GetRegexNamedCapturedGroups(regEx, s string) (paramsMap map[string]string) {
+
+	var compRegEx = regexp.MustCompile(regEx)
+	match := compRegEx.FindStringSubmatch(s)
+	paramsMap = make(map[string]string)
+
+	for i, name := range compRegEx.SubexpNames() {
+		if i > 0 && i <= len(match) {
+			paramsMap[name] = match[i]
+		}
+	}
+	return paramsMap
 }

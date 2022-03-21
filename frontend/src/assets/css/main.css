@@ -12,6 +12,7 @@ html {
 }
 :root {
     --border-color: #d5d5d5;
+    --active-color: #d5d5d5;
 }
 * {
     margin: 0;
@@ -59,7 +60,7 @@ body {
     font-size: 14px;
 }
 #dropzone .disclaimer:hover {
-    background-color: #7fdbf1;
+    background-color: var(--active-color);
 }
 
 #file-analyzer {
@@ -99,7 +100,7 @@ body {
     padding-bottom: 8px;
     padding-top: 8px;
 }
-#file-analyzer #sidebar #toolWindows #staticinfo {
+#file-analyzer #sidebar #toolWindows .staticinfo {
     text-align: left;
     padding-left: 16px;
 }
@@ -128,7 +129,7 @@ body {
     writing-mode: vertical-lr;
 }
 #file-analyzer #sidebar .toolWindowButton.active{
-    background-color: #7fdbf1;
+    background-color: var(--active-color);
 }
 #file-analyzer .container {
     border-top: 2px var(--border-color) solid;
@@ -215,16 +216,16 @@ body {
     user-select: all;
 }
 
-#file-analyzer #filters .input-group {
+#file-analyzer .filters .input-group {
     margin-bottom: 8px;
 }
 
-#file-analyzer #filters .group-label {
+#file-analyzer .filters .group-label {
     font-size: 14px;
     margin-bottom: 4px;
 }
 
-#file-analyzer #filters {
+#file-analyzer .filters {
     text-align: left;
     font-size: 14px;
 }
@@ -262,8 +263,20 @@ body {
 
 }
 
+#file-analyzer .ThreadDumpFilter li.active {
+    background-color: var(--active-color);
+}
+#file-analyzer .ThreadDumpFilter li {
+    list-style-type: none;
+}
+#file-analyzer .ThreadDumpFilter li:hover {
+    cursor: pointer;
+}
+#file-analyzer .ThreadDumpFilter {
+    text-align: left;
+}
 
-#filters input {
+.filters input {
     cursor: pointer;
 }
 

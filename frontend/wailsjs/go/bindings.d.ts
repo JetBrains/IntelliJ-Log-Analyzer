@@ -5,8 +5,8 @@ export interface go {
 		GetFilters():Promise<string>
 		GetLogs():Promise<string>
 		GetStaticInfo():Promise<string>
-		GetThreadDumps(arg1:string):Promise<string>
-		GetThreadDumpsFilters():Promise<string>
+		GetThreadDumpFileContent(arg1:string,arg2:string):Promise<string>
+		GetThreadDumpsFilters(arg1:string):Promise<string>
 		OpenArchive():Promise<string>
 		OpenFolder():Promise<string>
 		SetFilters(arg1:any):Promise<string>

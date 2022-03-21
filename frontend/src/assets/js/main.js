@@ -1,26 +1,28 @@
-
 const render = async () => {
     clearToolWindows();
-    clearEditors();
+    redrawEditors()
+}
+const redrawEditors = async () => {
+    $("#editors>div").remove();
     await renderMainScreen();
-    function clearToolWindows() {
-        let tabs = $("#toolWindows-buttons").find(".toolWindowButton")
-        let toolWindows = $("#toolWindows").find(".toolWindow")
-        toolWindows.remove();
-        tabs.remove();
-    }
-    function clearEditors() {
-        $("#editors>div").remove();
-    }
+}
+const clearToolWindows = async () => {
+    let tabs = $("#toolWindows-buttons").find(".toolWindowButton")
+    let toolWindows = $("#toolWindows").find(".toolWindow")
+    toolWindows.remove();
+    tabs.remove();
 }
 function renderMainScreen() {
-    showToolWindow("Filters", "top", "Main Editor", window.go.main.App.GetFilters())
-    showToolWindow("Static Info", "bot", "", window.go.main.App.GetStaticInfo())
+    showToolWindow("Filters", "filters", "top", "Main Editor", window.go.main.App.GetFilters())
+    showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
     showEditor("Main Editor", window.go.main.App.GetLogs());
 }
 
+//showEditor dhows editor if it exists, or generate new editor if it does not exist
+// @name is the id attribute for the editor
+// @content is a async function which returns content to be displayed
 async function showEditor(name, content) {
-    let id  = name.toLowerCase().replaceAll(" ","");
+    let id = getObjectID(name);
     let editors = $("#editors")
     if (!$(`#${id}`).length) {
         if (content) await cerateEditor()
@@ -61,15 +63,15 @@ async function showEditor(name, content) {
 // @name is the Title of Tool Window
 // @position is one of top/bot
 // @fillFunction is a promise for Go function that returns a string of Tool Windiow content
-function showToolWindow(name, position, linkededitor, fillFunction) {
+async function showToolWindow(name, cssClass, position, linkedEditor, fillFunction) {
     let tabs = $("#toolWindows-buttons ." + position);
     let tabsElements = tabs.find(`.toolWindowButton`);
     let toolWindows = $("#toolWindows ." + position + " .toolWindow")
-    let id = name.toLowerCase().replaceAll(" ", "");
+    let id = getObjectID(name);
     if (!getToolWindowTabElement()) {
         createToolWindowTabElement()
-        createToolWindowContent()
-        showToolWindow(name, position, fillFunction)
+        await createToolWindowContent()
+        return showToolWindow(name, cssClass, position, linkedEditor, fillFunction)
     }
     selectToolWindowTab()
     showToolWindowContent()
@@ -110,8 +112,10 @@ function showToolWindow(name, position, linkededitor, fillFunction) {
         tabs.append(
             $("<div class='toolWindowButton' target='" + id + "'>" + name + "</div>")
                 .click(function () {
-                    showToolWindow(name, position, fillFunction)
-                    if (linkededitor) {showEditor(linkededitor,"")}
+                    showToolWindow(name, cssClass, position, linkedEditor, fillFunction)
+                    if (linkedEditor) {
+                        showEditor(linkedEditor, "")
+                    }
                 })
         )
     }
@@ -119,11 +123,16 @@ function showToolWindow(name, position, linkededitor, fillFunction) {
     async function createToolWindowContent() {
         let selector = $("#toolWindows ." + position)
         let content = await fillFunction
-        selector.append("<div class='toolWindow' id='" + id + "'>" + content + "</div>")
+        selector.append("<div class='toolWindow " + cssClass + "' id='" + id + "'>" + content + "</div>")
     }
 }
 
-
+function getObjectID(s) {
+    return s.toLowerCase().replaceAll("-"," ")
+        .replaceAll("."," ")
+        .replaceAll("/"," ")
+        .replaceAll(" ", "");
+}
 $(document).ready(function () {
     $("#select-dir").on('click', async () => {
         var openedDir = await window.go.main.App.OpenFolder()
@@ -147,7 +156,7 @@ $(document).ready(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
         await window.go.main.App.SetFilters(filters)
-        await render()
+        await redrawEditors()
     });
 })
 

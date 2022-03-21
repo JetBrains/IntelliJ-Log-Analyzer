@@ -1,5 +1,7 @@
 module log_analyzer
 
+go 1.18
+
 require github.com/wailsapp/wails/v2 v2.0.0-beta.30
 
 require (
@@ -31,5 +33,3 @@ require (
 	golang.org/x/net v0.0.0-20210510120150-4163338589ed // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 )
-
-go 1.17

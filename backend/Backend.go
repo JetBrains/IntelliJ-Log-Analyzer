@@ -41,7 +41,7 @@ func GetStaticInfo() *analyzer.AggregatedStaticInfo {
 func GetFilters() *analyzer.Filters {
 	return entities.CurrentAnalyzer.GetFilters()
 }
-func GetThreadDump(dir string) *analyzer.ThreadDump {
+func GetThreadDumpFolder(dir string) *analyzer.ThreadDump {
 	return entities.CurrentAnalyzer.GetThreadDump(dir)
 }
 

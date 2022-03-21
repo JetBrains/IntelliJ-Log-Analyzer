@@ -34,19 +34,21 @@ const go = {
         return window.go.main.App.GetStaticInfo();
       },
       /**
-       * GetThreadDumps
+       * GetThreadDumpFileContent
        * @param {string} arg1 - Go Type: string
+       * @param {string} arg2 - Go Type: string
        * @returns {Promise<string>}  - Go Type: string
        */
-      "GetThreadDumps": (arg1) => {
-        return window.go.main.App.GetThreadDumps(arg1);
+      "GetThreadDumpFileContent": (arg1, arg2) => {
+        return window.go.main.App.GetThreadDumpFileContent(arg1, arg2);
       },
       /**
        * GetThreadDumpsFilters
+       * @param {string} arg1 - Go Type: string
        * @returns {Promise<string>}  - Go Type: string
        */
-      "GetThreadDumpsFilters": () => {
-        return window.go.main.App.GetThreadDumpsFilters();
+      "GetThreadDumpsFilters": (arg1) => {
+        return window.go.main.App.GetThreadDumpsFilters(arg1);
       },
       /**
        * OpenArchive

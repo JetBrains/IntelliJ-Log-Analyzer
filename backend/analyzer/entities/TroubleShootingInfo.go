@@ -52,13 +52,13 @@ func parseTroubleshootingInfo(path string) (a analyzer.StaticInfo) {
 }
 
 func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) {
-	s := getRegexNamedCapturedGroups(`^Custom plugins: \[(?P<PluginsString>.*)\]`, currentString)["PluginsString"]
+	s := analyzer.GetRegexNamedCapturedGroups(`^Custom plugins: \[(?P<PluginsString>.*)\]`, currentString)["PluginsString"]
 	if len(s) == 0 {
 		return nil
 	}
 	pluginsListAsSlice := strings.Split(s, ",")
 	for _, pluginAsString := range pluginsListAsSlice {
-		s := getRegexNamedCapturedGroups(`^\s*(?P<Plugin>.*)\s+\((?P<Version>.*)\)$`, pluginAsString)
+		s := analyzer.GetRegexNamedCapturedGroups(`^\s*(?P<Plugin>.*)\s+\((?P<Version>.*)\)$`, pluginAsString)
 		version := s["Version"]
 		name := s["Plugin"]
 		//todo: retreive plugin's link
@@ -73,16 +73,16 @@ func findCustomPlugins(currentString string) (pluginsList []analyzer.IDEPlugin) 
 }
 
 func findJRE(currentString string) string {
-	s := getRegexNamedCapturedGroups(`^JRE:\s*(?P<JRE>.*)`, currentString)["JRE"]
+	s := analyzer.GetRegexNamedCapturedGroups(`^JRE:\s*(?P<JRE>.*)`, currentString)["JRE"]
 	return s
 }
 
 func findBuild(currentString string) string {
-	s := getRegexNamedCapturedGroups(`Build:\s(?P<Build>#.*)`, currentString)["Build"]
+	s := analyzer.GetRegexNamedCapturedGroups(`Build:\s(?P<Build>#.*)`, currentString)["Build"]
 	return s
 }
 
 func findOS(currentString string) string {
-	s := getRegexNamedCapturedGroups(`^Operating System:\s*(?P<OS>.*)`, currentString)["OS"]
+	s := analyzer.GetRegexNamedCapturedGroups(`^Operating System:\s*(?P<OS>.*)`, currentString)["OS"]
 	return s
 }
