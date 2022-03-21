@@ -5,6 +5,7 @@ const render = async () => {
 const redrawEditors = async () => {
     $("#editors>div").remove();
     await renderMainScreen();
+    setSidebarState()
 }
 const clearToolWindows = async () => {
     let tabs = $("#toolWindows-buttons").find(".toolWindowButton")
@@ -115,24 +116,6 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
         let target = object.attr("target")
         $("#" + target).parent().hide()
     }
-    function setSidebarState() {
-        let ActiveToolWindows = 0
-        $(".toolWindowButton").each(function () {
-            if ($(this).hasClass("active")) {
-                ActiveToolWindows++
-            }
-        })
-        if (ActiveToolWindows===0) {
-            $("#sidebar").hide()
-            $("#sidebar .resizer").hide()
-        } else if (ActiveToolWindows===1) {
-            $("#sidebar").show()
-            $("#sidebar .resizer").hide()
-        } else {
-            $("#sidebar").show()
-            $("#sidebar .resizer").show()
-        }
-    }
     function createToolWindowTabElement() {
         tabs.append(
             $("<div class='toolWindowButton' target='" + id + "'>" + name + "</div>")
@@ -162,6 +145,25 @@ function getObjectID(s) {
         .replaceAll("."," ")
         .replaceAll("/"," ")
         .replaceAll(" ", "");
+}
+function setSidebarState() {
+    let ActiveToolWindows = 0
+    $(".toolWindowButton").each(function () {
+        if ($(this).hasClass("active")) {
+            ActiveToolWindows++
+        }
+    })
+    if (ActiveToolWindows===0) {
+        $("#sidebar").hide()
+        $("#file-analyzer .resizer").hide()
+    } else if (ActiveToolWindows===1) {
+        $("#sidebar").show()
+        $("#file-analyzer>.container>.resizer").show()
+        $("#sidebar .resizer").hide()
+    } else {
+        $("#sidebar").show()
+        $("#file-analyzer .resizer").show()
+    }
 }
 $(document).ready(function () {
     $("#select-dir").on('click', async () => {
