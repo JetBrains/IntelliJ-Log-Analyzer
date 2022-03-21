@@ -71,7 +71,7 @@ body {
     width: 100%;
 }
 #file-analyzer #sidebar {
-    width: 20%;
+    width: calc(20% - 25px);
     display: flex;
     height: 100%;
     flex-direction: row;
@@ -92,7 +92,7 @@ body {
     white-space: nowrap;
 }
 #file-analyzer #sidebar #toolWindows {
-    width: calc(100% - 25px);
+    width: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -110,31 +110,29 @@ body {
     text-align: left;
     padding-left: 8px;
 }
-#file-analyzer #sidebar #toolWindows-buttons {
+#file-analyzer #toolWindows-buttons {
     border-right: 2px var(--border-color) solid;
     position: relative;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    /*background-color: red;*/
     height: 100%;
     width: 25px !important;
 }
-#file-analyzer #sidebar #toolWindows-buttons .top {
+#file-analyzer  #toolWindows-buttons .top {
 
 }
-#file-analyzer #sidebar .toolWindowButton{
+#file-analyzer  .toolWindowButton{
     font-size: 16px;
     height: auto;
     white-space: nowrap;
-    background-color: #fafafa;
     padding-top: 8px;
     padding-bottom: 8px;
     cursor: pointer;
     transform: rotate(180deg);
     writing-mode: vertical-lr;
 }
-#file-analyzer #sidebar .toolWindowButton.active{
+#file-analyzer .toolWindowButton.active{
     background-color: var(--active-color);
 }
 #file-analyzer .container {

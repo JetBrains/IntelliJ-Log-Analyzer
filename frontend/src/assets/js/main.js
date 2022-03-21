@@ -93,6 +93,8 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
     function selectToolWindowTab() {
         tabsElements.each(function () {
             if ($(this).attr('target') === id) {
+                $("#sidebar").show()
+                $("#"+id).parent().show()
                 $(this).addClass("active")
             } else {
                 $(this).removeClass("active")
@@ -109,14 +111,34 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
             }
         })
     }
-
+    function hideToolWindow(object) {
+        object.removeClass("active")
+        let target = object.attr("target")
+        $("#" + target).parent().hide()
+        hideSidebarIfThereAreNoActiveToolWindows();
+        function hideSidebarIfThereAreNoActiveToolWindows() {
+            let thereIsActiveToolWindow = false
+            $(".toolWindowButton").each(function () {
+                if ($(this).hasClass("active")) {
+                    thereIsActiveToolWindow = true
+                }
+            })
+            if (!thereIsActiveToolWindow) {
+                $("#sidebar").hide()
+            }
+        }
+    }
     function createToolWindowTabElement() {
         tabs.append(
             $("<div class='toolWindowButton' target='" + id + "'>" + name + "</div>")
                 .click(function () {
-                    showToolWindow(name, cssClass, position, linkedEditor, fillFunction)
-                    if (linkedEditor) {
-                        showEditor(linkedEditor, "")
+                    if ($(this).hasClass("active")) {
+                        hideToolWindow($(this))
+                    } else {
+                        showToolWindow(name, cssClass, position, linkedEditor, fillFunction)
+                        if (linkedEditor) {
+                            showEditor(linkedEditor, "")
+                        }
                     }
                 })
         )
