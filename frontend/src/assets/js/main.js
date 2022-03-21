@@ -93,8 +93,6 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
     function selectToolWindowTab() {
         tabsElements.each(function () {
             if ($(this).attr('target') === id) {
-                $("#sidebar").show()
-                $("#"+id).parent().show()
                 $(this).addClass("active")
             } else {
                 $(this).removeClass("active")
@@ -106,6 +104,7 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
         toolWindows.each(function () {
             if ($(this).prop('id') === id) {
                 $(this).show()
+                $(this).parent().show()
             } else {
                 $(this).hide()
             }
@@ -115,17 +114,23 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
         object.removeClass("active")
         let target = object.attr("target")
         $("#" + target).parent().hide()
-        hideSidebarIfThereAreNoActiveToolWindows();
-        function hideSidebarIfThereAreNoActiveToolWindows() {
-            let thereIsActiveToolWindow = false
-            $(".toolWindowButton").each(function () {
-                if ($(this).hasClass("active")) {
-                    thereIsActiveToolWindow = true
-                }
-            })
-            if (!thereIsActiveToolWindow) {
-                $("#sidebar").hide()
+    }
+    function setSidebarState() {
+        let ActiveToolWindows = 0
+        $(".toolWindowButton").each(function () {
+            if ($(this).hasClass("active")) {
+                ActiveToolWindows++
             }
+        })
+        if (ActiveToolWindows===0) {
+            $("#sidebar").hide()
+            $("#sidebar .resizer").hide()
+        } else if (ActiveToolWindows===1) {
+            $("#sidebar").show()
+            $("#sidebar .resizer").hide()
+        } else {
+            $("#sidebar").show()
+            $("#sidebar .resizer").show()
         }
     }
     function createToolWindowTabElement() {
@@ -140,6 +145,7 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
                             showEditor(linkedEditor, "")
                         }
                     }
+                    setSidebarState();
                 })
         )
     }
