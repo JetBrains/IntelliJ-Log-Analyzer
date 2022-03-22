@@ -101,14 +101,14 @@ define("ace/mode/folding/idea-style",[], function(require, exports, module) {
 
             var fw = this._getFoldWidgetBase(session, foldStyle, row);
 
-            if (!fw && this.startRegionRe.test(line))
+            if (!fw && this.startRegionRe.test(line) || row===0)
                 return "start"; // lineCommentRegionStart
 
             return fw;
         };
         this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
             var line = session.getLine(row);
-            if (this.startRegionRe.test(line))
+            if (this.startRegionRe.test(line) || row===0)
                 return this.getCommentRegionBlock(session, line, row);
         };
         this.getCommentRegionBlock = function(session, line, row) {
