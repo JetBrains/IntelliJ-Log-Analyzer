@@ -47,7 +47,7 @@ async function showEditor(name, content) {
             theme: "ace/theme/light",
             readOnly: true,
             selectionStyle: "text",
-            showLineNumbers: false,
+            showLineNumbers: true,
             showGutter: true,
             showPrintMargin: false,
             highlightSelectedWord: true,
@@ -55,7 +55,7 @@ async function showEditor(name, content) {
         editor.setValue(await content);
         await highlightEntriesTypes();
         editor.clearSelection();
-        editor.session.foldAll(0, editor.session.getLength() - 4, 1);
+        editor.session.foldAll(0, editor.session.getLength() - 4, -1);
         editor.execCommand('find');
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
         editor.on("click", ThreadDumpLinkHandler)
@@ -77,7 +77,7 @@ async function showEditor(name, content) {
                 if (mappedColors[groupName]) {
                     if (mappedColors[groupName] !== true) {
                         let cssClass = getObjectID(groupName)
-                        let cssContent = "position: absolute; opacity: 0.2; background-color:" + mappedColors[groupName] + ";"
+                        let cssContent = "position: absolute; opacity: 0.3; background-color:" + mappedColors[groupName] + ";"
                         addCssClass(cssClass, cssContent)
                         mappedColors[groupName] = true
                     }

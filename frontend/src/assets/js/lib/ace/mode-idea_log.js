@@ -38,10 +38,10 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
             }, {
                 regex: "ERROR",
                 token: "loglevel.error",
-            },{
+            }, {
                 regex: "FREEZE",
                 token: "loglevel.error",
-            },{
+            }, {
                 regex: "(threadDump\\S*(?=\\s)*)",
                 token: "hyperlink",
             }, {
@@ -54,7 +54,7 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
                 regex: " - (.*) - ",
                 token: "variable.class"
             }, {
-                    defaultToken: "text"
+                defaultToken: "text"
             }]
         };
         this.normalizeRules()
@@ -65,14 +65,15 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
     exports.CustomHighlightRules = CustomHighlightRules;
 });
 
-define("ace/mode/folding/idea-style",[], function(require, exports, module) {
+//Folds IDE STARTED ... IDE SHUTDOWN sections
+define("ace/mode/folding/idea-style", [], function (require, exports, module) {
     "use strict";
 
     let oop = require("../../lib/oop");
     let Range = require("../../range").Range;
     let BaseFoldMode = require("./fold_mode").FoldMode;
 
-    let FoldMode = exports.FoldMode = function(commentRegex) {
+    let FoldMode = exports.FoldMode = function (commentRegex) {
         if (commentRegex) {
             this.foldingStartMarker = new RegExp(
                 this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
@@ -84,14 +85,14 @@ define("ace/mode/folding/idea-style",[], function(require, exports, module) {
     };
     oop.inherits(FoldMode, BaseFoldMode);
 
-    (function() {
+    (function () {
         this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
         this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
-        this.singleLineBlockCommentRe= /^\s*(\/\*).*\*\/\s*$/;
+        this.singleLineBlockCommentRe = /^\s*(\/\*).*\*\/\s*$/;
         this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
         this.startRegionRe = /-+ IDE STARTED -+/;
         this._getFoldWidgetBase = this.getFoldWidget;
-        this.getFoldWidget = function(session, foldStyle, row) {
+        this.getFoldWidget = function (session, foldStyle, row) {
             var line = session.getLine(row);
 
             if (this.singleLineBlockCommentRe.test(line)) {
@@ -101,17 +102,17 @@ define("ace/mode/folding/idea-style",[], function(require, exports, module) {
 
             var fw = this._getFoldWidgetBase(session, foldStyle, row);
 
-            if (!fw && this.startRegionRe.test(line) || row===0)
+            if (!fw && this.startRegionRe.test(line) || row === 0)
                 return "start"; // lineCommentRegionStart
 
             return fw;
         };
-        this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
+        this.getFoldWidgetRange = function (session, foldStyle, row, forceMultiline) {
             var line = session.getLine(row);
-            if (this.startRegionRe.test(line) || row===0)
+            if (this.startRegionRe.test(line) || row === 0)
                 return this.getCommentRegionBlock(session, line, row);
         };
-        this.getCommentRegionBlock = function(session, line, row) {
+        this.getCommentRegionBlock = function (session, line, row) {
             let startColumn = line.search(this.startRegionRe);
             let maxRow = session.getLength();
             let startRow = row;
@@ -121,22 +122,25 @@ define("ace/mode/folding/idea-style",[], function(require, exports, module) {
             let depth = 1;
             while (++row < maxRow) {
                 line = session.getLine(row);
-                let m = re.exec(line);
-
-                if (!m) continue;
-                 if (m[0]) {
-                     depth--;
-                     if (reWebserverStopped.exec(session.getLine(row+1))) {
-                         row = row+1
-                     }
-                 }
-                else depth++;
-
+                let lineMatchIdeShutdown = re.exec(line);
+                if (this.startRegionRe.test(line) && row>startRow) {
+                    depth--;
+                    row = row - 1
+                    line = session.getLine(row);
+                }
+                if (lineMatchIdeShutdown && lineMatchIdeShutdown[0]) {
+                    depth--;
+                    if (reWebserverStopped.exec(session.getLine(row + 1))) {
+                        row = row + 1
+                        line = session.getLine(row);
+                    }
+                }
                 if (!depth) break;
             }
 
             let endRow = row;
             if (endRow > startRow) {
+                console.log("range: " + startRow + " " +  startColumn + " " + endRow)
                 return new Range(startRow, startColumn, endRow, line.length);
             }
         };
