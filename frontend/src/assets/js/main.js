@@ -27,10 +27,10 @@ async function renderMainScreen() {
 async function showEditor(name, content) {
     let id = getObjectID(name);
     let editors = $("#editors")
+    $("#editors>div").hide()
     if (!$(`#${id}`).length) {
         if (content) await cerateEditor()
     }
-    $("#editors>div").hide()
     editors.find(`.${id}`).show()
     async function cerateEditor() {
         editors.append(`    
@@ -53,13 +53,47 @@ async function showEditor(name, content) {
             highlightSelectedWord: true,
         })
         editor.setValue(await content);
-        editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
+        await highlightEntriesTypes();
         editor.clearSelection();
         editor.session.foldAll(0, editor.session.getLength() - 4, 1);
         editor.execCommand('find');
+        editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
         editor.on("click", ThreadDumpLinkHandler)
-    }
 
+        //Checks entryType of every line and highlight this line according to type.
+        //Highlighting color is configured for every DynamicEntity on init()
+        async function highlightEntriesTypes() {
+            let needle = /(^\s*<entryType>)(.*)(<\/entryType>\s*)/
+            let mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
+            editor.$search.setOptions({
+                needle: needle,
+                caseSensitive: true,
+                wholeWord: false,
+                regExp: true,
+            });
+            let range = editor.$search.findAll(editor.session)
+            for (const rangeKey in range) {
+                let groupName = editor.getSession().doc.getTextRange(range[rangeKey]).match(needle)[2]
+                if (mappedColors[groupName]) {
+                    if (mappedColors[groupName] !== true) {
+                        let cssClass = getObjectID(groupName)
+                        let cssContent = "position: absolute; opacity: 0.2; background-color:" + mappedColors[groupName] + ";"
+                        addCssClass(cssClass, cssContent)
+                        mappedColors[groupName] = true
+                    }
+                    editor.session.addMarker(range[rangeKey], getObjectID(groupName), "screenLine", false)
+                }
+                editor.session.replace(range[rangeKey], "")
+            }
+        }
+        function addCssClass(className, content) {
+            document.body.appendChild(
+                Object.assign(
+                    document.createElement("style"),
+                    {textContent: "." + className + " {" +content+"}"})
+            )
+        }
+    }
 }
 
 // showToolWindow adds tool window on the left.
