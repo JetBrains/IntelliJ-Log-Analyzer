@@ -21,7 +21,7 @@ func init() {
 	})
 }
 func isIdeaLog(path string) bool {
-	if strings.Contains(path, "idea.log") {
+	if strings.Contains(path, "idea") && strings.Contains(path, ".log") {
 		return true
 	}
 	return false

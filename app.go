@@ -61,13 +61,27 @@ func (b *App) OpenFolder() string {
 		return ""
 	}
 }
-func (b *App) UploadArchive(DataURIScheme string) string {
-
-	b64data := DataURIScheme[strings.IndexByte(DataURIScheme, ',')+1:]
-	data, err := base64.StdEncoding.DecodeString(b64data)
+func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
+	data := ConvertDataURISchemeToBase64File(DataURIScheme)
+	log.Println(DataURIScheme)
+	f, err := os.CreateTemp("", filename)
 	if err != nil {
-		log.Println("Could not convert Data URI scheme to base64 file")
+		log.Println("Could not create temp file: " + err.Error())
 	}
+	_, err = f.Write(data)
+	if err != nil {
+		log.Println("Could not write to temp file:" + err.Error())
+	}
+	_ = f.Close()
+	log.Println("Created file: " + f.Name())
+	if err := backend.InitLogDirectory(f.Name()); err == nil {
+		return f.Name()
+	} else {
+		return ""
+	}
+}
+func (b *App) UploadArchive(DataURIScheme string) string {
+	data := ConvertDataURISchemeToBase64File(DataURIScheme)
 	f, err := os.CreateTemp("", "logs.zip")
 	if err != nil {
 		log.Println("Could not create temp file: " + err.Error())
@@ -154,4 +168,14 @@ func (b *App) SetFilters(a map[string]bool) string {
 		backend.GetLogs().ApplyFilters(backend.GetFilters())
 	}
 	return "failure"
+}
+
+func ConvertDataURISchemeToBase64File(DataURIScheme string) (data []byte) {
+	b64data := DataURIScheme[strings.IndexByte(DataURIScheme, ',')+1:]
+	if data, err := base64.StdEncoding.DecodeString(b64data); err == nil {
+		return data
+	} else {
+		log.Println("Could not convert Data URI scheme to base64 file")
+		return nil
+	}
 }

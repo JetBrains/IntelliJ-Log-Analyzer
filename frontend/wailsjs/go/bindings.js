@@ -80,6 +80,15 @@ const go = {
       "UploadArchive": (arg1) => {
         return window.go.main.App.UploadArchive(arg1);
       },
+      /**
+       * UploadLogFile
+       * @param {string} arg1 - Go Type: string
+       * @param {string} arg2 - Go Type: string
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "UploadLogFile": (arg1, arg2) => {
+        return window.go.main.App.UploadLogFile(arg1, arg2);
+      },
     },
   },
 

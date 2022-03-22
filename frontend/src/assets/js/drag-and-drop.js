@@ -39,8 +39,11 @@ $(document).ready(function () {
                 })
             } else if (log) {
                 entry.file(async file => {
-                    result = await window.go.main.App.UploadLogFile(file);
-                    resolve(result)
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = await async function () {
+                        resolve(await window.go.main.App.UploadLogFile(entry.name, reader.result));
+                    }
                 })
             } else {
                 console.log("File type is not supported")

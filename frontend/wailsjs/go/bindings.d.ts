@@ -11,6 +11,7 @@ export interface go {
 		OpenFolder():Promise<string>
 		SetFilters(arg1:any):Promise<string>
 		UploadArchive(arg1:string):Promise<string>
+		UploadLogFile(arg1:string,arg2:string):Promise<string>
     },
   }
 
