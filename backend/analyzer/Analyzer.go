@@ -32,11 +32,12 @@ type StaticEntity struct {
 }
 
 type DynamicEntity struct {
-	entityInstances map[string]string //entityInstances is path:hash map of every instance of entity created for every found path of this entity type.
-	Name            string            // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
-	ConvertToLogs   func(path string) Logs
-	CheckPath       func(path string) bool
-	GetDisplayName  func(path string) string
+	entityInstances       map[string]string //entityInstances is path:hash map of every instance of entity created for every found path of this entity type.
+	Name                  string            // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
+	ConvertToLogs         func(path string) Logs
+	CheckPath             func(path string) bool
+	GetDisplayName        func(path string) string
+	LineHighlightingColor string //Color represents the color that is used to highlight all lines of this entity type in the editor
 }
 
 func (e *DynamicEntity) addDynamicEntityInstance(path string) {
@@ -124,7 +125,7 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
 			logEntries := entity.ConvertToLogs(path)
 			writeSyncer.Lock()
 			a.DynamicEntities[i].addDynamicEntityInstance(path)
-			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].entityInstances[path], logEntries)
+			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
 			writeSyncer.Unlock()
 		}
 	}

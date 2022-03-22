@@ -13,6 +13,13 @@ const go = {
         return window.go.main.App.FilterUpdate(arg1);
       },
       /**
+       * GetEntityNamesWithLineHighlightingColors
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetEntityNamesWithLineHighlightingColors": () => {
+        return window.go.main.App.GetEntityNamesWithLineHighlightingColors();
+      },
+      /**
        * GetFilters
        * @returns {Promise<string>}  - Go Type: string
        */

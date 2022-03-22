@@ -51,7 +51,7 @@ func parseIdeaLog(path string) analyzer.Logs {
 			logToPass = append(logToPass, analyzer.LogEntry{
 				Severity: currentEntry.Severity,
 				Time:     currentEntry.DateAndTime,
-				Text:     currentEntry.Class + " " + currentEntry.Header + " " + currentEntry.Body + "\n",
+				Text:     currentEntry.Class + " " + currentEntry.Header + " " + currentEntry.Body,
 			})
 		} else if len(logToPass) > 0 {
 			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + currentString

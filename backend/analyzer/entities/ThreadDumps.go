@@ -10,10 +10,11 @@ import (
 
 func init() {
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
-		Name:           "Thread Dumps",
-		ConvertToLogs:  getLogEntry,
-		CheckPath:      isThreadDump,
-		GetDisplayName: analyzer.GetThreadDumpDisplayName,
+		Name:                  "Thread Dumps",
+		ConvertToLogs:         getLogEntry,
+		CheckPath:             isThreadDump,
+		GetDisplayName:        analyzer.GetThreadDumpDisplayName,
+		LineHighlightingColor: "#faa379",
 	})
 }
 func isThreadDump(path string) bool {
@@ -33,7 +34,7 @@ func getLogEntry(path string) analyzer.Logs {
 	logToPass = append(logToPass, analyzer.LogEntry{
 		Severity: "FREEZE",
 		Time:     analyzer.GetTimeStampFromThreadDump(path).Add(-5 * time.Second),
-		Text:     "Freeze started: " + fileName + "\n",
+		Text:     "Freeze started: " + fileName,
 	})
 	return logToPass
 }

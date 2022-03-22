@@ -14,10 +14,11 @@ type Filters map[string]FilterEntries
 type FilterEntries []FilterEntry
 
 type FilterEntry struct {
-	Checked    bool
-	GroupLabel string
-	ID         string
-	EntryLabel string
+	Checked                    bool
+	GroupLabel                 string
+	ID                         string
+	EntryLabel                 string
+	GroupLineHighlightingColor string //Fills automatically based on the LineHighlightingColor of the DynamicEntity
 	//innerFilters []innerFilter
 }
 
@@ -43,10 +44,11 @@ func (f *Filters) ConvertToHTML() string {
 // Append adds generated filter to slice of filters
 func (f Filters) Append(entity DynamicEntity, entityEntryPath string, entityEntryId string) {
 	f[entity.Name] = append(f[entity.Name], FilterEntry{
-		Checked:    true,
-		GroupLabel: entity.Name,
-		ID:         entityEntryId,
-		EntryLabel: entity.GetDisplayName(entityEntryPath),
+		Checked:                    true,
+		GroupLabel:                 entity.Name,
+		GroupLineHighlightingColor: entity.LineHighlightingColor,
+		ID:                         entityEntryId,
+		EntryLabel:                 entity.GetDisplayName(entityEntryPath),
 	})
 }
 

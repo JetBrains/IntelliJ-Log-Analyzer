@@ -1,6 +1,10 @@
 {{ range $key, $value := . }}
     <div class="input-group">
-        <p class="group-label">{{$key}}</p>
+        <p class="group-label">{{$key}}
+            {{if (index $value 0).GroupLineHighlightingColor}}
+            <span class="filter-color-hint" style="background-color: {{(index $value 0).GroupLineHighlightingColor}};">  </span>
+            {{end}}
+        </p>
         {{range $value}}
             <div class="checkboxes">
                 <input id="{{.ID}}" name="{{.ID}}" type="checkbox" value="{{.ID}}" {{if .Checked}}checked{{end}}/>

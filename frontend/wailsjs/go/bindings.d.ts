@@ -2,6 +2,7 @@ export interface go {
   "main": {
     "App": {
 		FilterUpdate(arg1:number):Promise<string>
+		GetEntityNamesWithLineHighlightingColors():Promise<string>
 		GetFilters():Promise<string>
 		GetLogs():Promise<string>
 		GetStaticInfo():Promise<string>

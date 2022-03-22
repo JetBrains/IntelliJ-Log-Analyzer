@@ -1,1 +1,2 @@
-{{range .}}{{.Time.Format "02 Jan 2006 15:04:05"}} {{.Severity}} {{.Text}}{{end}}
+{{range .}}{{if .EntityName}}<entryType>{{.EntityName}}</entryType>{{end}} {{.Time.Format "02 Jan 2006 15:04:05"}} {{.Severity}} {{.Text}}
+{{end}}

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/base64"
+	json "encoding/json"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"log_analyzer/backend"
@@ -170,6 +171,15 @@ func (b *App) SetFilters(a map[string]bool) string {
 	return "failure"
 }
 
+func (b *App) GetEntityNamesWithLineHighlightingColors() string {
+	jsonMap := make(map[string]string)
+	for entityName, entityEntries := range *backend.GetFilters() {
+		jsonMap[entityName] = entityEntries[0].GroupLineHighlightingColor
+	}
+	marshal, _ := json.Marshal(jsonMap)
+
+	return string(marshal)
+}
 func ConvertDataURISchemeToBase64File(DataURIScheme string) (data []byte) {
 	b64data := DataURIScheme[strings.IndexByte(DataURIScheme, ',')+1:]
 	if data, err := base64.StdEncoding.DecodeString(b64data); err == nil {
