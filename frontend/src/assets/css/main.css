@@ -192,7 +192,7 @@ body {
     height: calc(100% - 36px);
     white-space: nowrap;
     text-align: left;
-    line-height: 1;
+    line-height: 1.2;
     border: 1px solid #e1e1e1;
     padding-left: 8px;
     padding-top: 16px;
