@@ -117,20 +117,21 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
             let maxRow = session.getLength();
             let startRow = row;
 
-            let re = /.*--- IDE SHUTDOWN ---.*/;
-            let reWebserverStopped = /.*web server stopped.*/;
+            let lineIdeShutdown = /-+ IDE SHUTDOWN -+/;
+            let lineWebserverStopped = /.*web server stopped.*/;
             let depth = 1;
             while (++row < maxRow) {
                 line = session.getLine(row);
-                let lineMatchIdeShutdown = re.exec(line);
-                if (this.startRegionRe.test(line) && row>startRow) {
+                let lineMatchIdeShutdown = lineIdeShutdown.exec(line);
+                let lineMatchIdeStart = this.startRegionRe.test(line);
+                if (lineMatchIdeStart) {
                     depth--;
                     row = row - 1
                     line = session.getLine(row);
                 }
                 if (lineMatchIdeShutdown && lineMatchIdeShutdown[0]) {
                     depth--;
-                    if (reWebserverStopped.exec(session.getLine(row + 1))) {
+                    if (lineWebserverStopped.exec(session.getLine(row + 1))) {
                         row = row + 1
                         line = session.getLine(row);
                     }
@@ -140,7 +141,6 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
 
             let endRow = row;
             if (endRow > startRow) {
-                console.log("range: " + startRow + " " +  startColumn + " " + endRow)
                 return new Range(startRow, startColumn, endRow, line.length);
             }
         };
