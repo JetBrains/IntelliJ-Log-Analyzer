@@ -140,7 +140,7 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
             }
 
             let endRow = row;
-            if (endRow > startRow) {
+            if (endRow > startRow && depth===0) {
                 return new Range(startRow, startColumn, endRow, line.length);
             }
         };
