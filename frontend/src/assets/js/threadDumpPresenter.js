@@ -11,7 +11,12 @@ let ThreadDumpLinkHandler = async function (e) {
 async function openThreadDump(path) {
     var myRegexp = new RegExp("(\\d{8}-)(\\d{6})", "g");
     var match = myRegexp.exec(path);
-    let name = "TD-" + match[2]
+    let name;
+    if (match && match[2]) {
+        name = "TD-" + match[2]
+    } else {
+        name = path
+    }
     let id = getObjectID(name);
     let cssClass = "ThreadDumpFilter"
     let editorName = getObjectID("threadDump editor" + path.toLowerCase());

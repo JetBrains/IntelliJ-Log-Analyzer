@@ -155,6 +155,8 @@ func (b *App) GetFilters() string {
 func (b *App) GetThreadDumpFileContent(dir string, file string) string {
 	return backend.GetThreadDumpFolder(dir).GetFile(file).ConvertToHTML()
 }
+
+//GetThreadDumpsFilters returns HTML of the list of files in ThreadDump folder.
 func (b *App) GetThreadDumpsFilters(dir string) string {
 	return backend.GetThreadDumpFolder(dir).GetFiltersHTML()
 }

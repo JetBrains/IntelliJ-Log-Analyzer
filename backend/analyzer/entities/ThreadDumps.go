@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 func init() {
@@ -33,7 +32,7 @@ func getLogEntry(path string) analyzer.Logs {
 	fileName := filepath.Base(path)
 	logToPass = append(logToPass, analyzer.LogEntry{
 		Severity: "FREEZE",
-		Time:     analyzer.GetTimeStampFromThreadDump(path).Add(-5 * time.Second),
+		Time:     analyzer.GetTimeStampFromThreadDump(fileName),
 		Text:     "Freeze started: " + fileName,
 	})
 	return logToPass

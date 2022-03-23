@@ -5,9 +5,11 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -81,10 +83,10 @@ func sortedKeys[K string, V any](m map[K]V) []K {
 	return keys
 }
 
-func GetTimeStampFromThreadDump(filename string) time.Time {
+func getTimeStampFromThreadDumpFilename(filename string) time.Time {
+	filename = path.Base(filename)
 	timeStamp := GetRegexNamedCapturedGroups(`(?P<Year>\d{4})(?P<Month>\d{2})(?P<Day>\d{2})-(?P<Hours>\d{2})(?P<Minutes>\d{2})(?P<Seconds>\d{2})`, filename)
 	if len(timeStamp) == 0 {
-		log.Println("Error parsing time from Thread Dump path: " + filename)
 		return time.Time{}
 	}
 	s := fmt.Sprintf("%s-%s-%sT%s:%s:%sZ", timeStamp["Year"], timeStamp["Month"], timeStamp["Day"], timeStamp["Hours"], timeStamp["Minutes"], timeStamp["Seconds"])
@@ -95,16 +97,53 @@ func GetTimeStampFromThreadDump(filename string) time.Time {
 	return t
 }
 
-func GetThreadDumpDisplayName(path string) string {
-	if path == "report.txt" {
-		return path
+//GetTimeStampFromThreadDump returns zero time.Time{} for file/dir that does not contain timestamp
+//							 returns time.Time{} for file/dir that contains timestamp
+func GetTimeStampFromThreadDump(path string) (t time.Time) {
+	fileinfo, _ := os.Stat(path)
+	if getTimeStampFromThreadDumpFilename(filepath.Base(path)).IsZero() {
+		if fileinfo == nil {
+			return t
+		} else if fileinfo.IsDir() {
+			return getTimeStampFromFirstInnerFile(path)
+		}
+		return t
 	}
-	t := GetTimeStampFromThreadDump(path)
+	return getTimeStampFromThreadDumpFilename(filepath.Base(path))
+}
+
+//GetThreadDumpDisplayName retuns formatted timestamp string if it is possible to convert the filename to timestamp
+// If it is not possible - returns filename
+func GetThreadDumpDisplayName(path string) string {
+	t := time.Time{}
+	if GetTimeStampFromThreadDump(path).IsZero() {
+		return filepath.Base(path)
+	} else {
+		t = GetTimeStampFromThreadDump(path)
+	}
 	duration := GetRegexNamedCapturedGroups(`(?P<Duration>\d{2})sec$`, path)["Duration"]
 	if len(duration) > 0 {
 		duration = fmt.Sprintf("(%ss)", duration)
 	}
-
 	s := fmt.Sprintf("%s %s", t.Format("2006.01.02 15:04:05"), duration)
 	return s
+}
+
+//scans all the filenames in ThreadDumps directory and returns the timestamp of the earliest
+func getTimeStampFromFirstInnerFile(path string) (threadDumpTime time.Time) {
+	threadDumpTime = time.Now()
+	var wg sync.WaitGroup
+	visit := func(path string, file os.DirEntry, err error) error {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if t := getTimeStampFromThreadDumpFilename(path); !t.IsZero() && t.Before(threadDumpTime) {
+				threadDumpTime = t
+			}
+		}()
+		return nil
+	}
+	_ = filepath.WalkDir(path, visit)
+	wg.Wait()
+	return threadDumpTime
 }
