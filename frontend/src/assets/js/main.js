@@ -217,10 +217,10 @@ $(document).ready(function () {
             render()
         }
     })
-    $("#toolWindows").on('click', '#filters input:checkbox', function () {
+    $("#toolWindows").on('click', '#summary input:checkbox', function () {
         checkChildElements(this)
         var filters = {};
-        $("#filters input:checkbox").each(function () {
+        $("#summary input:checkbox").each(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
         window.go.main.App.SetFilters(filters).then(redrawEditors())
