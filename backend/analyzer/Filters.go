@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/binary"
 	"html/template"
 	"log"
@@ -33,7 +34,7 @@ func (f *Filters) IsEmpty() bool {
 func (f *Filters) ConvertToHTML() string {
 	var tpl bytes.Buffer
 	t := template.Must(template.New("Filters.gohtml").
-		ParseFiles("./backend/analyzer/Filters.gohtml"))
+		ParseFS(tmplFS, "Filters.gohtml"))
 	err := t.Execute(&tpl, *f)
 	if err != nil {
 		log.Println(err.Error())

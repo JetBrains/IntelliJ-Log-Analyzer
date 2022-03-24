@@ -17,7 +17,7 @@ type OtherFiles []struct {
 func (f *OtherFiles) ConvertToHTML() (html string) {
 	var tpl bytes.Buffer
 	t := template.Must(template.New("OtherFiles.gohtml").
-		ParseFiles("./backend/analyzer/OtherFiles.gohtml"))
+		ParseFS(tmplFS, "OtherFiles.gohtml"))
 	err := t.Execute(&tpl, *f)
 	if err != nil {
 		log.Println(err.Error())

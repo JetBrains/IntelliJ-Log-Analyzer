@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"crypto/sha1"
+	"embed"
 	"fmt"
 	"log"
 	"os"
@@ -15,6 +16,9 @@ import (
 )
 
 var writeSyncer = sync.Mutex{}
+
+//go:embed *.gohtml
+var tmplFS embed.FS
 
 type Analyzer struct {
 	FolderToWorkWith      string

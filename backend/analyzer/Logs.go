@@ -24,7 +24,7 @@ type LogEntry struct {
 func (logs Logs) ConvertToHTML() string {
 	var tpl bytes.Buffer
 	t := template.Must(template.New("Logs.gohtml").
-		ParseFiles("./backend/analyzer/Logs.gohtml"))
+		ParseFS(tmplFS, "Logs.gohtml"))
 	err := t.Execute(&tpl, logs)
 	if err != nil {
 		log.Println(err.Error())

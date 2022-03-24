@@ -30,7 +30,7 @@ func (a AggregatedStaticInfo) ConvertToHTML() string {
 	}
 	var tpl bytes.Buffer
 	t := template.Must(template.New("StaticInfo.gohtml").
-		ParseFiles("./backend/analyzer/StaticInfo.gohtml"))
+		ParseFS(tmplFS, "StaticInfo.gohtml"))
 	err := t.Execute(&tpl, a)
 	if err != nil {
 		log.Println(err.Error())
