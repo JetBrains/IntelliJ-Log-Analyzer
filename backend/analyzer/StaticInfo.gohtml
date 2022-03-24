@@ -4,9 +4,11 @@
         <li>{{$value.OS}}</li>
         <li>{{$value.JRE}}</li>
         <li> Custom plugins:<br/>
+            <div class="plusgins-list">
             {{range $value.PluginsList}}
                 <a href="#" onclick='window.runtime.BrowserOpenURL({{.Link}})'>{{.Name}}</a> ({{.Version}})<br/>
             {{end}}
+            </div>
         </li>
     </ul>
 {{end}}

@@ -1,5 +1,6 @@
 {{if (index .)}}
-    <ul class="other-files"> Non-recognized files:
+    <h4>Unrecognized files:</h4>
+    <ul class="other-files">
         {{ range $i, $otherFile := . }}
             <li target="{{.Uuid}}">{{.BasePath}}
             </li>

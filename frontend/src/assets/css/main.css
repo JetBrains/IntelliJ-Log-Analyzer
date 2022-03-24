@@ -110,6 +110,9 @@ body {
     text-align: left;
     padding-left: 8px;
 }
+#file-analyzer #sidebar #toolWindows .staticinfo .plusgins-list{
+    padding-left: 8px;
+}
 #file-analyzer #toolWindows-buttons {
     border-right: 2px var(--border-color) solid;
     position: relative;
@@ -147,7 +150,9 @@ body {
 }
 
 #file-analyzer #filters .file-checkbox {
-    padding-left: 8px;
+    padding-left: 16px;
+    list-style: none;
+    font-size: 12px;
 }
 
 #file-analyzer #log-holder {
@@ -200,12 +205,14 @@ body {
 }
 
 #file-analyzer .filters .input-group {
+    margin-top: 4px;
     margin-bottom: 8px;
 }
 
 #file-analyzer .filters .group-label {
     font-size: 14px;
     margin-bottom: 4px;
+    padding-left: 8px;
 }
 #file-analyzer .filters .group-label>.folding-icon{
     cursor: default;
@@ -221,12 +228,14 @@ body {
     text-align: left;
     font-size: 14px;
 }
+#file-analyzer .filters .other-files  {
+    margin-top: 4px;
+}
 #file-analyzer .filters .other-files li {
     list-style-type: none;
     padding-left: 8px;
     cursor: pointer;
-    text-decoration: underline;
-    color: #0bf;
+    white-space: nowrap;
 }
 
 #file-uploader {

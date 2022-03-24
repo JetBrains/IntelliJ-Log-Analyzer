@@ -64,7 +64,6 @@ func (b *App) OpenFolder() string {
 }
 func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
 	data := ConvertDataURISchemeToBase64File(DataURIScheme)
-	log.Println(DataURIScheme)
 	f, err := os.CreateTemp("", filename)
 	if err != nil {
 		log.Println("Could not create temp file: " + err.Error())
