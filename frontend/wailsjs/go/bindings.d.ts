@@ -1,10 +1,10 @@
 export interface go {
   "main": {
     "App": {
-		FilterUpdate(arg1:number):Promise<string>
 		GetEntityNamesWithLineHighlightingColors():Promise<string>
 		GetFilters():Promise<string>
 		GetLogs():Promise<string>
+		GetOtherFileContent(arg1:string):Promise<string>
 		GetStaticInfo():Promise<string>
 		GetSummary():Promise<string>
 		GetThreadDumpFileContent(arg1:string,arg2:string):Promise<string>

@@ -159,16 +159,16 @@ func (b *App) GetFilters() string {
 func (b *App) GetThreadDumpFileContent(dir string, file string) string {
 	return backend.GetThreadDumpFolder(dir).GetFile(file).ConvertToHTML()
 }
+func (b *App) GetOtherFileContent(fileUUID string) string {
+	return backend.GetOtherFiles().GetContent(fileUUID)
+}
 
 //GetThreadDumpsFilters returns HTML of the list of files in ThreadDump folder.
 func (b *App) GetThreadDumpsFilters(dir string) string {
 	return backend.GetThreadDumpFolder(dir).GetFiltersHTML()
 }
 
-// FilterUpdate reads the values of filter area on the left of frontend window
-func (b *App) FilterUpdate(value interface{}) string {
-	return ""
-}
+// SetFilters reads the values of filter area on the left of frontend window
 func (b *App) SetFilters(a map[string]bool) string {
 	err := backend.SetFilters(a)
 	if err == nil {

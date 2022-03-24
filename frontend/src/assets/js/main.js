@@ -1,6 +1,7 @@
 const render = async () => {
     await clearToolWindows();
     await redrawEditors()
+    $(".group-label>.folding-icon").click();
 }
 const redrawEditors = async () => {
     $("#editors>div").remove();
@@ -273,5 +274,31 @@ $(document).ready(function () {
         }
     });
 
+    //reveal/collapse filter items on folding-icon click
+    $("#toolWindows").on('click', '.group-label>.folding-icon', function () {
+        let childList = $(this).parent().find("ul")
+        if ( childList.is( ":hidden" ) ) {
+            childList.show()
+            $(this).text("ᐯ");
+        } else {
+            childList.hide()
+            $(this).text(">");
+        }
+
+
+    })
+    $("#toolWindows").on('click', '.other-files li', function () {
+        $(".other-files li").removeClass("active")
+        $(this).addClass("active")
+        let fileUUID = $(this).attr("target");
+        let fileName = $(this).innerText
+        let editorName = getObjectID(fileUUID)
+        console.log(fileUUID)
+        showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then( function () {
+            let editor = ace.edit(editorName)
+            editor.renderer.scrollToLine(0)
+            editor.clearSelection();
+        })
+    });
 })
 

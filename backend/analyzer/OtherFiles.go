@@ -3,6 +3,7 @@ package analyzer
 import (
 	"bytes"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"path/filepath"
 )
@@ -41,4 +42,14 @@ func (f *OtherFiles) FilterAnalyzedDirectories(collectedFiles []string) OtherFil
 		}
 	}
 	return s
+}
+
+func (f *OtherFiles) GetContent(fileUUID string) string {
+	for _, file := range *f {
+		if file.Uuid == fileUUID {
+			content, _ := ioutil.ReadFile(file.FullPath)
+			return string(content)
+		}
+	}
+	return ""
 }

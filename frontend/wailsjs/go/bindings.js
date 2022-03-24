@@ -5,14 +5,6 @@ const go = {
   "main": {
     "App": {
       /**
-       * FilterUpdate
-       * @param {number} arg1 - Go Type: interface {}
-       * @returns {Promise<string>}  - Go Type: string
-       */
-      "FilterUpdate": (arg1) => {
-        return window.go.main.App.FilterUpdate(arg1);
-      },
-      /**
        * GetEntityNamesWithLineHighlightingColors
        * @returns {Promise<string>}  - Go Type: string
        */
@@ -32,6 +24,14 @@ const go = {
        */
       "GetLogs": () => {
         return window.go.main.App.GetLogs();
+      },
+      /**
+       * GetOtherFileContent
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetOtherFileContent": (arg1) => {
+        return window.go.main.App.GetOtherFileContent(arg1);
       },
       /**
        * GetStaticInfo
