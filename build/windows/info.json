@@ -5,10 +5,10 @@
 	"info": {
 		"0000": {
 			"ProductVersion": "1.0.0",
-			"CompanyName": "wailsLogAnalyzer",
-			"FileDescription": "wailsLogAnalyzer",
+			"CompanyName": "JetBrains",
+			"FileDescription": "IntelliJ IDEs log analyzer",
 			"LegalCopyright": "Copyright.........",
-			"ProductName": "wailsLogAnalyzer",
+			"ProductName": "Log Analyzer",
 			"Comments": "Built using Wails (https://wails.app)"
 		}
 	}

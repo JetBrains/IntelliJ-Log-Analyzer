@@ -15,7 +15,7 @@ import (
 //go:embed frontend/src
 var assets embed.FS
 
-//go:embed build/appicon.png
+//go:embed appicon.png
 var icon []byte
 
 func main() {
@@ -57,7 +57,7 @@ func main() {
 			WindowIsTranslucent:  false,
 			About: &mac.AboutInfo{
 				Title:   "JetBrains Logs Analyzer",
-				Message: "Author: Konstantin Annikov https://kannikov.ru",
+				Message: "Author: Konstantin Annikov",
 				Icon:    icon,
 			},
 		},

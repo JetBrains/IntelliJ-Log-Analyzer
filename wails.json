@@ -7,9 +7,9 @@
   "version": "2",
   "Path": "",
   "BuildDir": "",
-  "outputfilename": "wailsLogAnalyzer",
+  "outputfilename": "LogAnalyzer",
   "OutputType": "",
-  "Platform": "",
+  "Platform": "windows, macos",
   "Author": {
     "name": "konstantin.annikov",
     "email": "konstantin.annikov@jetbrains.com"
