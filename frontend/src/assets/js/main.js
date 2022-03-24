@@ -59,6 +59,7 @@ async function showEditor(name, content) {
         editor.execCommand('find');
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
         editor.on("click", ThreadDumpLinkHandler)
+        editor.on("click", IndexingDiagnosticLinkHandler)
         editor.session.foldAll(0, editor.session.getLength() - 4, 1);
 
         //Checks entryType of every line and highlight this line according to type.

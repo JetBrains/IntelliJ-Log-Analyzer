@@ -33,7 +33,7 @@
 .ace-github .ace_date{
     color: #0000ff;
 }
-.ace-github .ace_hyperlink{
+.ace-github .ace_hyperlink, .ace-github .ace_ThreadDumpsHyperlink, .ace-github .ace_IndexingDiagnosticHyperlink, .ace-github .ace_IndexingProjectDiagnosticHyperlink{
     color: #00bbff;
     text-decoration: underline;
     cursor: pointer !important;

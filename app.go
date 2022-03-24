@@ -9,6 +9,7 @@ import (
 	"log_analyzer/backend"
 	"log_analyzer/backend/analyzer"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -38,6 +39,14 @@ func (b *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
 }
 
+func (b *App) OpenIndexingSummaryForProject(fileName string) {
+	absolutePath := backend.GetIndexingFilePath(fileName)
+	runtime.BrowserOpenURL(b.ctx, filepath.Dir(absolutePath)+string(filepath.Separator)+"report.html")
+}
+func (b *App) OpenIndexingReport(fileName string) {
+	absolutePath := backend.GetIndexingFilePath(fileName)
+	runtime.BrowserOpenURL(b.ctx, absolutePath)
+}
 func (b *App) OpenFolder() string {
 	path, _ := runtime.OpenDirectoryDialog(b.ctx, runtime.OpenDialogOptions{
 		DefaultDirectory: "",

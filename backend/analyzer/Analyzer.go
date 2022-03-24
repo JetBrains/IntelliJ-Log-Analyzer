@@ -39,6 +39,7 @@ type DynamicEntity struct {
 	Name                  string            // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
 	ConvertToLogs         func(path string) Logs
 	CheckPath             func(path string) bool
+	CheckIgnoredPath      func(path string) bool
 	GetDisplayName        func(path string) string
 	LineHighlightingColor string //Color represents the color that is used to highlight all lines of this entity type in the editor
 }
@@ -130,31 +131,36 @@ func (a *Analyzer) GetFilters() *Filters {
 	return nil
 }
 
-func (a *Analyzer) CollectStaticInfoFromStaticEntities(path string) (collected bool) {
-	collected = false
+func (a *Analyzer) CollectStaticInfoFromStaticEntities(path string) (analyzed bool) {
+	analyzed = false
 	for i, entity := range a.StaticEntities {
 		if entity.CheckPath(path) == true {
 			a.StaticEntities[i].CollectedInfo = entity.ConvertToStaticInfo(path)
-			collected = true
+			analyzed = true
 		}
 	}
-	return collected
+	return analyzed
 }
 
 // CollectLogsFromDynamicEntities Checks if path fulfil the Entity requirements and Adds all the Entity's logEntries to the aggregated logs
-func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (collected bool) {
-	collected = false
+func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (analyzed bool) {
+	analyzed = false
 	for i, entity := range a.DynamicEntities {
+		if entity.CheckIgnoredPath != nil {
+			if entity.CheckIgnoredPath(path) == true {
+				return true
+			}
+		}
 		if entity.CheckPath(path) == true {
 			logEntries := entity.ConvertToLogs(path)
 			writeSyncer.Lock()
 			a.DynamicEntities[i].addDynamicEntityInstance(path)
 			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
 			writeSyncer.Unlock()
-			collected = true
+			analyzed = true
 		}
 	}
-	return collected
+	return analyzed
 }
 
 // GenerateFilters Generates filters for all Entities and saves them into Filters slice
@@ -250,13 +256,13 @@ func sortedKeys[K string, V any](m map[K]V) []K {
 	return keys
 }
 
-func sliceContains[S comparable](slice []S, element S) bool {
-	for _, e := range slice {
+func SliceContains[S comparable](slice []S, element S) int {
+	for i, e := range slice {
 		if e == element {
-			return true
+			return i
 		}
 	}
-	return false
+	return -1
 }
 
 func IsHiddenFile(filename string) bool {

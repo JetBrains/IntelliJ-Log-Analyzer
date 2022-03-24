@@ -79,6 +79,22 @@ const go = {
         return window.go.main.App.OpenFolder();
       },
       /**
+       * OpenIndexingReport
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<void>} 
+       */
+      "OpenIndexingReport": (arg1) => {
+        return window.go.main.App.OpenIndexingReport(arg1);
+      },
+      /**
+       * OpenIndexingSummaryForProject
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<void>} 
+       */
+      "OpenIndexingSummaryForProject": (arg1) => {
+        return window.go.main.App.OpenIndexingSummaryForProject(arg1);
+      },
+      /**
        * SetFilters
        * @param {any} arg1 - Go Type: map[string]bool
        * @returns {Promise<string>}  - Go Type: string

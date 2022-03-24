@@ -38,12 +38,18 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
             }, {
                 regex: "ERROR",
                 token: "loglevel.error",
+            },{
+                regex: "INDEX",
+                token: "loglevel.info",
             }, {
                 regex: "FREEZE",
                 token: "loglevel.error",
             }, {
                 regex: "(threadDump\\S*(?=\\s)*)",
-                token: "hyperlink",
+                token: "ThreadDumpsHyperlink",
+            },{
+                regex: /(Indexing project:.*)(report.html)(.*Report: )(.*\.html)/,
+                token: ["text", "IndexingProjectDiagnosticHyperlink", "text", "IndexingDiagnosticHyperlink"],
             }, {
                 regex: "\\d{2} (Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC) \\d{4} \\d{1,2}:\\d{2}:\\d{2}",
                 token: "date"

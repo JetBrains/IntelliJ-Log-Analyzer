@@ -48,6 +48,15 @@ func GetThreadDumpFolder(dir string) *analyzer.ThreadDump {
 	return entities.CurrentAnalyzer.GetThreadDump(dir)
 }
 
+func GetIndexingFilePath(path string) string {
+	for _, s := range entities.CurrentAnalyzer.GetIndexingFilesList() {
+		if strings.Contains(s, path) {
+			return s
+		}
+	}
+	return ""
+}
+
 func UnzipToTempFodler(src string) (dest string) {
 	dest, err := ioutil.TempDir("", "prefix")
 	r, err := zip.OpenReader(src)

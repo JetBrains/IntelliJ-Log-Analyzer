@@ -2,7 +2,7 @@ let ThreadDumpLinkHandler = async function (e) {
     let editor = e.editor
     let pos = editor.getCursorPosition()
     let token = editor.session.getTokenAt(pos.row, pos.column)
-    if ((token.type !== null) && (/hyperlink/.test(token.type))) {
+    if ((token.type !== null) && (/ThreadDumpsHyperlink/.test(token.type))) {
         await openThreadDump(token.value)
     }
 

@@ -149,10 +149,11 @@ body {
     position: relative;
 }
 
-#file-analyzer #filters .file-checkbox {
+#file-analyzer #summary .file-checkbox {
     padding-left: 16px;
     list-style: none;
     font-size: 12px;
+    white-space: nowrap;
 }
 
 #file-analyzer #log-holder {

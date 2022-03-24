@@ -37,7 +37,7 @@ func (f *OtherFiles) Append(path string) {
 func (f *OtherFiles) FilterAnalyzedDirectories(collectedFiles []string) OtherFiles {
 	s := OtherFiles{}
 	for _, file := range *f {
-		if !sliceContains(collectedFiles, filepath.Dir(file.FullPath)) {
+		if i := SliceContains(collectedFiles, filepath.Dir(file.FullPath)); i == -1 {
 			s = append(s, file)
 		}
 	}
