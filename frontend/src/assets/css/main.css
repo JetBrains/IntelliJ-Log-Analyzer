@@ -14,6 +14,7 @@ html {
     font-family: "JetBrains Mono";
     font-style: normal;
     font-weight: 400;
+    src: local(""),
     url("/assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
 }
 :root {
@@ -196,7 +197,7 @@ body {
 
 
 #file-analyzer #log-holder .editor {
-    font-family: "JetBrains Mono", ui-monospace;
+    font-family: "JetBrains Mono", monospace;
     overflow: hidden;
     font-size: 14px;
     width: 100%;
