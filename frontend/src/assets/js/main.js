@@ -227,7 +227,6 @@ $(document).ready(function () {
         window.go.main.App.SetFilters(filters).then(redrawEditors())
         //Group check/uncheck functionality
         function checkChildElements(elem) {
-            console.log("change")
             var checked = $(elem).prop("checked"),
                 container = $(elem).parent();
 
@@ -235,7 +234,6 @@ $(document).ready(function () {
                 indeterminate: false,
                 checked: checked
             });
-            console.log(container)
             checkSiblings(container);
             function checkSiblings(el) {
 
@@ -298,7 +296,6 @@ $(document).ready(function () {
         let fileUUID = $(this).attr("target");
         let fileName = $(this).innerText
         let editorName = getObjectID(fileUUID)
-        console.log(fileUUID)
         showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then( function () {
             let editor = ace.edit(editorName)
             editor.renderer.scrollToLine(0)

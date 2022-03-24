@@ -70,6 +70,5 @@ func getTimeStampFromIndexingFile(path string) time.Time {
 func getIndexingProjectName(path string) string {
 	projectFolder := analyzer.GetRegexNamedCapturedGroups(`indexing-diagnostic.{1}(?P<ProjectFolder>.*).{1}diagnostic-(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})-(?P<Hours>\d{2})-(?P<Minutes>\d{2})-(?P<Seconds>\d{2}).*.html`, path)["ProjectFolder"]
 	projectName := projectFolder[:strings.LastIndex(projectFolder, ".")]
-	log.Println(projectName)
 	return projectName
 }
