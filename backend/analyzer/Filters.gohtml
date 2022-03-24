@@ -1,17 +1,23 @@
-{{ range $key, $value := . }}
-    <div class="input-group">
-        <p class="group-label">{{$key}}
-            {{if (index $value 0).GroupLineHighlightingColor}}
-            <span class="filter-color-hint" style="background-color: {{(index $value 0).GroupLineHighlightingColor}};">  </span>
-            {{end}}
-        </p>
-        {{range $value}}
-            <div class="checkboxes">
-                <input id="{{.ID}}" name="{{.ID}}" type="checkbox" value="{{.ID}}" {{if .Checked}}checked{{end}}/>
-                <label class="inline" for="{{.ID}}">{{.EntryLabel}}</label>
-            </div>
+<div class="input-group">
+    <ul class="group-label">
+        {{ range $key, $value := . }}
+            <li>
+                <input id="{{$key}}" type="checkbox" checked><label for="{{$key}}">{{$key}}</label>
+                {{if (index $value 0).GroupLineHighlightingColor}}
+                    <span class="filter-color-hint"
+                          style="background-color: {{(index $value 0).GroupLineHighlightingColor}};">  </span>
+                {{end}}
+                <ul>
+                    {{range $value}}
+                        <li class="file-checkbox">
+                            <input id="{{.ID}}" name="{{.ID}}" type="checkbox" value="{{.ID}}"
+                                   {{if .Checked}}checked{{end}}/>
+                            <label class="inline" for="{{.ID}}">{{.EntryLabel}}</label>
+                        </li>
+                    {{end}}
+                </ul>
+            </li>
         {{end}}
-    </div>
-{{end}}
-
+    </ul>
+</div>
 

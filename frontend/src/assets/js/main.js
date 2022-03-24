@@ -216,13 +216,63 @@ $(document).ready(function () {
             render()
         }
     })
-    $("#toolWindows").on('click', '#filters input:checkbox', async () => {
+    $("#toolWindows").on('click', '#filters input:checkbox', function () {
+        checkChildElements(this)
         var filters = {};
         $("#filters input:checkbox").each(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
-        await window.go.main.App.SetFilters(filters)
-        await redrawEditors()
+        window.go.main.App.SetFilters(filters).then(redrawEditors())
     });
+
+    //Group check/uncheck functionality
+    function checkChildElements(elem) {
+        console.log("change")
+        var checked = $(elem).prop("checked"),
+            container = $(elem).parent();
+
+        container.find('input[type="checkbox"]').prop({
+            indeterminate: false,
+            checked: checked
+        });
+        console.log(container)
+        checkSiblings(container);
+        function checkSiblings(el) {
+
+            var parent = el.parent().parent(),
+                all = true;
+            el.siblings().each(function() {
+                let returnValue = all = ($(elem).children('input[type="checkbox"]').prop("checked") === checked);
+                return returnValue;
+            });
+
+            if (all && checked) {
+
+                parent.children('input[type="checkbox"]').prop({
+                    indeterminate: false,
+                    checked: checked
+                });
+
+                checkSiblings(parent);
+
+            } else if (all && !checked) {
+
+                parent.children('input[type="checkbox"]').prop("checked", checked);
+                parent.children('input[type="checkbox"]').prop("indeterminate", (parent.find('input[type="checkbox"]:checked').length > 0));
+                checkSiblings(parent);
+
+            } else {
+
+                el.parents("li").children('input[type="checkbox"]').prop({
+                    indeterminate: true,
+                    checked: false
+                });
+
+            }
+
+        }
+
+    }
+
 })
 

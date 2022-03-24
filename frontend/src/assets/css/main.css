@@ -146,7 +146,7 @@ body {
     position: relative;
 }
 
-#file-analyzer #filters .checkboxes {
+#file-analyzer #filters .file-checkbox {
     padding-left: 8px;
 }
 
