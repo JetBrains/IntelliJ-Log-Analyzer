@@ -223,56 +223,55 @@ $(document).ready(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
         window.go.main.App.SetFilters(filters).then(redrawEditors())
-    });
+        //Group check/uncheck functionality
+        function checkChildElements(elem) {
+            console.log("change")
+            var checked = $(elem).prop("checked"),
+                container = $(elem).parent();
 
-    //Group check/uncheck functionality
-    function checkChildElements(elem) {
-        console.log("change")
-        var checked = $(elem).prop("checked"),
-            container = $(elem).parent();
-
-        container.find('input[type="checkbox"]').prop({
-            indeterminate: false,
-            checked: checked
-        });
-        console.log(container)
-        checkSiblings(container);
-        function checkSiblings(el) {
-
-            var parent = el.parent().parent(),
-                all = true;
-            el.siblings().each(function() {
-                let returnValue = all = ($(elem).children('input[type="checkbox"]').prop("checked") === checked);
-                return returnValue;
+            container.find('input[type="checkbox"]').prop({
+                indeterminate: false,
+                checked: checked
             });
+            console.log(container)
+            checkSiblings(container);
+            function checkSiblings(el) {
 
-            if (all && checked) {
-
-                parent.children('input[type="checkbox"]').prop({
-                    indeterminate: false,
-                    checked: checked
+                var parent = el.parent().parent(),
+                    all = true;
+                el.siblings().each(function() {
+                    let returnValue = all = ($(elem).children('input[type="checkbox"]').prop("checked") === checked);
+                    return returnValue;
                 });
 
-                checkSiblings(parent);
+                if (all && checked) {
 
-            } else if (all && !checked) {
+                    parent.children('input[type="checkbox"]').prop({
+                        indeterminate: false,
+                        checked: checked
+                    });
 
-                parent.children('input[type="checkbox"]').prop("checked", checked);
-                parent.children('input[type="checkbox"]').prop("indeterminate", (parent.find('input[type="checkbox"]:checked').length > 0));
-                checkSiblings(parent);
+                    checkSiblings(parent);
 
-            } else {
+                } else if (all && !checked) {
 
-                el.parents("li").children('input[type="checkbox"]').prop({
-                    indeterminate: true,
-                    checked: false
-                });
+                    parent.children('input[type="checkbox"]').prop("checked", checked);
+                    parent.children('input[type="checkbox"]').prop("indeterminate", (parent.find('input[type="checkbox"]:checked').length > 0));
+                    checkSiblings(parent);
+
+                } else {
+
+                    el.parents("li").children('input[type="checkbox"]').prop({
+                        indeterminate: true,
+                        checked: false
+                    });
+
+                }
 
             }
 
         }
-
-    }
+    });
 
 })
 
