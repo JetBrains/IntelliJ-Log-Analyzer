@@ -11,11 +11,3 @@ let IndexingDiagnosticLinkHandler = async function (e) {
     }
 
 }
-
-async function openThreadDump(path) {
-    if (path==="report.html") {
-
-    } else {
-        await window.go.main.App.OpenIndexingReport(path)
-    }
-}
