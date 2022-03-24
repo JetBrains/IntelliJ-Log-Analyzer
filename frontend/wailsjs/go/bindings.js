@@ -41,6 +41,13 @@ const go = {
         return window.go.main.App.GetStaticInfo();
       },
       /**
+       * GetSummary
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetSummary": () => {
+        return window.go.main.App.GetSummary();
+      },
+      /**
        * GetThreadDumpFileContent
        * @param {string} arg1 - Go Type: string
        * @param {string} arg2 - Go Type: string

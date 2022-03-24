@@ -1,0 +1,8 @@
+{{if (index .)}}
+    <ul class="other-files"> Non-recognized files:
+        {{ range $i, $otherFile := . }}
+            <li target="{{.Uuid}}">{{.BasePath}}
+            </li>
+        {{end}}
+    </ul>
+{{end}}

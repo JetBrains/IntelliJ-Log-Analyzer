@@ -38,6 +38,9 @@ func GetLogs() *analyzer.Logs {
 func GetStaticInfo() *analyzer.AggregatedStaticInfo {
 	return entities.CurrentAnalyzer.GetStaticInfo()
 }
+func GetOtherFiles() *analyzer.OtherFiles {
+	return entities.CurrentAnalyzer.GetOtherFiles()
+}
 func GetFilters() *analyzer.Filters {
 	return entities.CurrentAnalyzer.GetFilters()
 }

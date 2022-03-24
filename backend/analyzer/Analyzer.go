@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"runtime"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -20,6 +22,7 @@ type Analyzer struct {
 	DynamicEntities       []DynamicEntity
 	StaticEntities        []StaticEntity
 	Filters               Filters
+	OtherFiles            OtherFiles
 	AggregatedLogs        Logs
 	AggregatedThreadDumps AggregatedThreadDumps
 	AggregatedStaticInfo  AggregatedStaticInfo
@@ -60,17 +63,28 @@ func (a *Analyzer) AddDynamicEntity(entity DynamicEntity) {
 //ParseLogDirectory analyzes provided path for known log elements
 func (a *Analyzer) ParseLogDirectory(path string) {
 	var wg sync.WaitGroup
+	var collectedFiles []string
 	visit := func(path string, file os.DirEntry, err error) error {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			a.CollectLogsFromDynamicEntities(path)
-			a.CollectStaticInfoFromStaticEntities(path)
+			isDynamic := a.CollectLogsFromDynamicEntities(path)
+			isStatic := a.CollectStaticInfoFromStaticEntities(path)
+			writeSyncer.Lock()
+			if isStatic || isDynamic {
+				collectedFiles = append(collectedFiles, path)
+			} else {
+				if !file.IsDir() && !IsHiddenFile(filepath.Base(path)) {
+					a.OtherFiles.Append(path)
+				}
+			}
+			writeSyncer.Unlock()
 		}()
 		return nil
 	}
 	_ = filepath.WalkDir(path, visit)
 	wg.Wait()
+	a.OtherFiles = a.OtherFiles.FilterAnalyzedDirectories(collectedFiles)
 }
 
 //IsEmpty checks if config has at least one filled attribute
@@ -92,6 +106,12 @@ func (a *Analyzer) GetStaticInfo() *AggregatedStaticInfo {
 	a.AggregatedStaticInfo = aggregateStaticInfo(a.StaticEntities)
 	return a.GetStaticInfo()
 }
+func (a *Analyzer) GetOtherFiles() *OtherFiles {
+	if !a.AggregatedLogs.IsEmpty() {
+		return &a.OtherFiles
+	}
+	return nil
+}
 
 //GetThreadDump returns Analyzed ThreadDumps folder as AggregatedThreadDumps entity. Analyzes it if it was not done already.
 func (a *Analyzer) GetThreadDump(threadDumpsFolder string) *ThreadDump {
@@ -110,16 +130,20 @@ func (a *Analyzer) GetFilters() *Filters {
 	return nil
 }
 
-func (a *Analyzer) CollectStaticInfoFromStaticEntities(path string) {
+func (a *Analyzer) CollectStaticInfoFromStaticEntities(path string) (collected bool) {
+	collected = false
 	for i, entity := range a.StaticEntities {
 		if entity.CheckPath(path) == true {
 			a.StaticEntities[i].CollectedInfo = entity.ConvertToStaticInfo(path)
+			collected = true
 		}
 	}
+	return collected
 }
 
 // CollectLogsFromDynamicEntities Checks if path fulfil the Entity requirements and Adds all the Entity's logEntries to the aggregated logs
-func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
+func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (collected bool) {
+	collected = false
 	for i, entity := range a.DynamicEntities {
 		if entity.CheckPath(path) == true {
 			logEntries := entity.ConvertToLogs(path)
@@ -127,8 +151,10 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) {
 			a.DynamicEntities[i].addDynamicEntityInstance(path)
 			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
 			writeSyncer.Unlock()
+			collected = true
 		}
 	}
+	return collected
 }
 
 // GenerateFilters Generates filters for all Entities and saves them into Filters slice
@@ -150,6 +176,7 @@ func (a *Analyzer) InitFilter() *Filters {
 func (a *Analyzer) Clear() {
 	a.AggregatedLogs = Logs{}
 	a.Filters = Filters{}
+	a.OtherFiles = OtherFiles{}
 	a.AggregatedStaticInfo = AggregatedStaticInfo{}
 	a.AggregatedThreadDumps = AggregatedThreadDumps{}
 	for i, _ := range a.StaticEntities {
@@ -210,4 +237,31 @@ func GetRegexNamedCapturedGroups(regEx, s string) (paramsMap map[string]string) 
 		}
 	}
 	return paramsMap
+}
+
+func sortedKeys[K string, V any](m map[K]V) []K {
+	keys := make([]K, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
+	}
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	return keys
+}
+
+func sliceContains[S comparable](slice []S, element S) bool {
+	for _, e := range slice {
+		if e == element {
+			return true
+		}
+	}
+	return false
+}
+
+func IsHiddenFile(filename string) bool {
+	if runtime.GOOS != "windows" {
+		return filename[0:1] == "."
+	}
+	return false
 }

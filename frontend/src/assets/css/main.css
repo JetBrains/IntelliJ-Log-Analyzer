@@ -218,6 +218,13 @@ body {
     text-align: left;
     font-size: 14px;
 }
+#file-analyzer .filters .other-files li {
+    list-style-type: none;
+    padding-left: 8px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0bf;
+}
 
 #file-uploader {
     display: grid;

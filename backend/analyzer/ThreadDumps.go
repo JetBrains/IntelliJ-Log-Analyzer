@@ -7,7 +7,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -70,17 +69,6 @@ func (t *ThreadDump) GetFiltersHTML() (html string) {
 		html = html + "<li filename='" + filepath.Base(i) + "'>" + GetThreadDumpDisplayName(filepath.Base(i)) + "</li>"
 	}
 	return html
-}
-
-func sortedKeys[K string, V any](m map[K]V) []K {
-	keys := make([]K, len(m))
-	i := 0
-	for k := range m {
-		keys[i] = k
-		i++
-	}
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
-	return keys
 }
 
 func getTimeStampFromThreadDumpFilename(filename string) time.Time {

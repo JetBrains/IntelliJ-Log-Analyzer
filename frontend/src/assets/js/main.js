@@ -14,7 +14,7 @@ const clearToolWindows = async () => {
     tabs.remove();
 }
 async function renderMainScreen() {
-    await showToolWindow("Filters", "filters", "top", "Main Editor", window.go.main.App.GetFilters())
+    await showToolWindow("Filters", "filters", "top", "Main Editor", window.go.main.App.GetSummary())
     if (await window.go.main.App.GetStaticInfo()) {
         await showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
     }

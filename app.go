@@ -147,6 +147,10 @@ func (b *App) GetStaticInfo() string {
 	return html
 }
 
+func (b *App) GetSummary() string {
+	return backend.GetFilters().ConvertToHTML() + backend.GetOtherFiles().ConvertToHTML()
+}
+
 // FilterGet returns the values of the filter area
 func (b *App) GetFilters() string {
 	return backend.GetFilters().ConvertToHTML()
