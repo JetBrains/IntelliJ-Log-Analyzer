@@ -1,8 +1,10 @@
 <div class="input-group">
-    <ul class="group-label">
+    Recognized files:
+    <ul>
         {{ range $key, $value := . }}
-            <li>
-                <input id="{{$key}}" type="checkbox" checked><label for="{{$key}}">{{$key}}</label>
+            <li class="group-label">
+                <span class="folding-icon">ᐯ</span>
+                <input id="{{$key}}" type="checkbox" checked> <label for="{{$key}}">{{$key}}</label>
                 {{if (index $value 0).GroupLineHighlightingColor}}
                     <span class="filter-color-hint"
                           style="background-color: {{(index $value 0).GroupLineHighlightingColor}};">  </span>

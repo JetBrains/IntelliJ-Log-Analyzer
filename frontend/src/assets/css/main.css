@@ -207,6 +207,9 @@ body {
     font-size: 14px;
     margin-bottom: 4px;
 }
+#file-analyzer .filters .group-label>.folding-icon{
+    cursor: default;
+}
 #file-analyzer .filters .group-label .filter-color-hint {
     opacity: 0.2;
     white-space:pre-wrap;
