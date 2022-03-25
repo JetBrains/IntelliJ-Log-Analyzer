@@ -115,8 +115,10 @@
     background: rgb(245, 245, 245);
 }
 
-.ace-github .ace_marker-layer .ace_selection {
-    background: rgb(181, 213, 255);
+.ace-github .ace_marker-layer .ace_selection, .ace_editor .ace_marker-layer .ace_selected-word {
+    /*background: rgb(181, 213, 255);*/
+    background: rgb(250, 209, 54);
+    box-shadow: 0 0 3px 0px black;
 }
 
 .ace-github.ace_multiselect .ace_selection.ace_start {
@@ -146,8 +148,7 @@
 }
 
 .ace-github .ace_marker-layer .ace_selected-word {
-    background: rgb(250, 250, 255);
-    border: 1px solid rgb(200, 200, 250);
+    background: rgba(250, 209, 54, 0.3);
 }
 
 .ace-github .ace_invisible {
