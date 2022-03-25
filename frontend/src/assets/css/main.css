@@ -196,6 +196,9 @@ body {
 }
 
 
+#file-analyzer #log-holder #editors {
+    height: 100%;
+}
 #file-analyzer #log-holder .editor {
     font-family: "JetBrains Mono", monospace;
     overflow: hidden;
