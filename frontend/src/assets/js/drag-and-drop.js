@@ -72,13 +72,17 @@ $(document).ready(function () {
 
         let result = "";
         for (let i = 0; i < items.length; i++) {
-            let entry = e.dataTransfer.items[i].webkitGetAsEntry();
-            if (entry.isFile) {
-                result = await processFile(entry);
-            } else if (entry.isDirectory) {
-                await scanDir(entry);
-                let zipFile = await zipWriter.close();
-                result = await window.go.main.App.UploadArchive(zipFile)
+            if (DataTransferItem.prototype.webkitGetAsEntry) {
+                let entry = e.dataTransfer.items[i].webkitGetAsEntry();
+                if (entry.isFile) {
+                    result = await processFile(entry);
+                } else if (entry.isDirectory) {
+                    await scanDir(entry);
+                    let zipFile = await zipWriter.close();
+                    result = await window.go.main.App.UploadArchive(zipFile)
+                }
+            } else {
+                console.log("webkitGetAsEntry is not supported")
             }
         }
         if (result) {
