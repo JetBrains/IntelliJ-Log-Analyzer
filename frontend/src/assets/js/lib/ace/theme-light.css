@@ -149,6 +149,7 @@
 
 .ace-github .ace_marker-layer .ace_selected-word {
     background: rgba(250, 209, 54, 0.3);
+    box-shadow: 0 0 1px 0px black;
 }
 
 .ace-github .ace_invisible {
