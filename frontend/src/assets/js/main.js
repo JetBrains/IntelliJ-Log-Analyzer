@@ -14,6 +14,7 @@ const clearToolWindows = async () => {
     toolWindows.remove();
     tabs.remove();
 }
+
 async function renderMainScreen() {
     await showToolWindow("Summary", "filters", "top", "Main Editor", window.go.main.App.GetSummary())
     if (await window.go.main.App.GetStaticInfo()) {
@@ -33,6 +34,7 @@ async function showEditor(name, content) {
         if (content) await cerateEditor()
     }
     editors.find(`.${id}`).show()
+
     async function cerateEditor() {
         editors.append(`    
             <div class=${id}>
@@ -88,11 +90,12 @@ async function showEditor(name, content) {
                 editor.session.replace(range[rangeKey], "")
             }
         }
+
         function addCssClass(className, content) {
             document.body.appendChild(
                 Object.assign(
                     document.createElement("style"),
-                    {textContent: "." + className + " {" +content+"}"})
+                    {textContent: "." + className + " {" + content + "}"})
             )
         }
     }
@@ -147,11 +150,13 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
             }
         })
     }
+
     function hideToolWindow(object) {
         object.removeClass("active")
         let target = object.attr("target")
         $("#" + target).parent().hide()
     }
+
     function createToolWindowTabElement() {
         tabs.append(
             $("<div class='toolWindowButton' target='" + id + "'>" + name + "</div>")
@@ -177,11 +182,12 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
 }
 
 function getObjectID(s) {
-    return s.toLowerCase().replaceAll("-"," ")
-        .replaceAll("."," ")
-        .replaceAll("/"," ")
+    return s.toLowerCase().replaceAll("-", " ")
+        .replaceAll(".", " ")
+        .replaceAll("/", " ")
         .replaceAll(" ", "");
 }
+
 function setSidebarState() {
     let ActiveToolWindows = 0
     $(".toolWindowButton").each(function () {
@@ -189,10 +195,10 @@ function setSidebarState() {
             ActiveToolWindows++
         }
     })
-    if (ActiveToolWindows===0) {
+    if (ActiveToolWindows === 0) {
         $("#sidebar").hide()
         $("#file-analyzer .resizer").hide()
-    } else if (ActiveToolWindows===1) {
+    } else if (ActiveToolWindows === 1) {
         $("#sidebar").show()
         $("#file-analyzer>.container>.resizer").show()
         $("#sidebar .resizer").hide()
@@ -201,6 +207,7 @@ function setSidebarState() {
         $("#file-analyzer .resizer").show()
     }
 }
+
 $(document).ready(function () {
     $("#select-dir").on('click', async () => {
         var openedDir = await window.go.main.App.OpenFolder()
@@ -225,6 +232,7 @@ $(document).ready(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
         window.go.main.App.SetFilters(filters).then(redrawEditors())
+
         //Group check/uncheck functionality
         function checkChildElements(elem) {
             var checked = $(elem).prop("checked"),
@@ -235,11 +243,12 @@ $(document).ready(function () {
                 checked: checked
             });
             checkSiblings(container);
+
             function checkSiblings(el) {
 
                 var parent = el.parent().parent(),
                     all = true;
-                el.siblings().each(function() {
+                el.siblings().each(function () {
                     let returnValue = all = ($(elem).children('input[type="checkbox"]').prop("checked") === checked);
                     return returnValue;
                 });
@@ -276,7 +285,7 @@ $(document).ready(function () {
     //reveal/collapse filter items on folding-icon click
     $("#toolWindows").on('click', '.group-label>.folding-icon', function () {
         let childList = $(this).parent().find("ul")
-        if ( childList.is( ":hidden" ) ) {
+        if (childList.is(":hidden")) {
             childList.show()
             $(this).html("<svg width=\"11\" height=\"14\" viewBox=\"0 0 11 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
                 "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.43427 5.93433C6.74669 5.62191 7.25322 5.62191 7.56564 5.93433C7.87806 6.24675 7.87806 6.75328 7.56564 7.0657L3.99995 10.6314L0.434266 7.0657C0.121846 6.75328 0.121846 6.24675 0.434266 5.93433C0.746685 5.62191 1.25322 5.62191 1.56564 5.93433L3.99995 8.36864L6.43427 5.93433Z\" fill=\"#6E6E6E\"/>\n" +
@@ -296,7 +305,7 @@ $(document).ready(function () {
         let fileUUID = $(this).attr("target");
         let fileName = $(this).innerText
         let editorName = getObjectID(fileUUID)
-        showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then( function () {
+        showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then(function () {
             let editor = ace.edit(editorName)
             editor.renderer.scrollToLine(0)
             editor.clearSelection();
