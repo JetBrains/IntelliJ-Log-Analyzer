@@ -11,7 +11,9 @@ Drag&Drop file, folder, or archive to Log Analyzer window at any time to analyze
 ## Builds
 
 macOS .app file:  [download](https://github.com/annikovk/idea_log_analyzer/blob/master/build/bin/JetBrains%20Log%20Analyzer.app.zip?raw=true)
+
 windows .exe file:  [download](https://github.com/annikovk/idea_log_analyzer/blob/master/build/bin/LogAnalyzer.exe?raw=true)
+
 Linux is not currently supported. 
 
 ## What can be parsed
