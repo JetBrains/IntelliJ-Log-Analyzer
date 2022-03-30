@@ -8,6 +8,10 @@ Program receives logs folder as an input and renders it for better usability.
 
 Drag&Drop file, folder, or archive to Log Analyzer window at any time to analyze. 
 
+## Demo 
+
+[![JetBrains Log Analyzer](https://img.youtube.com/vi/BJf6XB2KGMg/0.jpg)](https://www.youtube.com/watch?v=BJf6XB2KGMg "JetBrains Log Analyzer")
+
 ## Builds
 
 macOS .app file:  [download](https://github.com/annikovk/idea_log_analyzer/blob/master/build/bin/JetBrains%20Log%20Analyzer.app.zip?raw=true)
