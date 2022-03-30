@@ -1,5 +1,5 @@
 # Wails bin directory
-build/bin
+/build/bin/JetBrains Log Analyzer.app/
 
 # IDEs
 .idea
