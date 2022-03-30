@@ -64,7 +64,9 @@ func (b *App) OpenFolder() string {
 		TreatPackagesAsDirectories: false,
 	},
 	)
-
+	if path == "" {
+		return ""
+	}
 	if err := backend.InitLogDirectory(path); err == nil {
 		return path
 	} else {
@@ -129,6 +131,9 @@ func (b *App) OpenArchive() string {
 		TreatPackagesAsDirectories: false,
 	},
 	)
+	if path == "" {
+		return ""
+	}
 	unzippedDir := backend.UnzipToTempFodler(path)
 	log.Println("Unzipped files to path: " + path)
 	if err := backend.InitLogDirectory(unzippedDir); err == nil {

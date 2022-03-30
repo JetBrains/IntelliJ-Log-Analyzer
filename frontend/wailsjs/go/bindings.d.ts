@@ -1,3 +1,5 @@
+import * as models from './models';
+
 export interface go {
   "main": {
     "App": {
