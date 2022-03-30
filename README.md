@@ -32,7 +32,7 @@ All unknown files are listed in **Other files** section.
 
 License
 =======
-    Copyright 2022 Konstantin Anikov
+    Copyright 2022 Konstantin Annikov
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
