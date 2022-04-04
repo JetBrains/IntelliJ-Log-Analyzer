@@ -14,7 +14,7 @@ Here is a short overview of technologies used in the project:
 
 - Logs are represented with the help of [Ace Editor](https://github.com/ajaxorg/ace) 
 
-# Contributing
+## Preparing the environment
 
 * Install GoLang, npm and wails command line utilities following [this guide](https://wails.io/docs/gettingstarted/installation) 
 * Fork the repository and clone it to the local machine.
@@ -23,6 +23,8 @@ Here is a short overview of technologies used in the project:
 Here it is, you are all-set. Now you can run `wails dev` in project's root to start Log Analyzer in dev mode: 
 
 ![](https://i.imgur.com/jZu29uz.jpg)
+
+## Contributing
 
 # Where to start in the codebase
 
@@ -84,3 +86,8 @@ func init() {
 
 Highlighting rules are stored in [mode-idea_log.js](frontend/src/assets/js/lib/ace/mode-idea_log.js) file. Syntax and description of this file is available in [Defining Syntax Highlighting Rules](https://ace.c9.io/#nav=higlighter) section of Ace Editor documentation
 Styles for highlighting rules are stored in [theme-light.css](frontend/src/assets/js/lib/ace/theme-light.css) file
+
+# How To Build the binary
+
+1. Make sure you installed all needed dependencies according to [Preparing the environment](#preparing-the-environment) section 
+2. execute `wails build` command. If needed, customize the build according to [Wails documentation](https://wails.io/docs/reference/cli#build) 
