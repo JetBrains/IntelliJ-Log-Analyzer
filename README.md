@@ -3,11 +3,11 @@
 
 ## About
 
-Logs highlighter and analyzer. 
+Logs highlighter and analyzer for logs collected by **Help | Collect Logs and Diagnostic Data** action of any IntelliJ-based IDE. 
 
 Program receives logs folder as an input and renders it for better usability.
 
-Drag&Drop file, folder, or archive to Log Analyzer window at any time to analyze. 
+Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time to analyze. 
 
 ## Demo 
 
