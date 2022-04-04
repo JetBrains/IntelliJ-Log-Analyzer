@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/base64"
 	json "encoding/json"
+	"github.com/wailsapp/wails/v2/pkg/menu"
+	"github.com/wailsapp/wails/v2/pkg/menu/keys"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"log_analyzer/backend"
@@ -25,8 +27,17 @@ func NewApp() *App {
 
 // startup is called at application startup
 func (b *App) startup(ctx context.Context) {
-	// Perform your setup here
 	b.ctx = ctx
+	systemMenu := menu.NewMenuFromItems(
+		menu.AppMenu(),
+		menu.SubMenu("Help", menu.NewMenuFromItems(
+			menu.Separator(),
+			menu.Text("Submit Bug", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
+				runtime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
+			}),
+		)),
+	)
+	runtime.MenuSetApplicationMenu(b.ctx, systemMenu)
 }
 
 // domReady is called after the front-end dom has been loaded
