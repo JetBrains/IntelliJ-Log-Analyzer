@@ -90,4 +90,4 @@ Styles for highlighting rules are stored in [theme-light.css](frontend/src/asset
 # How To Build the binary
 
 1. Make sure you installed all needed dependencies according to [Preparing the environment](#preparing-the-environment) section 
-2. execute `wails build` command. If needed, customize the build according to [Wails documentation](https://wails.io/docs/reference/cli#build) 
+2. execute `wails build` command in project's root. If needed, customize the build according to [Wails documentation](https://wails.io/docs/reference/cli#build) 
