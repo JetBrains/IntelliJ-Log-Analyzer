@@ -1,5 +1,6 @@
 # IntelliJ Log Analyzer 
-[![official JetBrains project](https://jb.gg/badges/official-flat-square.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub) [![Contributions welcome][contributions-welcome-svg]][contributions-welcome]
+[![official JetBrains project](https://jb.gg/badges/official-flat-square.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+
 ## About
 
 Logs highlighter and analyzer. 
