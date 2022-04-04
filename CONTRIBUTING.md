@@ -4,7 +4,7 @@ Would you like to make it even better? That’s wonderful!
 
 This page is created to help you start contributing. 
 
-## Before you begin
+# Before you begin
 
 Here is a short overview of technologies used in the project:
 
@@ -14,7 +14,7 @@ Here is a short overview of technologies used in the project:
 
 - Logs are represented with the help of [Ace Editor](https://github.com/ajaxorg/ace) 
 
-## Preparing the environment
+# Preparing the environment
 
 * Install GoLang, npm and wails command line utilities following [this guide](https://wails.io/docs/gettingstarted/installation) 
 * Fork the repository and clone it to the local machine.
@@ -24,9 +24,9 @@ Here it is, you are all-set. Now you can run `wails dev` in project's root to st
 
 ![](https://i.imgur.com/jZu29uz.jpg)
 
-## Contributing
+# Contributing
 
-# Where to start in the codebase
+## Where to start in the codebase
 
 ALl the operations with log files (parsing, formatting, additional info generation) should be done in backend: `/backend/analyzer` 
 Text highlighting, code folding, user-triggered events handling should be done in frontend: `/frontend/src/`  
