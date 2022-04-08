@@ -71,9 +71,17 @@ func getTimeStringFromIdeaLog(str string) string {
 	return dateMatcher.FindString(str)
 }
 func parseLogStringNew(logEntryAsString string) (currentEntry analyzer.LogEntry) {
-	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Body>.*)\n`, logEntryAsString)
+	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Class>.*?\s)-(?P<Body>.*)\n`, logEntryAsString)
+	if logParts["Year"] == "" {
+		return analyzer.LogEntry{
+			Severity: "PARSE_ERROR",
+			Time:     time.Now().AddDate(0, 0, 1),
+			Text:     logEntryAsString,
+			Visible:  true,
+		}
+	}
 	currentEntry.Time, _ = time.Parse(time.RFC3339Nano, fmt.Sprintf("%s-%s-%sT%s:%s:%s.%sZ", logParts["Year"], logParts["Month"], logParts["Day"], logParts["Hours"], logParts["Minutes"], logParts["Seconds"], logParts["MiliSeconds"]))
 	currentEntry.Severity = strings.TrimSpace(logParts["Severity"])
-	currentEntry.Text = logParts["Body"]
+	currentEntry.Text = logParts["Class"] + "—" + logParts["Body"]
 	return currentEntry
 }

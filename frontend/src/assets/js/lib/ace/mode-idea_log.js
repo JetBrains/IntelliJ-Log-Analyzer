@@ -27,38 +27,32 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
 
         this.$rules = {
             "start": [{
-                token: "empty_line",
-                regex: '^$'
+                regex: /^$/,
+                token: "empty_line"
             }, {
-                regex: "INFO",
+                regex: /\s—\s(.*?)\s—\s/,
+                token: "variable.class"
+            }, {
+                regex: /INFO|INDEX|SEVERE/,
                 token: "loglevel.info",
-            }, {
-                regex: "WARN",
-                token: "loglevel.warn",
-            }, {
-                regex: "ERROR",
+            },{
+                regex: /ERROR|PARSE_ERROR|FREEZE/,
                 token: "loglevel.error",
             },{
-                regex: "INDEX",
-                token: "loglevel.info",
+                regex: /WARN|STDERR/,
+                token: "loglevel.warn",
             }, {
-                regex: "FREEZE",
-                token: "loglevel.error",
-            }, {
-                regex: "(threadDump\\S*(?=\\s)*)",
+                regex: /(threadDump\S*(?=\s)*)/,
                 token: "ThreadDumpsHyperlink",
             },{
                 regex: /(Indexing project:.*)(report.html)(.*Report: )(.*\.html)/,
                 token: ["text", "IndexingProjectDiagnosticHyperlink", "text", "IndexingDiagnosticHyperlink"],
             }, {
-                regex: "\\d{2} (Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC) \\d{4} \\d{1,2}:\\d{2}:\\d{2}",
+                regex: /(\d{2}\s(Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC)\s\d{4}\s\d{1,2}:\d{2}:\d{2})|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}[,|:]\d{3}/,
                 token: "date"
             }, {
-                regex: "^\\s*at.*$",
+                regex: /^\s*at.*$/,
                 token: "loglevel.warn"
-            }, {
-                regex: " - (.*) - ",
-                token: "variable.class"
             }, {
                 defaultToken: "text"
             }]
