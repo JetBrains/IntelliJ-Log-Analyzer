@@ -30,6 +30,7 @@ func (b *App) startup(ctx context.Context) {
 	b.ctx = ctx
 	systemMenu := menu.NewMenuFromItems(
 		menu.AppMenu(),
+		menu.EditMenu(),
 		menu.SubMenu("Help", menu.NewMenuFromItems(
 			menu.Separator(),
 			menu.Text("Submit Bug", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
