@@ -6,10 +6,10 @@
 		"0000": {
 			"ProductVersion": "1.0.0",
 			"CompanyName": "JetBrains",
-			"FileDescription": "IntelliJ IDEs log analyzer",
-			"LegalCopyright": "Copyright.........",
-			"ProductName": "Log Analyzer",
-			"Comments": "Built using Wails (https://wails.app)"
+			"FileDescription": "Utility to visualize logs of any JetBrains IDE",
+			"LegalCopyright": "Copyright 2022 Konstantin Annikov",
+			"ProductName": "IntelliJ Log Analyzer",
+			"Comments": "Logs highlighter and analyzer for logs collected by Help | Collect Logs and Diagnostic Data action of any IntelliJ-based IDE."
 		}
 	}
 }

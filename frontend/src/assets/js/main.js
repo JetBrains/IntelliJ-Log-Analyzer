@@ -54,6 +54,7 @@ async function showEditor(name, content) {
             showGutter: true,
             showPrintMargin: false,
             highlightSelectedWord: true,
+            scrollPastEnd: 0.05,
         })
         editor.setValue(await content);
         await highlightEntriesTypes();

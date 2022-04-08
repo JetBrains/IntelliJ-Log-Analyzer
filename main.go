@@ -36,7 +36,6 @@ func main() {
 		Frameless:         false,
 		StartHidden:       false,
 		HideWindowOnClose: false,
-		RGBA:              &options.RGBA{R: 247, G: 247, B: 247, A: 255},
 		Assets:            assets,
 		LogLevel:          logger.DEBUG,
 		OnStartup:         app.startup,
@@ -57,7 +56,7 @@ func main() {
 			WindowIsTranslucent:  false,
 			About: &mac.AboutInfo{
 				Title:   "JetBrains Logs Analyzer",
-				Message: "Author: Konstantin Annikov",
+				Message: "Logs highlighter and analyzer for logs collected by Help | Collect Logs and Diagnostic Data action of any IntelliJ-based IDE.",
 				Icon:    icon,
 			},
 		},
