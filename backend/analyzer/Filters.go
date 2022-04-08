@@ -4,11 +4,11 @@ import (
 	"bytes"
 	_ "embed"
 	"encoding/binary"
-	"html/template"
 	"log"
 	"reflect"
 	"sort"
 	"strconv"
+	"text/template"
 )
 
 type Filters map[string]FilterEntries

@@ -2,10 +2,10 @@ package analyzer
 
 import (
 	"bytes"
-	"html/template"
 	"log"
 	"reflect"
 	"sort"
+	"text/template"
 	"time"
 )
 

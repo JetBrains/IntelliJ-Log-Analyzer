@@ -2,10 +2,10 @@ package analyzer
 
 import (
 	"bytes"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"path/filepath"
+	"text/template"
 )
 
 type OtherFiles []struct {

@@ -2,8 +2,8 @@ package analyzer
 
 import (
 	"bytes"
-	"html/template"
 	"log"
+	"text/template"
 )
 
 type StaticInfo struct {
