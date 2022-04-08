@@ -2,6 +2,7 @@ package entities
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"log_analyzer/backend/analyzer"
@@ -46,13 +47,8 @@ func parseIdeaLog(path string) analyzer.Logs {
 	logToPass := []analyzer.LogEntry{}
 	for {
 		currentString, err := bufReader.ReadString('\n')
-		if !getTimeStampFromIdeaLog(currentString).IsZero() {
-			currentEntry := parseLogString(currentString)
-			logToPass = append(logToPass, analyzer.LogEntry{
-				Severity: currentEntry.Severity,
-				Time:     currentEntry.DateAndTime,
-				Text:     currentEntry.Class + " " + currentEntry.Header + " " + currentEntry.Body,
-			})
+		if getTimeStringFromIdeaLog(currentString) != "" {
+			logToPass = append(logToPass, parseLogStringNew(currentString))
 		} else if len(logToPass) > 0 {
 			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + currentString
 		}
@@ -67,14 +63,6 @@ func parseIdeaLog(path string) analyzer.Logs {
 	return logToPass
 }
 
-func getTimeStampFromIdeaLog(str string) (logTime time.Time) {
-	str = getTimeStringFromIdeaLog(str)
-	str = strings.Replace(str, " ", "T", 1)
-	str = strings.Replace(str, ",", ".", 1)
-	str = str + "Z"
-	logTime, _ = time.Parse(time.RFC3339Nano, str)
-	return logTime
-}
 func getTimeStringFromIdeaLog(str string) string {
 	dateMatcher := regexp.MustCompile("^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[.,]\\d{3})")
 	if !dateMatcher.MatchString(str) {
@@ -82,81 +70,10 @@ func getTimeStringFromIdeaLog(str string) string {
 	}
 	return dateMatcher.FindString(str)
 }
-
-func parseLogString(logEntryAsString string) (currentEntry LogEntry) {
-	logEntryAsString = strings.TrimLeft(logEntryAsString, "\n")
-	classEndPosition := 0
-	HeaderEndPosition := 0
-	currentEntry.DateAndTime = getTimeStampFromIdeaLog(logEntryAsString)
-	trimFoundPart(&logEntryAsString, getTimeStringFromIdeaLog(logEntryAsString))
-	rawTimeSinceStart := getRawTimeSinceStart(&logEntryAsString)
-	currentEntry.TimeSinceStart = getTimeSinceStart(rawTimeSinceStart)
-	trimFoundPart(&logEntryAsString, rawTimeSinceStart)
-	currentEntry.Severity = getSeverity(&logEntryAsString)
-	trimFoundPart(&logEntryAsString, currentEntry.Severity)
-	//logEntryAsString = strings.TrimSpace(logEntryAsString)
-	//currentEntry.Body = logEntryAsString[0:]
-	//todo make that without for loop and unify
-	for i := range logEntryAsString {
-		if currentEntry.Class == "" && getClass(logEntryAsString[0:i]) != "" {
-			classEndPosition = i
-			currentEntry.Class = getClass(logEntryAsString[0:i])
-		}
-		if classEndPosition != 0 {
-			HeaderEndPosition = strings.IndexAny(logEntryAsString, "\n")
-			if HeaderEndPosition == -1 {
-				currentEntry.Header = strings.TrimSpace(logEntryAsString[classEndPosition:])
-				break
-			} else {
-				//todo check if this is needed
-				currentEntry.Header = logEntryAsString[classEndPosition:HeaderEndPosition]
-			}
-
-		}
-		if HeaderEndPosition > 0 {
-			currentEntry.Body = logEntryAsString[HeaderEndPosition:]
-			break
-		}
-	}
-
+func parseLogStringNew(logEntryAsString string) (currentEntry analyzer.LogEntry) {
+	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Body>.*)\n`, logEntryAsString)
+	currentEntry.Time, _ = time.Parse(time.RFC3339Nano, fmt.Sprintf("%s-%s-%sT%s:%s:%s.%sZ", logParts["Year"], logParts["Month"], logParts["Day"], logParts["Hours"], logParts["Minutes"], logParts["Seconds"], logParts["MiliSeconds"]))
+	currentEntry.Severity = strings.TrimSpace(logParts["Severity"])
+	currentEntry.Text = logParts["Body"]
 	return currentEntry
-}
-func trimFoundPart(stringToCut *string, part string) {
-	*stringToCut = strings.TrimSpace(*stringToCut)
-	*stringToCut = strings.TrimPrefix(*stringToCut, part)
-}
-func getRawTimeSinceStart(str *string) string {
-	dateMatcher := regexp.MustCompile("\\[(.*?)]")
-	if dateMatcher.MatchString(*str) {
-		return dateMatcher.FindString(*str)
-	}
-	return ""
-}
-func getTimeSinceStart(s string) string {
-	s = strings.TrimSpace(s)
-	if len(s) > 8 && s[0] == '[' && s[len(s)-1] == ']' {
-		s = s[1 : len(s)-1]
-		return strings.TrimSpace(s)
-
-	}
-	return ""
-}
-
-func getClass(s string) string {
-	s = strings.TrimSpace(s)
-	if len(s) > 2 && s[0] == '-' && s[len(s)-1] == '-' {
-		return strings.TrimSpace(s[0:len(s)])
-	}
-	return ""
-}
-
-func getSeverity(s *string) string {
-	*s = strings.TrimSpace(*s)
-	severities := []string{"INFO", "ERROR", "DEBUG", "WARN", "SEVERE"}
-	for _, severity := range severities {
-		if strings.HasPrefix(*s, severity) {
-			return severity
-		}
-	}
-	return ""
 }
