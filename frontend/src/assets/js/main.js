@@ -20,20 +20,21 @@ async function renderMainScreen() {
     if (await window.go.main.App.GetStaticInfo()) {
         await showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
     }
-    showEditor("Main Editor", window.go.main.App.GetLogs());
+    window.mainEditorID = showEditor("Main Editor", window.go.main.App.GetLogs());
 }
 
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
 // @name is the id attribute for the editor
 // @content is a async function which returns content to be displayed
-async function showEditor(name, content) {
+function showEditor(name, content) {
     let id = getObjectID(name);
     let editors = $("#editors")
     $("#editors>div").hide()
     if (!$(`#${id}`).length) {
-        if (content) await cerateEditor()
+        if (content) cerateEditor()
     }
     editors.find(`.${id}`).show()
+    return id
 
     async function cerateEditor() {
         editors.append(`    
