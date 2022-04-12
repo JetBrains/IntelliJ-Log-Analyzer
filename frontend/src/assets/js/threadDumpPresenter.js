@@ -20,17 +20,22 @@ async function openThreadDump(path) {
     let id = getObjectID(name);
     let cssClass = "ThreadDumpFilter"
     let editorName = getObjectID("threadDump editor" + path.toLowerCase());
-    await showToolWindow(name, cssClass, "top", editorName, window.go.main.App.GetThreadDumpsFilters(path))
-    let files = $("#" + id).children()
-    files.bind('click', async function () {
-        let filename = $(this).attr("filename");
-        files.removeClass("active")
-        $(this).addClass("active")
-        await showEditor(editorName, window.go.main.App.GetThreadDumpFileContent(path, filename))
-        let editor = ace.edit(editorName);
-        editor.setValue(await window.go.main.App.GetThreadDumpFileContent(path, filename))
-        editor.renderer.scrollToLine(0)
-        editor.clearSelection();
-    })
-    files.first().click();
+    let ThreadDumpFodlerFiles = await window.go.main.App.GetThreadDumpsFilters(path)
+    if (ThreadDumpFodlerFiles.length>0) {
+        await showToolWindow(name, cssClass, "top", editorName, ThreadDumpFodlerFiles)
+        let files = $("#" + id).children()
+        files.bind('click', async function () {
+            let filename = $(this).attr("filename");
+            files.removeClass("active")
+            $(this).addClass("active")
+            await showEditor(editorName, window.go.main.App.GetThreadDumpFileContent(path, filename))
+            let editor = ace.edit(editorName);
+            editor.setValue(await window.go.main.App.GetThreadDumpFileContent(path, filename))
+            editor.renderer.scrollToLine(0)
+            editor.clearSelection();
+        })
+        files.first().click();
+    } else {
+        showNotification("warn","Thread Dumps folder is empty")
+    }
 }

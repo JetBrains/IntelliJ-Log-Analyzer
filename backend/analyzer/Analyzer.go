@@ -121,7 +121,7 @@ func (a *Analyzer) GetOtherFiles() *OtherFiles {
 //GetThreadDump returns Analyzed ThreadDumps folder as AggregatedThreadDumps entity. Analyzes it if it was not done already.
 func (a *Analyzer) GetThreadDump(threadDumpsFolder string) *ThreadDump {
 	t := a.AggregatedThreadDumps[threadDumpsFolder]
-	if len(t) > 0 {
+	if t != nil {
 		return &t
 	}
 	a.AggregatedThreadDumps[threadDumpsFolder] = make(ThreadDump)
