@@ -210,6 +210,54 @@ body {
     padding-top: 16px;
     user-select: all;
 }
+#file-analyzer #log-holder #alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+}
+#file-analyzer #log-holder  #alerts .alert {
+    padding-right: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    min-width: 160px;
+    filter: drop-shadow(0px 0px 1.3px rgba(0, 0, 0, 0.5)) drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.26));
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding-left: 16px;
+    font-size: 14px;
+    transition: 3s;
+}
+#file-analyzer #log-holder  #alerts .alert.warn {
+    background-color: #fdfbcb;
+    border: 1px solid #BAB824;
+}
+#file-analyzer #log-holder .alert.info {
+    background-color: #dff6df;
+    border: 1px solid #A0BF9D;
+}#file-analyzer #log-holder .alert.err {
+    background-color: #ffe8e8;
+    border: 1px solid #eccaca;
+}
+#file-analyzer #log-holder #alerts .alert .closebtn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    margin-left: 15px;
+    color: #dde0e1;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    height: 15px;
+    width: 15px;
+}
 
 #file-analyzer .filters .input-group {
     margin-top: 4px;
