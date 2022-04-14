@@ -4,14 +4,10 @@ version=$(cat ./wails.json | python3 -c "import sys, json; print(json.load(sys.s
 name=$(cat ./wails.json | python3 -c "import sys, json; print(json.load(sys.stdin)['name'])")
 wails build -clean -platform darwin -ldflags "-X 'main.Version=$version'"
 wails build -platform windows -ldflags "-X 'main.Version=$version'"
-cd ./build/bin
-zip -vr ./"$name".app.zip ./"$name".app
-rm -rf ./"$name".app
-cd ..
-if [ -e sign.sh ]
+if [ -e ./build/sign.sh ]
 then
     echo "Signing artifacts"
-    bash sign.sh "$name"
+    bash ./build/sign.sh "$name"
 else
     echo "Signing script not found. Build finished without signing"
 fi
