@@ -30,7 +30,7 @@ function showEditor(name, content) {
     let id = getObjectID(name);
     let editors = $("#editors")
     $("#editors>div").hide()
-    if (!$(`#${id}`).length) {
+    if (!$(`#${id}`).length && !$(`.${id}`).length) {
         if (content) cerateEditor()
     }
     editors.find(`.${id}`).show()
