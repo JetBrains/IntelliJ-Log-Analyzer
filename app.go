@@ -6,12 +6,14 @@ import (
 	json "encoding/json"
 	"github.com/wailsapp/wails/v2/pkg/menu"
 	"github.com/wailsapp/wails/v2/pkg/menu/keys"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
+	wailsruntime "github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"log_analyzer/backend"
 	"log_analyzer/backend/analyzer"
+	"log_analyzer/backend/update"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -28,17 +30,8 @@ func NewApp() *App {
 // startup is called at application startup
 func (b *App) startup(ctx context.Context) {
 	b.ctx = ctx
-	systemMenu := menu.NewMenuFromItems(
-		menu.AppMenu(),
-		menu.EditMenu(),
-		menu.SubMenu("Help", menu.NewMenuFromItems(
-			menu.Separator(),
-			menu.Text("Submit Bug", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
-				runtime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
-			}),
-		)),
-	)
-	runtime.MenuSetApplicationMenu(b.ctx, systemMenu)
+	b.RenderSystemMenu()
+	b.CheckForUpdates()
 }
 
 // domReady is called after the front-end dom has been loaded
@@ -53,18 +46,18 @@ func (b *App) shutdown(ctx context.Context) {
 
 func (b *App) OpenIndexingSummaryForProject(fileName string) {
 	absolutePath := backend.GetIndexingFilePath(fileName)
-	runtime.BrowserOpenURL(b.ctx, filepath.Dir(absolutePath)+string(filepath.Separator)+"report.html")
+	wailsruntime.BrowserOpenURL(b.ctx, filepath.Dir(absolutePath)+string(filepath.Separator)+"report.html")
 }
 func (b *App) OpenIndexingReport(fileName string) {
 	absolutePath := backend.GetIndexingFilePath(fileName)
-	runtime.BrowserOpenURL(b.ctx, absolutePath)
+	wailsruntime.BrowserOpenURL(b.ctx, absolutePath)
 }
 func (b *App) OpenFolder() string {
-	path, _ := runtime.OpenDirectoryDialog(b.ctx, runtime.OpenDialogOptions{
+	path, _ := wailsruntime.OpenDirectoryDialog(b.ctx, wailsruntime.OpenDialogOptions{
 		DefaultDirectory: "",
 		DefaultFilename:  "",
 		Title:            "Open direcotry with logs",
-		Filters: []runtime.FileFilter{
+		Filters: []wailsruntime.FileFilter{
 			{
 				DisplayName: "test Display name",
 				Pattern:     "",
@@ -127,11 +120,11 @@ func (b *App) UploadArchive(DataURIScheme string) string {
 	}
 }
 func (b *App) OpenArchive() string {
-	path, _ := runtime.OpenFileDialog(b.ctx, runtime.OpenDialogOptions{
+	path, _ := wailsruntime.OpenFileDialog(b.ctx, wailsruntime.OpenDialogOptions{
 		DefaultDirectory: "",
 		DefaultFilename:  "",
 		Title:            "Open archive with logs",
-		Filters: []runtime.FileFilter{
+		Filters: []wailsruntime.FileFilter{
 			{
 				DisplayName: "",
 				Pattern:     "*.zip",
@@ -219,4 +212,74 @@ func ConvertDataURISchemeToBase64File(DataURIScheme string) (data []byte) {
 		log.Println("Could not convert Data URI scheme to base64 file")
 		return nil
 	}
+}
+
+func (b *App) CheckForUpdates() bool {
+	updateAvailable, version := update.CheckForUpdate(Version)
+	if updateAvailable {
+		log.Printf("Update to version %s available. ", version)
+		dialog, _ := wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
+			"QuestionDialog",
+			"Update available",
+			"Version " + version + " is available",
+			[]string{"Update", "Cancel"},
+			"Update",
+			"Cancel",
+			nil,
+		})
+		if dialog == "Update" {
+			var updated bool
+			if runtime.GOOS == "darwin" {
+				updated = update.DoSelfUpdateMac()
+			} else {
+				updated = update.DoSelfUpdate(Version)
+			}
+			if updated {
+				wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
+					"InfoDialog",
+					"Update installed",
+					"Update " + version + " is installed. Please restart the program to apply changes.",
+					[]string{"Ok", "Cancel"},
+					"OK",
+					"Cancel",
+					nil,
+				})
+			}
+		}
+		return true
+	} else {
+		log.Printf("Version %s is the latest", Version)
+		return false
+	}
+}
+
+func (b *App) ShowNoUpdatesMessage() {
+	wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
+		"InfoDialog",
+		"No updates available",
+		Version + " is the latest version",
+		[]string{"Ok"},
+		"",
+		"",
+		nil,
+	})
+}
+
+func (b *App) RenderSystemMenu() {
+	systemMenu := menu.NewMenuFromItems(
+		menu.AppMenu(),
+		menu.EditMenu(),
+		menu.SubMenu("Help", menu.NewMenuFromItems(
+			menu.Separator(),
+			menu.Text("Submit Bug", keys.CmdOrCtrl("b"), func(_ *menu.CallbackData) {
+				wailsruntime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
+			}),
+			menu.Text("Check for updates", keys.CmdOrCtrl("u"), func(_ *menu.CallbackData) {
+				if !b.CheckForUpdates() {
+					b.ShowNoUpdatesMessage()
+				}
+			}),
+		)),
+	)
+	wailsruntime.MenuSetApplicationMenu(b.ctx, systemMenu)
 }

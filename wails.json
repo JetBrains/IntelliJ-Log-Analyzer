@@ -1,20 +1,17 @@
 {
-  "name": "JetBrains Log Analyzer",
-  "frontend:build": "",
-  "frontend:install": "",
-  "frontend:dev": "",
+  "name": "IntelliJ Log Analyzer",
   "wailsjsdir": "./frontend",
-  "version": "2",
-  "Path": "",
-  "BuildDir": "",
-  "outputfilename": "LogAnalyzer",
-  "OutputType": "",
-  "Platform": "windows, macos",
+  "info": {
+    "companyName": "JetBrains",
+    "productName": "IntelliJ Log Analyzer",
+    "productVersion": "1.0.3",
+    "copyright": "Copyright 2022 Konstantin Annikov",
+    "comments": "Utility to visualize logs of any JetBrains IDE"
+  },
   "Author": {
     "name": "konstantin.annikov",
     "email": "konstantin.annikov@jetbrains.com"
   },
   "debounceMS": 100,
-  "devserverurl": "http://localhost:34115",
-  "appargs": ""
+  "devserverurl": "http://localhost:34115"
 }

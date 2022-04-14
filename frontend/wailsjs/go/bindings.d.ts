@@ -3,6 +3,7 @@ import * as models from './models';
 export interface go {
   "main": {
     "App": {
+		CheckForUpdates():Promise<boolean>
 		GetEntityNamesWithLineHighlightingColors():Promise<string>
 		GetFilters():Promise<string>
 		GetLogs():Promise<string>
@@ -15,7 +16,9 @@ export interface go {
 		OpenFolder():Promise<string>
 		OpenIndexingReport(arg1:string):Promise<void>
 		OpenIndexingSummaryForProject(arg1:string):Promise<void>
+		RenderSystemMenu():Promise<void>
 		SetFilters(arg1:any):Promise<string>
+		ShowNoUpdatesMessage():Promise<void>
 		UploadArchive(arg1:string):Promise<string>
 		UploadLogFile(arg1:string,arg2:string):Promise<string>
     },

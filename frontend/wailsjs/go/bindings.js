@@ -5,6 +5,13 @@ const go = {
   "main": {
     "App": {
       /**
+       * CheckForUpdates
+       * @returns {Promise<boolean>}  - Go Type: bool
+       */
+      "CheckForUpdates": () => {
+        return window.go.main.App.CheckForUpdates();
+      },
+      /**
        * GetEntityNamesWithLineHighlightingColors
        * @returns {Promise<string>}  - Go Type: string
        */
@@ -95,12 +102,26 @@ const go = {
         return window.go.main.App.OpenIndexingSummaryForProject(arg1);
       },
       /**
+       * RenderSystemMenu
+       * @returns {Promise<void>} 
+       */
+      "RenderSystemMenu": () => {
+        return window.go.main.App.RenderSystemMenu();
+      },
+      /**
        * SetFilters
        * @param {any} arg1 - Go Type: map[string]bool
        * @returns {Promise<string>}  - Go Type: string
        */
       "SetFilters": (arg1) => {
         return window.go.main.App.SetFilters(arg1);
+      },
+      /**
+       * ShowNoUpdatesMessage
+       * @returns {Promise<void>} 
+       */
+      "ShowNoUpdatesMessage": () => {
+        return window.go.main.App.ShowNoUpdatesMessage();
       },
       /**
        * UploadArchive

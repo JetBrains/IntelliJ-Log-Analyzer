@@ -12,6 +12,8 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
+var Version = "1.0.0" //Version variable is being overwritten on built step and passed to the program via ldflag
+
 //go:embed frontend/src
 var assets embed.FS
 
@@ -56,7 +58,7 @@ func main() {
 			WindowIsTranslucent:  false,
 			About: &mac.AboutInfo{
 				Title:   "JetBrains Logs Analyzer",
-				Message: "Logs highlighter and analyzer for logs collected by Help | Collect Logs and Diagnostic Data action of any IntelliJ-based IDE.",
+				Message: "Version: " + Version + "\n",
 				Icon:    icon,
 			},
 		},
