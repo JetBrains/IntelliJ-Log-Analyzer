@@ -48,7 +48,7 @@ func parseIdeaLog(path string) analyzer.Logs {
 	for {
 		currentString, err := bufReader.ReadString('\n')
 		if getTimeStringFromIdeaLog(currentString) != "" {
-			logToPass = append(logToPass, parseLogStringNew(currentString))
+			logToPass = append(logToPass, parseIdeaLogString(currentString))
 		} else if len(logToPass) > 0 {
 			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + currentString
 		}
@@ -70,7 +70,7 @@ func getTimeStringFromIdeaLog(str string) string {
 	}
 	return dateMatcher.FindString(str)
 }
-func parseLogStringNew(logEntryAsString string) (currentEntry analyzer.LogEntry) {
+func parseIdeaLogString(logEntryAsString string) (currentEntry analyzer.LogEntry) {
 	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Class>.*?\s)-(?P<Body>.*)\n`, logEntryAsString)
 	if logParts["Year"] == "" {
 		return analyzer.LogEntry{
