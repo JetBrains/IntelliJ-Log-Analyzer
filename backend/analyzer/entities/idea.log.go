@@ -3,8 +3,6 @@ package entities
 import (
 	"bufio"
 	"fmt"
-	"io"
-	"log"
 	"log_analyzer/backend/analyzer"
 	"os"
 	"path/filepath"
@@ -43,23 +41,17 @@ func getDisplayName(path string) string {
 }
 func parseIdeaLog(path string) analyzer.Logs {
 	reader, _ := os.Open(path)
-	bufReader := bufio.NewReader(reader)
+	defer reader.Close()
+	scanner := bufio.NewScanner(reader)
 	logToPass := []analyzer.LogEntry{}
-	for {
-		currentString, err := bufReader.ReadString('\n')
+	for scanner.Scan() {
+		currentString := scanner.Text()
 		if getTimeStringFromIdeaLog(currentString) != "" {
 			logToPass = append(logToPass, parseIdeaLogString(currentString))
 		} else if len(logToPass) > 0 {
-			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + currentString
-		}
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Fatalf("ERROR: %s", err)
+			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + "\n" + currentString
 		}
 	}
-
 	return logToPass
 }
 
@@ -71,7 +63,7 @@ func getTimeStringFromIdeaLog(str string) string {
 	return dateMatcher.FindString(str)
 }
 func parseIdeaLogString(logEntryAsString string) (currentEntry analyzer.LogEntry) {
-	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Class>.*?\s)-(?P<Body>.*)\n`, logEntryAsString)
+	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Class>.*?\s)-(?P<Body>.*)`, logEntryAsString)
 	if logParts["Year"] == "" {
 		return analyzer.LogEntry{
 			Severity: "PARSE_ERROR",
