@@ -157,11 +157,15 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (analyzed bool) {
 		}
 		if entity.CheckPath(path) == true {
 			logEntries := entity.ConvertToLogs(path)
-			writeSyncer.Lock()
-			a.DynamicEntities[i].addDynamicEntityInstance(path)
-			a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
-			writeSyncer.Unlock()
-			analyzed = true
+			if logEntries == nil {
+				log.Printf("Entity \"%s\" returned nothing for %s. Adding file to other files", entity.Name, path)
+			} else {
+				writeSyncer.Lock()
+				a.DynamicEntities[i].addDynamicEntityInstance(path)
+				a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
+				writeSyncer.Unlock()
+				analyzed = true
+			}
 		}
 	}
 	return analyzed
