@@ -7,7 +7,7 @@ wails build -platform windows -ldflags "-X 'main.Version=$version'"
 if [ -e ./build/sign.sh ]
 then
     echo "Signing artifacts"
-    bash ./build/sign.sh "$name"
+    bash ./build/sign.sh "$name" "$version"
 else
     echo "Signing script not found. Build finished without signing"
 fi
