@@ -71,12 +71,12 @@ func UnzipToTempFodler(src string) (dest string) {
 
 	// Closure to address file descriptors issue with all the deferred .Close() methods
 	extractAndWriteFile := func(f *zip.File) error {
-		rc, err := f.Open()
+		archiveFile, err := f.Open()
 		if err != nil {
 			return err
 		}
 		defer func() {
-			if err := rc.Close(); err != nil {
+			if err := archiveFile.Close(); err != nil {
 				panic(err)
 			}
 		}()
@@ -96,17 +96,18 @@ func UnzipToTempFodler(src string) (dest string) {
 			if err != nil {
 				log.Println(err)
 			}
-			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			destfile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 			if err != nil {
 				return err
 			}
 			defer func() {
-				if err := f.Close(); err != nil {
+				if err := destfile.Close(); err != nil {
 					panic(err)
 				}
+				_ = os.Chtimes(destfile.Name(), f.Modified, f.Modified)
 			}()
 
-			_, err = io.Copy(f, rc)
+			_, err = io.Copy(destfile, archiveFile)
 			if err != nil {
 				return err
 			}
