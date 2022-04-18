@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 )
 
 // App struct
@@ -30,6 +31,8 @@ func NewApp() *App {
 
 // startup is called at application startup
 func (b *App) startup(ctx context.Context) {
+	loc, _ := time.LoadLocation("UTC")
+	time.Local = loc // -> this is setting the global timezone
 	b.ctx = ctx
 	b.RenderSystemMenu()
 	b.CheckForUpdates()
