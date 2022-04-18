@@ -10,6 +10,7 @@ import (
 	"log"
 	"log_analyzer/backend"
 	"log_analyzer/backend/analyzer"
+	"log_analyzer/backend/analyzer/entities"
 	"log_analyzer/backend/update"
 	"os"
 	"path/filepath"
@@ -41,7 +42,7 @@ func (b *App) domReady(ctx context.Context) {
 
 // shutdown is called at application termination
 func (b *App) shutdown(ctx context.Context) {
-	// Perform your teardown here
+	entities.CurrentAnalyzer.Clear()
 }
 
 func (b *App) OpenIndexingSummaryForProject(fileName string) {
@@ -98,7 +99,7 @@ func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
 }
 func (b *App) UploadArchive(DataURIScheme string) string {
 	data := ConvertDataURISchemeToBase64File(DataURIScheme)
-	f, err := os.CreateTemp("", "logs.zip")
+	f, err := os.CreateTemp("", "IntelliJLogsAnalyzer-temp.zip")
 	if err != nil {
 		log.Println("Could not create temp file: " + err.Error())
 	}
@@ -113,6 +114,10 @@ func (b *App) UploadArchive(DataURIScheme string) string {
 	log.Println("Created file: " + f.Name())
 
 	unzippedDir := backend.UnzipToTempFodler(f.Name())
+	err = os.RemoveAll(f.Name())
+	if err != nil {
+		log.Println("Could not remove temp archive: " + err.Error())
+	}
 	if err := backend.InitLogDirectory(unzippedDir); err == nil {
 		return unzippedDir
 	} else {

@@ -58,7 +58,7 @@ func GetIndexingFilePath(path string) string {
 }
 
 func UnzipToTempFodler(src string) (dest string) {
-	dest, err := ioutil.TempDir("", "prefix")
+	dest, err := ioutil.TempDir("", "IntelliJLogsAnalyzer")
 	r, err := zip.OpenReader(src)
 	if err != nil {
 		return ""
