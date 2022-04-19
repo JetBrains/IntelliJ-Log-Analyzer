@@ -2,6 +2,7 @@ package entities
 
 import (
 	"log_analyzer/backend/analyzer"
+	"regexp"
 	"strings"
 )
 
@@ -16,8 +17,6 @@ func init() {
 }
 
 func isBuildLog(path string) bool {
-	if strings.Contains(path, "build.log") {
-		return true
-	}
-	return false
+	return strings.Contains(path, "build.log") ||
+		regexp.MustCompile(`build.\d+.log`).MatchString(path)
 }
