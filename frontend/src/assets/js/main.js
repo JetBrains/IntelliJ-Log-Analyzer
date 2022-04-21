@@ -69,7 +69,7 @@ function showEditor(name, content) {
         editor.setValue(await content);
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
         editor.clearSelection();
-        createStyleGutterMarkers(0, editor.session.getLength())
+        await createStyleGutterMarkers(0, editor.session.getLength())
         editor.session.foldAll(0, editor.session.getLength() - 4, 1);
         highlightEntriesTypes();
         editor.on("click", ThreadDumpLinkHandler)
