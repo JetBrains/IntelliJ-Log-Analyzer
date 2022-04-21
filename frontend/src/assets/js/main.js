@@ -57,23 +57,60 @@ function showEditor(name, content) {
             highlightSelectedWord: true,
             scrollPastEnd: 0.05,
         })
-        editor.setValue(await content);
-        await highlightEntriesTypes();
-        editor.clearSelection();
         editor.execCommand('find');
+        editor.setValue(await content);
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
+        editor.clearSelection();
+        createStyleGutterMarkers(0, editor.session.getLength())
+        editor.session.foldAll(0, editor.session.getLength() - 4, 1);
+        highlightEntriesTypes();
         editor.on("click", ThreadDumpLinkHandler)
         editor.on("click", IndexingDiagnosticLinkHandler)
-        editor.session.foldAll(0, editor.session.getLength() - 4, 1);
 
         //Checks entryType of every line and highlight this line according to type.
         //Highlighting color is configured for every DynamicEntity on init()
         async function highlightEntriesTypes() {
-            let needle = /(^\s*<entryType>)(.*)(<\/entryType>\s*)/
             let mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
+            let observer = new MutationObserver(function (e) {
+                addHighlighting(e, mappedColors);
+            });
+            observer.observe($('.ace_gutter')[0], {subtree: true, childList: true});
+
+            //addHighlighting is called on every mutation of the gutter, sets gutter's markers by createStyleMarkers(), and highlight the lines according to type from gutter
+            async function addHighlighting(e, mappedColors) {
+                e[0].target.childNodes.forEach(function (gutter) {
+                    //todo: innerText is a hack, it is needed to get text line number from gutter position
+                    let lineNumber = parseInt(gutter.innerText) - 1;
+                    let lineAlreadyHighlighted = false;
+                    Object.entries(mappedColors).forEach(([index]) => {
+                        if (gutter.className.includes(getObjectID(index))) {
+                            let marker = editor.session.getMarkers();
+                            for (var i in marker) {
+                                if (marker[i]["clazz"] === getObjectID(index) && marker[i]["range"]["start"]["row"] === lineNumber) {
+                                    lineAlreadyHighlighted = true
+                                    break;
+                                }
+                            }
+                            if (!lineAlreadyHighlighted) {
+                                editor.session.highlightLines(lineNumber, lineNumber, getObjectID(index), false)
+                                lineAlreadyHighlighted = true
+                            }
+                        }
+
+                    })
+                })
+            }
+        }
+
+        async function createStyleGutterMarkers(lineStart, lineEnd, mappedColors) {
+            if (!mappedColors) {
+                mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
+            }
+            let needle = /(^\s*<entryType>)(.*)(<\/entryType>\s*)/
             editor.$search.setOptions({
                 needle: needle,
                 caseSensitive: true,
+                range: new ace.Range(lineStart, 0, lineEnd, Number.POSITIVE_INFINITY),
                 wholeWord: false,
                 regExp: true,
             });
@@ -87,7 +124,7 @@ function showEditor(name, content) {
                         addCssClass(cssClass, cssContent)
                         mappedColors[groupName] = true
                     }
-                    editor.session.addMarker(range[rangeKey], getObjectID(groupName), "screenLine", false)
+                    editor.session.addGutterDecoration(range[rangeKey]["start"]["row"], getObjectID(groupName))
                 }
                 editor.session.replace(range[rangeKey], "")
             }
@@ -97,7 +134,7 @@ function showEditor(name, content) {
             document.body.appendChild(
                 Object.assign(
                     document.createElement("style"),
-                    {textContent: "." + className + " {" + content + "}"})
+                    {textContent: ".ace_content ." + className + " {" + content + "}"})
             )
         }
     }
@@ -314,4 +351,3 @@ $(document).ready(function () {
         })
     });
 })
-
