@@ -15,9 +15,9 @@ Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time t
 
 ## Builds
 
-macOS .app file:  [download](https://github.com/annikovk/idea_log_analyzer/blob/master/build/bin/JetBrains%20Log%20Analyzer.app.zip?raw=true)
+macOS .app file:  [download](https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/download/IntelliJ.Log.Analyzer-darwin-amd64.zip)
 
-windows .exe file:  [download](https://github.com/annikovk/idea_log_analyzer/blob/master/build/bin/LogAnalyzer.exe?raw=true)
+windows .exe file:  [download](https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/download/IntelliJ.Log.Analyzer-windows-amd64.exe)
 
 Linux is not currently supported. 
 
