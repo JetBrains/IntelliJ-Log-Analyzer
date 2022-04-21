@@ -21,8 +21,7 @@ func InitLogDirectory(path string) (err error) {
 	entities.CurrentAnalyzer.FolderToWorkWith = path
 	timeStart := time.Now()
 	entities.CurrentAnalyzer.ParseLogDirectory(path)
-	log.Printf("Parsed Logs in %s", time.Now().Sub(timeStart).String())
-	log.Printf("Log Entries Count: %d", len(entities.CurrentAnalyzer.AggregatedLogs))
+	log.Printf("Parsed Logs in %s \n Log Entries Count: %d", time.Now().Sub(timeStart).String(), len(entities.CurrentAnalyzer.AggregatedLogs))
 	entities.CurrentAnalyzer.AggregatedLogs.SortByTime()
 	entities.CurrentAnalyzer.GenerateFilters()
 	if entities.CurrentAnalyzer.IsEmpty() {
@@ -129,10 +128,10 @@ func UnzipToTempFodler(src string) (dest string) {
 // Set the Checked values for all FilterEntry elements from frontend
 func SetFilters(f map[string]bool) error {
 	for _, entries := range entities.CurrentAnalyzer.Filters {
-		for i, entry := range entries {
+		for i, entry := range entries.Entries {
 			for id, value := range f {
 				if entry.ID == id {
-					entries[i].Checked = value
+					entries.Entries[i].Checked = value
 				}
 			}
 		}
