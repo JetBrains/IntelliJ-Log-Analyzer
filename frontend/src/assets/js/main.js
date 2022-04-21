@@ -17,10 +17,18 @@ const clearToolWindows = async () => {
 
 async function renderMainScreen() {
     await showToolWindow("Summary", "filters", "top", "Main Editor", window.go.main.App.GetSummary())
+    setSummaryToolWindowGroupCheckboxStates()
     if (await window.go.main.App.GetStaticInfo()) {
         await showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
     }
     window.mainEditorID = showEditor("Main Editor", window.go.main.App.GetLogs());
+    function setSummaryToolWindowGroupCheckboxStates() {
+        $("#summary input:checkbox").each(function (){
+            if ($(this).attr("mixed")!==undefined) {
+                $(this).prop({indeterminate: true});
+            }
+        })
+    }
 }
 
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
