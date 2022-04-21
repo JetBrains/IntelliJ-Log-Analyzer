@@ -264,60 +264,39 @@ $(document).ready(function () {
             render()
         }
     })
-    $("#toolWindows").on('click', '#summary input:checkbox', function () {
-        checkChildElements(this)
+    $("#toolWindows").on('click', '#summary input:checkbox', async function () {
+        await checkChildElements(this)
         var filters = {};
         $("#summary input:checkbox").each(function () {
             filters[$(this).val()] = $(this).prop('checked');
         })
-        window.go.main.App.SetFilters(filters).then(redrawEditors())
-
+        await window.go.main.App.SetFilters(filters).then(redrawEditors())
         //Group check/uncheck functionality
-        function checkChildElements(elem) {
-            var checked = $(elem).prop("checked"),
-                container = $(elem).parent();
-
-            container.find('input[type="checkbox"]').prop({
-                indeterminate: false,
-                checked: checked
-            });
-            checkSiblings(container);
-
-            function checkSiblings(el) {
-
-                var parent = el.parent().parent(),
-                    all = true;
-                el.siblings().each(function () {
-                    let returnValue = all = ($(elem).children('input[type="checkbox"]').prop("checked") === checked);
-                    return returnValue;
-                });
-
-                if (all && checked) {
-
-                    parent.children('input[type="checkbox"]').prop({
-                        indeterminate: false,
-                        checked: checked
-                    });
-
-                    checkSiblings(parent);
-
-                } else if (all && !checked) {
-
-                    parent.children('input[type="checkbox"]').prop("checked", checked);
-                    parent.children('input[type="checkbox"]').prop("indeterminate", (parent.find('input[type="checkbox"]:checked').length > 0));
-                    checkSiblings(parent);
-
+        async function checkChildElements(elem) {
+            var checked = $(elem).prop('checked');
+            var isParent = !!$(elem).closest('li').find(' > ul').length;
+            if (isParent) {
+                // if a parent level checkbox is changed, locate all children
+                var children = $(elem).closest('li').find('ul input[type=checkbox]');
+                children.prop({
+                    checked
+                }); // all children will have what parent has
+            } else {
+                console.log("is not parent")
+                // if a child checkbox is changed, locate parent and all children
+                var parent = $(elem).closest('ul').closest('li').find('>label input[type=checkbox]');
+                var children = $(elem).closest('ul').find('input[type=checkbox]');
+                if (children.filter(':checked').length === 0) {
+                    // if all children are unchecked
+                    parent.prop({ checked: false, indeterminate: false });
+                } else if (children.length === children.filter(':checked').length) {
+                    // if all children are checked
+                    parent.prop({ checked: true, indeterminate: false });
                 } else {
-
-                    el.parents("li").children('input[type="checkbox"]').prop({
-                        indeterminate: true,
-                        checked: false
-                    });
-
+                    // if some of the children are checked
+                    parent.prop({ checked: true, indeterminate: true });
                 }
-
             }
-
         }
     });
 
