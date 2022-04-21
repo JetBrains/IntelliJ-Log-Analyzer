@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 )
 
 var writeSyncer = sync.Mutex{}
@@ -23,6 +24,7 @@ var tmplFS embed.FS
 type Analyzer struct {
 	FolderToWorkWith      string
 	IsFolderTemp          bool
+	LastModifiedFileTime  time.Time
 	DynamicEntities       []DynamicEntity
 	StaticEntities        []StaticEntity
 	Filters               Filters
@@ -39,20 +41,28 @@ type StaticEntity struct {
 }
 
 type DynamicEntity struct {
-	entityInstances       map[string]string //entityInstances is path:hash map of every instance of entity created for every found path of this entity type.
-	Name                  string            // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
+	Name                  string                             // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
+	entityInstances       map[string]DynamicEntityProperties // entityInstances is path:DynamicEntityProperties map of every instance of entity created for every found path of this entity type.
 	ConvertToLogs         func(path string) Logs
 	CheckPath             func(path string) bool
 	CheckIgnoredPath      func(path string) bool
+	DefaultVisibility     func(path string) bool // DefaultVisibility is a function that returns true if this file should be checked in Filter (visible in "Summary" tab) by default.
 	GetDisplayName        func(path string) string
 	LineHighlightingColor string //Color represents the color that is used to highlight all lines of this entity type in the editor
 }
+type DynamicEntityProperties struct {
+	Hash    string
+	Visible bool
+}
 
-func (e *DynamicEntity) addDynamicEntityInstance(path string) {
+func (e *DynamicEntity) addDynamicEntityInstance(path string, visible bool) {
 	if e.entityInstances == nil {
-		e.entityInstances = make(map[string]string)
+		e.entityInstances = make(map[string]DynamicEntityProperties)
 	}
-	e.entityInstances[path] = getHash(path)
+	e.entityInstances[path] = DynamicEntityProperties{
+		Hash:    getHash(path),
+		Visible: visible,
+	}
 }
 
 //AddStaticEntity adds new static Entity to the list of known Entities. Should be Called within the application start.
@@ -90,6 +100,25 @@ func (a *Analyzer) ParseLogDirectory(path string) {
 	_ = filepath.WalkDir(path, visit)
 	wg.Wait()
 	a.OtherFiles = a.OtherFiles.FilterAnalyzedDirectories(collectedFiles)
+}
+
+func (a *Analyzer) GetLastModifiedFile() time.Time {
+	if !a.LastModifiedFileTime.IsZero() {
+		return a.LastModifiedFileTime
+	}
+	var rememberedPath = ""
+	visit := func(path string, file os.DirEntry, err error) error {
+		if !file.IsDir() && !IsHiddenFile(filepath.Base(path)) {
+			if GetFileModTime(path).After(a.LastModifiedFileTime) {
+				a.LastModifiedFileTime = GetFileModTime(path)
+				rememberedPath = path
+			}
+		}
+		return nil
+	}
+	_ = filepath.WalkDir(a.FolderToWorkWith, visit)
+	log.Printf("Last modified file: %s timestamp: %s", rememberedPath, a.LastModifiedFileTime)
+	return a.LastModifiedFileTime
 }
 
 //IsEmpty checks if config has at least one filled attribute
@@ -160,8 +189,13 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (analyzed bool) {
 			if logEntries == nil {
 				log.Printf("Entity \"%s\" returned nothing for %s. Adding file to other files", entity.Name, path)
 			} else {
+				if entity.DefaultVisibility == nil {
+					entity.DefaultVisibility = func(path string) bool {
+						return true
+					}
+				}
 				writeSyncer.Lock()
-				a.DynamicEntities[i].addDynamicEntityInstance(path)
+				a.DynamicEntities[i].addDynamicEntityInstance(path, entity.DefaultVisibility(path))
 				a.AggregatedLogs.AppendSeveral(a.DynamicEntities[i].Name, a.DynamicEntities[i].entityInstances[path], logEntries)
 				writeSyncer.Unlock()
 				analyzed = true
@@ -175,8 +209,8 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (analyzed bool) {
 func (a *Analyzer) GenerateFilters() {
 	filter := a.InitFilter()
 	for _, entity := range a.DynamicEntities {
-		for path, id := range entity.entityInstances {
-			filter.Append(entity, path, id)
+		for path, _ := range entity.entityInstances {
+			filter.Append(entity, path)
 		}
 	}
 	filter.SortByFilename()
@@ -193,11 +227,12 @@ func (a *Analyzer) Clear() {
 	a.OtherFiles = OtherFiles{}
 	a.AggregatedStaticInfo = AggregatedStaticInfo{}
 	a.AggregatedThreadDumps = AggregatedThreadDumps{}
+	a.LastModifiedFileTime = time.Time{}
 	for i, _ := range a.StaticEntities {
 		a.StaticEntities[i].CollectedInfo = StaticInfo{}
 	}
 	for i, _ := range a.DynamicEntities {
-		a.DynamicEntities[i].entityInstances = make(map[string]string)
+		a.DynamicEntities[i].entityInstances = make(map[string]DynamicEntityProperties)
 	}
 	if a.IsFolderTemp {
 		err := os.RemoveAll(a.FolderToWorkWith)
@@ -278,4 +313,12 @@ func IsHiddenFile(filename string) bool {
 		return filename[0:1] == "."
 	}
 	return false
+}
+
+func GetFileModTime(path string) (date time.Time) {
+	fileinfo, err := os.Stat(path)
+	if err == nil {
+		return fileinfo.ModTime()
+	}
+	return time.Time{}
 }

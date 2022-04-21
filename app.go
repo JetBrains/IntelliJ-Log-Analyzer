@@ -206,7 +206,7 @@ func (b *App) SetFilters(a map[string]bool) string {
 func (b *App) GetEntityNamesWithLineHighlightingColors() string {
 	jsonMap := make(map[string]string)
 	for entityName, entityEntries := range *backend.GetFilters() {
-		jsonMap[entityName] = entityEntries[0].GroupLineHighlightingColor
+		jsonMap[entityName] = entityEntries.Entries[0].GroupLineHighlightingColor
 	}
 	marshal, _ := json.Marshal(jsonMap)
 
@@ -274,7 +274,7 @@ func (b *App) ShowNoUpdatesMessage() {
 }
 
 func (b *App) RenderSystemMenu() {
-	systemMenu := menu.NewMenuFromItems(
+	macMenu := menu.NewMenuFromItems(
 		menu.AppMenu(),
 		menu.EditMenu(),
 		menu.SubMenu("Help", menu.NewMenuFromItems(
@@ -289,5 +289,22 @@ func (b *App) RenderSystemMenu() {
 			}),
 		)),
 	)
-	wailsruntime.MenuSetApplicationMenu(b.ctx, systemMenu)
+	windowsMenu := menu.NewMenuFromItems(
+		menu.SubMenu("Help", menu.NewMenuFromItems(
+			menu.Separator(),
+			menu.Text("Submit Bug", keys.CmdOrCtrl("b"), func(_ *menu.CallbackData) {
+				wailsruntime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
+			}),
+			menu.Text("Check for updates", keys.CmdOrCtrl("u"), func(_ *menu.CallbackData) {
+				if !b.CheckForUpdates() {
+					b.ShowNoUpdatesMessage()
+				}
+			}),
+		)),
+	)
+	if runtime.GOOS == "darwin" {
+		wailsruntime.MenuSetApplicationMenu(b.ctx, macMenu)
+	} else {
+		wailsruntime.MenuSetApplicationMenu(b.ctx, windowsMenu)
+	}
 }

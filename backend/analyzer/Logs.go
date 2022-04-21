@@ -33,15 +33,15 @@ func (logs Logs) ConvertToHTML() string {
 }
 
 // Append adds one log entry of entity with UUID to the struct of logs
-func (logs *Logs) Append(entityName string, instanceId string, entry LogEntry) {
-	entry.EntityInstanceId = instanceId
+func (logs *Logs) Append(entityName string, instanceProperties DynamicEntityProperties, entry LogEntry) {
+	entry.EntityInstanceId = instanceProperties.Hash
 	entry.EntityName = entityName
-	entry.Visible = true
+	entry.Visible = instanceProperties.Visible
 	*logs = append(*logs, entry)
 }
-func (logs *Logs) AppendSeveral(entityName string, instanceId string, logEntry []LogEntry) {
+func (logs *Logs) AppendSeveral(entityName string, instanceProperties DynamicEntityProperties, logEntry []LogEntry) {
 	for _, entry := range logEntry {
-		logs.Append(entityName, instanceId, entry)
+		logs.Append(entityName, instanceProperties, entry)
 	}
 
 }
