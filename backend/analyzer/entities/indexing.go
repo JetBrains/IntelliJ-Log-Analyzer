@@ -16,7 +16,7 @@ func init() {
 		CheckPath:             isIndexingFile,
 		CheckIgnoredPath:      isIgnortedIndexingFile,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#79b2f7",
+		LineHighlightingColor: "#94c794",
 	})
 }
 func isIndexingFolder(path string) bool {

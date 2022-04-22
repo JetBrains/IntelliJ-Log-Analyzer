@@ -19,7 +19,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isBackendLogVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider DebuggerWorker",
@@ -28,7 +28,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider RoslynWorker",
@@ -37,7 +37,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider SolutionBuilder",
@@ -46,7 +46,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider UnitTestLogs",
@@ -55,7 +55,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider MsBuildTask",
@@ -64,7 +64,7 @@ func init() {
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
 		GetDisplayName:        getDisplayName,
-		LineHighlightingColor: "#fece81",
+		LineHighlightingColor: "#58c0f1",
 	})
 }
 
@@ -138,7 +138,7 @@ func getTimeStringFromRiderBackendLog(str string) string {
 }
 func parseRiderBackendLogString(startDate time.Time, logEntryAsString string) (currentEntry analyzer.LogEntry) {
 	logEntryAsStringToIdeaLogFormat := fmt.Sprintf("%s %s", startDate.Format("2006-01-02"), logEntryAsString)
-	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})(?P<Text>.*)`, logEntryAsStringToIdeaLogFormat)
+	logParts := analyzer.GetRegexNamedCapturedGroups(`(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s*\|(?P<Severity>\w)\|(?P<Class>.*?)\|(?P<Text>.*)`, logEntryAsStringToIdeaLogFormat)
 	if startDate.IsZero() || logParts["Hours"] == "" {
 		log.Printf("PARSE_ERROR!\n logEntryAsStringToIdeaLogFormat:%s\n Start Date: %s\n logParts[\"Hours\"]: %s\n", logEntryAsStringToIdeaLogFormat, startDate, logParts["Hours"])
 		return analyzer.LogEntry{
@@ -149,8 +149,27 @@ func parseRiderBackendLogString(startDate time.Time, logEntryAsString string) (c
 		}
 	}
 	currentEntry.Time, _ = time.Parse(time.RFC3339Nano, fmt.Sprintf("%s-%s-%sT%s:%s:%s.%sZ", startDate.Format("2006"), startDate.Format("01"), startDate.Format("02"), logParts["Hours"], logParts["Minutes"], logParts["Seconds"], logParts["MiliSeconds"]))
-	currentEntry.Severity = "RIDER"
-	currentEntry.Text = logParts["Text"]
+	currentEntry.Severity = getSeverityFromRiderBackendLog(logParts["Severity"])
+	currentEntry.Text = logParts["Class"] + " —" + logParts["Text"]
 	currentEntry.Visible = true
 	return currentEntry
+}
+
+func getSeverityFromRiderBackendLog(s string) string {
+	if strings.HasPrefix(s, "E") {
+		return "ERROR"
+	}
+	if strings.HasPrefix(s, "W") {
+		return "WARN"
+	}
+	if strings.HasPrefix(s, "V") {
+		return "VERB"
+	}
+	if strings.HasPrefix(s, "T") {
+		return "TRACE"
+	}
+	if strings.HasPrefix(s, "I") {
+		return "INFO"
+	}
+	return "RIDER"
 }
