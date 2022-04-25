@@ -1,0 +1,20 @@
+body.dark {
+    --border-color: #555555;
+    --active-color: #737677;
+    --background-color: #3c3f41;
+    --text-color: #dedede;
+    --editor-background-color: #2b2b2b;
+    --editor-text-color: #dedede;
+    --editor-gutter-background-color: #313335;
+    --editor-gutter-text-color: #a5a7aa;
+    --editor-date-color: #679b4f;
+    --editor-active-line-background-color: #323232;
+    --editor-search-box-background-color: #45494a;
+    --editor-search-box-active-button-background-color: #5c6164;
+    --editor-search-box-active-button-text-color: #3cb5e3;
+    --editor-fodled-region-color: #dedede;
+    --hyperlink-color: #00bbff;
+    --scrollbar-track-color: #2b2b2b;
+    --scrollbar-thumb-color: #484848;
+    --scrollbar-active-thumb-color: #595959;
+}

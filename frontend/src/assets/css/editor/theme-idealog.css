@@ -7,7 +7,7 @@
     height: 100%;
     /*background-color: red;*/
     top: 0;
-    color: black;
+    color: var(--editor-fodled-region-color);
     left: 4px;
     font-size: 9px;
     line-height: 1;
@@ -16,151 +16,152 @@
     position: relative;
     background-image: none !important;
     width: 60px !important;
+    border: 1px solid var(--border-color) !important;
 
 }
-.ace-github .ace_gutter {
-    background: #e8e8e8;
-    color: #AAA;
+.editor .ace_gutter {
+    background: var(--editor-gutter-background-color);
+    color: var(--editor-gutter-text-color);
 }
 
-.ace-github  {
-    background: #fff;
-    color: #000;
+.editor  {
+    background: var(--editor-background-color);
+    color: var(--editor-text-color);
 }
-.ace-github .ace_namespace{
+.editor .ace_namespace{
     color: #0000ff;
 }
-.ace-github .ace_date{
-    color: #0000ff;
+.editor .ace_date{
+    color: var(--editor-date-color);
 }
-.ace-github .ace_hyperlink, .ace-github .ace_ThreadDumpsHyperlink, .ace-github .ace_IndexingDiagnosticHyperlink, .ace-github .ace_IndexingProjectDiagnosticHyperlink{
-    color: #00bbff;
+.editor .ace_hyperlink, .editor .ace_ThreadDumpsHyperlink, .editor .ace_IndexingDiagnosticHyperlink, .editor .ace_IndexingProjectDiagnosticHyperlink{
+    color: var(--hyperlink-color);
     text-decoration: underline;
     cursor: pointer !important;
     pointer-events: auto;
     /*position: absolute;*/
 }
-.ace-github .ace_loglevel.ace_error{
+.editor .ace_loglevel.ace_error{
     font-weight: bold;
     color: #d15151;
 }
-.ace-github .ace_loglevel.ace_warn{
+.editor .ace_loglevel.ace_warn{
     color: #d15151;
 }
-.ace-github .ace_loglevel.ace_info{
+.editor .ace_loglevel.ace_info{
     color: #00bc00;
 }
-.ace-github .ace_keyword {
+.editor .ace_keyword {
     font-weight: bold;
 }
 
-.ace-github .ace_string {
+.editor .ace_string {
     color: #D14;
 }
 
-.ace-github .ace_variable.ace_class {
+.editor .ace_variable.ace_class {
     color: teal;
 }
 
-.ace-github .ace_constant.ace_numeric {
+.editor .ace_constant.ace_numeric {
     color: #099;
 }
 
-.ace-github .ace_constant.ace_buildin {
+.editor .ace_constant.ace_buildin {
     color: #0086B3;
 }
 
-.ace-github .ace_support.ace_function {
+.editor .ace_support.ace_function {
     color: #0086B3;
 }
 
-.ace-github .ace_comment {
+.editor .ace_comment {
     color: #998;
     font-style: italic;
 }
 
-.ace-github .ace_variable.ace_language  {
+.editor .ace_variable.ace_language  {
     color: #0086B3;
 }
 
-.ace-github .ace_paren {
+.editor .ace_paren {
     font-weight: bold;
 }
 
-.ace-github .ace_boolean {
+.editor .ace_boolean {
     font-weight: bold;
 }
 
-.ace-github .ace_string.ace_regexp {
+.editor .ace_string.ace_regexp {
     color: #009926;
     font-weight: normal;
 }
 
-.ace-github .ace_variable.ace_instance {
+.editor .ace_variable.ace_instance {
     color: teal;
 }
 
-.ace-github .ace_constant.ace_language {
+.editor .ace_constant.ace_language {
     font-weight: bold;
 }
 
-.ace-github .ace_cursor {
+.editor .ace_cursor {
     color: black;
 }
 
-.ace-github.ace_focus .ace_marker-layer .ace_active-line {
-    background: rgb(255, 255, 204);
+.editor.ace_focus .ace_marker-layer .ace_active-line {
+    background: var(--editor-active-line-background-color);
 }
-.ace-github .ace_marker-layer .ace_active-line {
-    background: rgb(245, 245, 245);
+.editor .ace_marker-layer .ace_active-line {
+    background: var(--editor-active-line-background-color);
 }
 
-.ace-github .ace_marker-layer .ace_selection, .ace_editor .ace_marker-layer .ace_selected-word {
+.editor .ace_marker-layer .ace_selection, .ace_editor .ace_marker-layer .ace_selected-word {
     /*background: rgb(181, 213, 255);*/
     background: rgb(250, 209, 54);
     box-shadow: 0 0 3px 0px black;
 }
 
-.ace-github.ace_multiselect .ace_selection.ace_start {
+.editor.ace_multiselect .ace_selection.ace_start {
     box-shadow: 0 0 3px 0px white;
 }
 /* bold keywords cause cursor issues for some fonts */
 /* this disables bold style for editor and keeps for static highlighter */
-.ace-github.ace_nobold .ace_line > span {
+.editor.ace_nobold .ace_line > span {
     font-weight: normal !important;
 }
 
-.ace-github .ace_marker-layer .ace_step {
+.editor .ace_marker-layer .ace_step {
     background: rgb(252, 255, 0);
 }
 
-.ace-github .ace_marker-layer .ace_stack {
+.editor .ace_marker-layer .ace_stack {
     background: rgb(164, 229, 101);
 }
 
-.ace-github .ace_marker-layer .ace_bracket {
+.editor .ace_marker-layer .ace_bracket {
     margin: -1px 0 0 -1px;
     border: 1px solid rgb(192, 192, 192);
 }
 
-.ace-github .ace_gutter-active-line {
+.editor .ace_gutter-active-line {
     background-color : rgba(0, 0, 0, 0.07);
 }
 
-.ace-github .ace_marker-layer .ace_selected-word {
+.editor .ace_marker-layer .ace_selected-word {
     background: rgba(250, 209, 54, 0.3);
     box-shadow: 0 0 1px 0px black;
 }
 
-.ace-github .ace_invisible {
+.editor .ace_invisible {
     color: #BFBFBF
 }
 
-.ace-github .ace_print-margin {
+.editor .ace_print-margin {
     width: 1px;
     background: #e8e8e8;
 }
 
-.ace-github .ace_indent-guide {
+.editor .ace_indent-guide {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;
 }

@@ -17,10 +17,6 @@ html {
     src: local(""),
     url("/assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
 }
-:root {
-    --border-color: #d5d5d5;
-    --active-color: #d5d5d5;
-}
 * {
     margin: 0;
     padding: 0;
@@ -28,6 +24,8 @@ html {
     user-select: none;
 }
 body {
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin: 0;
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -40,6 +38,25 @@ body {
     align-items: stretch;
 }
 
+::-webkit-scrollbar {
+    background: var(--scrollbar-track-color);
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+    border-radius: 7px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 7px;
+
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-active-thumb-color);
+    border-radius: 7px;
+
+}
 #dropzone {
     position: fixed;
     top: 0;
@@ -113,9 +130,13 @@ body {
     text-align: left;
     padding-left: 8px;
 }
+#file-analyzer #sidebar #toolWindows .staticinfo .plusgins-list a{
+    color: var(--hyperlink-color);
+}
 #file-analyzer #sidebar #toolWindows .staticinfo .plusgins-list{
     padding-left: 8px;
 }
+
 #file-analyzer #toolWindows-buttons {
     border-right: 2px var(--border-color) solid;
     position: relative;
@@ -125,10 +146,10 @@ body {
     height: 100%;
     width: 25px !important;
 }
-#file-analyzer  #toolWindows-buttons .top {
+#file-analyzer #toolWindows-buttons .top {
 
 }
-#file-analyzer  .toolWindowButton{
+#file-analyzer .toolWindowButton{
     font-size: 16px;
     height: auto;
     white-space: nowrap;
@@ -205,7 +226,6 @@ body {
     white-space: nowrap;
     text-align: left;
     line-height: 1.2;
-    border: 1px solid #e1e1e1;
     padding-left: 8px;
     padding-top: 16px;
     user-select: all;
@@ -231,28 +251,30 @@ body {
     padding-left: 16px;
     font-size: 14px;
     transition: 3s;
+    color: var(--notification-text-color);
 }
 #file-analyzer #log-holder  #alerts .alert.warn {
-    background-color: #fdfbcb;
-    border: 1px solid #BAB824;
+    background-color: var(--notification-warn-background-color);
+    border: 1px solid var(--notification-warn-border-color);
 }
 #file-analyzer #log-holder .alert.info {
-    background-color: #dff6df;
-    border: 1px solid #A0BF9D;
-}#file-analyzer #log-holder .alert.err {
-    background-color: #ffe8e8;
-    border: 1px solid #eccaca;
+    background-color: var(--notification-info-background-color);
+    border: 1px solid var(--notification-info-border-color);
+}
+#file-analyzer #log-holder .alert.err {
+    background-color: var(--notification-err-background-color);
+    border: 1px solid var(--notification-err-border-color);
 }
 #file-analyzer #log-holder #alerts .alert .closebtn {
     position: absolute;
     top: 4px;
     right: 4px;
     margin-left: 15px;
-    color: #dde0e1;
+    color: var(--notification-text-color);
     font-weight: bold;
     float: right;
-    font-size: 22px;
-    line-height: 20px;
+    font-size: 16px;
+    line-height: 16px;
     cursor: pointer;
     transition: 0.3s;
     height: 15px;
@@ -348,7 +370,7 @@ body {
     padding-top: 16px;
     padding-bottom: 4px;
     font-size: 18px;
-    color: #192033;
+    color: var(--text-color);
     font-weight: bold;
 }
 

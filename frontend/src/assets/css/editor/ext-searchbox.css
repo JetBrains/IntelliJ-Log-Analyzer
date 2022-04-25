@@ -1,5 +1,4 @@
 .ace_search {
-    background-color: #ddd;
     overflow: hidden;
     margin: 0;
     height: 36px;
@@ -27,8 +26,9 @@
     outline: 1px solid red;
 }
 .ace_search_field {
+    background-color: var(--editor-search-box-background-color);
     height: 100%;
-    color: black;
+    color: var(--editor-text-color);
     padding: 0;
     font-size: inherit;
     margin: 0;
@@ -41,11 +41,11 @@
     line-height: inherit;
     display: inline-block;
     padding: 0 6px;
-    background: #fff;
+    background: var(--editor-search-box-background-color);
     cursor: pointer;
     margin: 0;
     top: 4px;
-    color: #666;
+    color: var(--editor-text-color);
 }
 
 .ace_searchbtn:disabled {
@@ -53,7 +53,7 @@
     cursor: default;
 }
 .ace_searchbtn:hover {
-    background-color: #eef1f6;
+    background-color: var(--editor-search-box-active-button-background-color);
 }
 
 .ace_searchbtn.prev, .ace_searchbtn.next {
@@ -105,23 +105,19 @@ background: url("data:image/svg+xml,%3Csvg%20width%3D%2212%22%20height%3D%228%22
     user-select: none;
     overflow: hidden;
     opacity: 0.3;
-    padding: 1px;
-    width: 16px;
+    padding: 3px;
+    width: 22px;
     box-sizing:    border-box!important;
-    color: black;
+    color: var(--editor-text-color);
 }
-.ace_button:hover {
-    background-color: #f0f0f0;
+.ace_button:hover, .ace_button:active,.ace_button.checked  {
+    background-color: var(--editor-search-box-active-button-background-color);
+    border: 1px solid var(--editor-search-box-active-button-background-color);
+    border-radius: 4px;
     opacity:1;
 }
-.ace_button:active {
-    background-color: #eef3f7;
-    color: #7fdbf1;
-}
-.ace_button.checked {
-    background-color: #eef3f7;
-    color: #7fdbf1;
-    opacity:1;
+.ace_button:active, .ace_button.checked {
+    color: var(--editor-search-box-active-button-text-color);
 }
 .ace_search_options{
     display: flex;
@@ -141,6 +137,6 @@ background: url("data:image/svg+xml,%3Csvg%20width%3D%2212%22%20height%3D%228%22
 .ace_search_counter {
     float: left;
     opacity: .3;
-    color: black;
+    color: var(--editor-text-color);
     padding: 0 4px;
 }

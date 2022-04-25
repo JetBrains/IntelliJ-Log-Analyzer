@@ -1,0 +1,27 @@
+body {
+    --border-color: #d5d5d5;
+    --active-color: #d5d5d5;
+    --background-color: #fff;
+    --text-color: #192033;
+    --editor-background-color: #ffffff;
+    --editor-text-color: #000000;
+    --editor-gutter-background-color: #f9f9f9;
+    --editor-gutter-text-color: #AAA;
+    --editor-date-color: #0000ff;
+    --hyperlink-color: #0000ff;
+    --editor-active-line-background-color: rgb(255, 255, 204);
+    --editor-search-box-background-color: #ffffff;
+    --editor-search-box-active-button-background-color: #dae4ee;
+    --editor-search-box-active-button-text-color: #3cb5e3;
+    --editor-fodled-region-color: #000000;
+    --scrollbar-track-color: #ffffff;
+    --scrollbar-thumb-color: #c6c6c6;
+    --scrollbar-active-thumb-color: #7f7f7f;
+    --notification-info-background-color: #baeeba;
+    --notification-err-background-color: #ffcccc;
+    --notification-warn-background-color: #f9f78e;
+    --notification-info-border-color: #a0bf9d;
+    --notification-err-border-color: #d69696;
+    --notification-warn-border-color: #bab824;
+    --notification-text-color: #000000;
+}
