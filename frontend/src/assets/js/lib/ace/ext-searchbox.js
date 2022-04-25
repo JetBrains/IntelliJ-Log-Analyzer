@@ -8,7 +8,7 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
     var searchboxCss = "";
     $.ajax({
         async: false,
-        url: "/assets/js/lib/ace/ext-searchbox.min.css",
+        url: "/assets/css/editor/ext-searchbox.min.css",
         dataType: "text",
         success: function (cssText) {
             searchboxCss = cssText;

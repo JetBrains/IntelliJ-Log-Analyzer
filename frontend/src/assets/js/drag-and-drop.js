@@ -4,6 +4,10 @@ $(document).ready(function () {
     let dropzone = $("body>div#dropzone")[0];
     let loader = $("#dropzone .loader");
     let disclamer = $("#dropzone .disclaimer");
+    let directorySelector =  $("#select-dir");
+    let archiveSelector = $("#select-archive")
+    let fileUploader = $("#file-uploader");
+    let fileAnalyzer = $("#file-analyzer");
     let lastTarget = null;
 
     //Adds all the content of a directory to zipWriter (object that contains zip archive to send to the backend)
@@ -86,8 +90,8 @@ $(document).ready(function () {
             }
         }
         if (result) {
-            $("#file-uploader").hide();
-            $("#file-analyzer").show();
+            fileUploader.hide();
+            fileAnalyzer.show();
             render()
         }
         loader.hide();
@@ -96,8 +100,23 @@ $(document).ready(function () {
         dropzone.style.opacity = 0;
         return false;
     });
-
     window.addEventListener('dragover', function (ev) {
         ev.preventDefault();
     });
+    directorySelector.on('click', async () => {
+        var openedDir = await window.go.main.App.OpenFolder()
+        if (openedDir.length > 0) {
+            fileUploader.hide();
+            fileAnalyzer.show();
+            render()
+        }
+    })
+    archiveSelector.on('click', async () => {
+        var openedArchive = await window.go.main.App.OpenArchive()
+        if (openedArchive.length > 0) {
+            fileUploader.hide();
+            fileAnalyzer.show();
+            render()
+        }
+    })
 })
