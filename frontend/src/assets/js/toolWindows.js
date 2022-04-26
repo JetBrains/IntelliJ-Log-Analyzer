@@ -194,12 +194,27 @@ function setSidebarState() {
     if (ActiveToolWindows === 0) {
         $("#sidebar").hide()
         $("#file-analyzer .resizer").hide()
+        setToolWindowHeight()
     } else if (ActiveToolWindows === 1) {
         $("#sidebar").show()
         $("#file-analyzer>.container>.resizer").show()
         $("#sidebar .resizer").hide()
+        setToolWindowHeight()
     } else {
         $("#sidebar").show()
         $("#file-analyzer .resizer").show()
+        setToolWindowHeight()
+    }
+    function setToolWindowHeight() {
+        let bot = $("#toolWindows .bot")
+        let top = $("#toolWindows .top")
+        if (!bot.find(":visible").html()){
+            top.css("height", "100%")
+        } else if (!top.find(":visible").html()) {
+            bot.css("height", "100%")
+        } else {
+            top.css("height", "50%")
+            bot.css("height", "50%")
+        }
     }
 }
