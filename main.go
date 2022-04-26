@@ -2,9 +2,8 @@ package main
 
 import (
 	"embed"
-	"log"
-
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -40,6 +39,7 @@ func main() {
 		HideWindowOnClose: false,
 		Assets:            assets,
 		LogLevel:          logger.DEBUG,
+		Logger:            NewAppLogger(),
 		OnStartup:         app.startup,
 		OnDomReady:        app.domReady,
 		OnShutdown:        app.shutdown,

@@ -227,13 +227,12 @@ func (b *App) CheckForUpdates() bool {
 	if updateAvailable {
 		log.Printf("Update to version %s available. ", version)
 		dialog, _ := wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
-			"QuestionDialog",
-			"Update available",
-			"Version " + version + " is available",
-			[]string{"Update", "Cancel"},
-			"Update",
-			"Cancel",
-			nil,
+			Type:          "QuestionDialog",
+			Title:         "Update available",
+			Message:       "Version " + version + " is available",
+			Buttons:       []string{"Update", "Cancel"},
+			DefaultButton: "Update",
+			CancelButton:  "Cancel",
 		})
 		if dialog == "Update" {
 			var updated bool
