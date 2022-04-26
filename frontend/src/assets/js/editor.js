@@ -1,7 +1,7 @@
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
 // @name is the id attribute for the editor
 // @content is a async function which returns content to be displayed
-function showEditor(name, content) {
+async function showEditor(name, content) {
     let id = getObjectID(name);
     let editors = $("#editors")
     $("#editors>div").hide()
@@ -33,6 +33,7 @@ function showEditor(name, content) {
             scrollPastEnd: 0.05,
         })
         editor.execCommand('find');
+        window.runtime.LogDebug("Fetching content for " + name)
         editor.setValue(await content);
         editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
         editor.clearSelection();
@@ -45,11 +46,12 @@ function showEditor(name, content) {
         //Checks entryType of every line and highlight this line according to type.
         //Highlighting color is configured for every DynamicEntity on init()
         async function highlightEntriesTypes() {
+            window.runtime.LogDebug("Highlighting entries")
             let mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
             let observer = new MutationObserver(function (e) {
                 addHighlighting(e, mappedColors);
             });
-            observer.observe($('.ace_gutter')[0], {subtree: true, childList: true});
+            observer.observe($(`#${id} .ace_gutter`)[0], {subtree: true, childList: true});
 
             //addHighlighting is called on every mutation of the gutter, sets gutter's markers by createStyleMarkers(), and highlight the lines according to type from gutter
             async function addHighlighting(e, mappedColors) {
@@ -78,6 +80,7 @@ function showEditor(name, content) {
         }
 
         async function createStyleGutterMarkers(lineStart, lineEnd, mappedColors) {
+            window.runtime.LogDebug("Placing gutter markers " + name)
             if (!mappedColors) {
                 mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
             }

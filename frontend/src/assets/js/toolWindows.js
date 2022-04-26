@@ -60,6 +60,7 @@ $(document).ready(function () {
                 "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.43427 5.93433C6.74669 5.62191 7.25322 5.62191 7.56564 5.93433C7.87806 6.24675 7.87806 6.75328 7.56564 7.0657L3.99995 10.6314L0.434266 7.0657C0.121846 6.75328 0.121846 6.24675 0.434266 5.93433C0.746685 5.62191 1.25322 5.62191 1.56564 5.93433L3.99995 8.36864L6.43427 5.93433Z\" fill=\"#6E6E6E\"/>\n" +
                 "</svg>\n");
         }
+
         function drawRightArrow(el) {
             $(el).html("<svg width=\"11\" height=\"14\" viewBox=\"0 0 11 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
                 "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M2.93427 4.56567C2.62185 4.25325 2.62185 3.74672 2.93427 3.4343C3.24668 3.12188 3.75322 3.12188 4.06564 3.4343L7.63132 6.99999L4.06564 10.5657C3.75322 10.8781 3.24669 10.8781 2.93427 10.5657C2.62185 10.2533 2.62185 9.74672 2.93427 9.4343L5.36858 6.99999L2.93427 4.56567Z\" fill=\"#6E6E6E\"/>\n" +
@@ -67,17 +68,24 @@ $(document).ready(function () {
         }
 
     })
+
+    //show/hide other files on click
     toolWindows.on('click', '.other-files li', function () {
-        $(".other-files li").removeClass("active")
-        $(this).addClass("active")
         let fileUUID = $(this).attr("target");
-        let fileName = $(this).innerText
         let editorName = getObjectID(fileUUID)
-        showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then(function () {
-            let editor = ace.edit(editorName)
-            editor.renderer.scrollToLine(0)
-            editor.clearSelection();
-        })
+        if (this.classList.contains("active")) {
+            showEditor("Main Editor")
+            $(this).removeClass("active")
+        } else {
+            $(".other-files li").removeClass("active")
+            $(this).addClass("active")
+            showEditor(editorName, window.go.main.App.GetOtherFileContent(fileUUID)).then(function () {
+                let editor = ace.edit(editorName)
+                editor.renderer.scrollToLine(0)
+                editor.clearSelection();
+            })
+        }
+
     });
 })
 
@@ -96,7 +104,6 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
         return showToolWindow(name, cssClass, position, linkedEditor, fillFunction)
     }
     selectToolWindowTab()
-    showToolWindowContent()
 
     function getToolWindowTabElement() {
         let a;
@@ -118,6 +125,7 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
                 $(this).removeClass("active")
             }
         })
+        showToolWindowContent()
     }
 
     function showToolWindowContent() {
@@ -137,11 +145,26 @@ async function showToolWindow(name, cssClass, position, linkedEditor, fillFuncti
         $("#" + target).parent().hide()
     }
 
+    function removeToolWindow(object) {
+        let target = object.attr("target")
+        $("#" + target).remove()
+        object.remove()
+    }
+
     function createToolWindowTabElement() {
+        let closeButton = function () {
+            if (id !== getObjectID("Summary") && id !== getObjectID("Static Info")) {
+                return '<span class="closebtn">&times;</span>'
+            }
+            return ''
+        }
         tabs.append(
-            $("<div class='toolWindowButton' target='" + id + "'>" + name + "</div>")
-                .click(function () {
-                    if ($(this).hasClass("active")) {
+            $("<div class='toolWindowButton' target='" + id + "'>" + name + closeButton() + '</div>')
+                .click(function (e) {
+                    if ($(e.target).hasClass("closebtn")) {
+                        removeToolWindow($(this))
+                        renderMainScreen()
+                    } else if ($(this).hasClass("active")) {
                         hideToolWindow($(this))
                     } else {
                         showToolWindow(name, cssClass, position, linkedEditor, fillFunction)

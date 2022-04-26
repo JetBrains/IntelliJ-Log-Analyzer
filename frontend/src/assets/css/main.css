@@ -146,9 +146,6 @@ body {
     height: 100%;
     width: 25px !important;
 }
-#file-analyzer #toolWindows-buttons .top {
-
-}
 #file-analyzer .toolWindowButton{
     font-size: 16px;
     height: auto;
@@ -158,9 +155,14 @@ body {
     cursor: pointer;
     transform: rotate(180deg);
     writing-mode: vertical-lr;
+    width: 23px;
 }
 #file-analyzer .toolWindowButton.active{
     background-color: var(--active-color);
+}
+#file-analyzer .toolWindowButton span.closebtn{
+    padding-top: 4px;
+    padding-bottom: 2px;
 }
 #file-analyzer .container {
     border-top: 2px var(--border-color) solid;
@@ -309,10 +311,26 @@ body {
     margin-top: 4px;
 }
 #file-analyzer .filters .other-files li {
+    position: relative;
     list-style-type: none;
     padding-left: 8px;
     cursor: pointer;
     white-space: nowrap;
+}
+#file-analyzer .filters .other-files li.active {
+    background-color: var(--active-color);
+}
+#file-analyzer .filters .other-files li.active:after {
+    content: "×";
+    text-align: center;
+    background-color: var(--active-color);
+    line-height: 1.2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100%;
+    color: var(--text-color);
 }
 
 #file-uploader {
