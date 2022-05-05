@@ -11,7 +11,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
-var Version = "1.0.5" //Version variable is being overwritten on built step and passed to the program via ldflag
+var Version = "1.0.6" //Version variable is being overwritten on built step and passed to the program via ldflag
 
 //go:embed frontend/src
 var assets embed.FS
