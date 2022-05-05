@@ -48,7 +48,7 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
                 regex: /(Indexing project:.*)(report.html)(.*Report: )(.*\.html)/,
                 token: ["text", "IndexingProjectDiagnosticHyperlink", "text", "IndexingDiagnosticHyperlink"],
             }, {
-                regex: /(\d{2}\s(Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Dec|DEC)\s\d{4}\s\d{1,2}:\d{2}:\d{2})|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}[,|:]\d{3}/,
+                regex: /(\d{2}\s(Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Nov|NOV|Dec|DEC)\s\d{4}\s\d{1,2}:\d{2}:\d{2})|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}[,|:]\d{3}/,
                 token: "date"
             }, {
                 regex: /^\s*at.*$/,
