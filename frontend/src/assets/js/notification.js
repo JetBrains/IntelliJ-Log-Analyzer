@@ -11,4 +11,5 @@ function showNotification(type, text) {
     </div>
     `)
     $(".alert").delay(3000).fadeOut(0)
+    //todo remove(instead of hide) alerts on close/click
 }
