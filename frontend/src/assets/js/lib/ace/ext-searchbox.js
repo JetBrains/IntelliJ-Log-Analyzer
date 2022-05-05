@@ -58,7 +58,7 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
         this.setEditor = function (editor) {
             editor.searchBox = this;
             let editorID = editor.container.id
-            let editorSearchBox = $("#editors").find(`[linked-editor='${editorID}']`)[0]
+            let editorSearchBox = editors.find(`[linked-editor='${editorID}']`)[0]
             editorSearchBox.appendChild(this.element);
             // editor.renderer.scroller.appendChild(this.element);
             this.editor = editor;
@@ -114,7 +114,7 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
             });
 
             this.$onChange = lang.delayedCall(function () {
-                _this.find(false, false);
+                _this.find(false, true, false);
             });
 
             event.addListener(this.searchInput, "input", function () {
@@ -170,11 +170,6 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
                 if (sb.activeInput == sb.replaceInput)
                     sb.replace();
                 sb.findPrev();
-            },
-            "Alt-Return": function (sb) {
-                if (sb.activeInput == sb.replaceInput)
-                    sb.replaceAll();
-                sb.findAll();
             },
             "Tab": function (sb) {
                 (sb.activeInput == sb.replaceInput ? sb.searchInput : sb.replaceInput).focus();
@@ -243,6 +238,7 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
         };
 
         this.highlight = function (re) {
+            //https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/11
             this.editor.session.highlight(re || this.editor.$search.$options.re);
             this.editor.renderer.updateBackMarkers();
         };
