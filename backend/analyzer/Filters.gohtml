@@ -4,11 +4,12 @@
         {{ range $key, $value := . }}
             <li class="group-label">
                 <span class="folding-icon"></span>
-                <label for="{{$key}}"><input id="{{$key}}" type="checkbox" {{$value.State}}> {{$key}}</label>
+                <label for="{{$key}}"><input id="{{$key}}" type="checkbox" {{$value.State}}> {{$key}}
                 {{if (index $value.Entries 0).GroupLineHighlightingColor}}
                     <span class="filter-color-hint"
                           style="background-color: {{(index $value.Entries 0).GroupLineHighlightingColor}};">  </span>
                 {{end}}
+                </label>
                 <ul>
                     {{range $value.Entries}}
                         <li class="file-checkbox">

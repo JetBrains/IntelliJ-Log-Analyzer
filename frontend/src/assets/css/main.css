@@ -296,8 +296,17 @@ body {
 #file-analyzer .filters .group-label>.folding-icon{
     cursor: default;
 }
+#file-analyzer .filters .group-label label {
+    position: relative;
+    display: inline-block;
+}
 #file-analyzer .filters .group-label .filter-color-hint {
     opacity: 0.2;
+    position: absolute;
+    left: -4px;
+    width: calc(100% + 8px);
+    z-index: -1;
+    height: 100%;
     white-space:pre-wrap;
     display: inline-block;
     padding-left: 10px;
