@@ -159,7 +159,7 @@ define("ace/ext/searchbox", ["require", "exports", "module", "ace/lib/dom", "ace
                 sb.findPrev();
             },
             "esc": function (sb) {
-                // setTimeout(function() { sb.hide();});
+                sb.activeInput.value = "";
             },
             "Return": function (sb) {
                 if (sb.activeInput == sb.replaceInput)
