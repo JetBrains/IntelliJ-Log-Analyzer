@@ -1,5 +1,9 @@
+function setPreferableColorScheme() {
+    getPreferredColorScheme().then(scheme => {
+        setColorScheme(scheme);
+    });
+}
 function setColorScheme(scheme) {
-    console.log("setColorScheme: " + scheme);
     switch (scheme) {
         case 'dark':
             document.body.classList.add("dark");
@@ -10,23 +14,31 @@ function setColorScheme(scheme) {
     }
 }
 
-function getPreferredColorScheme() {
-    if (window.matchMedia) {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        } else {
-            return 'light';
-        }
+async function getPreferredColorScheme() {
+    let theme = await window.go.main.App.GetSetting("EditorTheme")
+    if (theme!=="system") {
+        return theme;
+    } else {
+        return getSystemTheme();
     }
-    return 'light';
+    function getSystemTheme() {
+        if (window.matchMedia) {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            } else {
+                return 'light';
+            }
+        }
+        return 'light';
+    }
 }
 
 if (window.matchMedia) {
     //set theme on startup
-    setColorScheme(getPreferredColorScheme());
+    setPreferableColorScheme();
     //add event listener for theme change
     var colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
     colorSchemeQuery.addEventListener('change', function (){
-        setColorScheme(getPreferredColorScheme());
+        setPreferableColorScheme();
     });
 }

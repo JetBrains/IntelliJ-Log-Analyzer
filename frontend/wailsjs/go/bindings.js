@@ -41,6 +41,21 @@ const go = {
         return window.go.main.App.GetOtherFileContent(arg1);
       },
       /**
+       * GetSetting
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<number>}  - Go Type: interface {}
+       */
+      "GetSetting": (arg1) => {
+        return window.go.main.App.GetSetting(arg1);
+      },
+      /**
+       * GetSettingsScreenHTML
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetSettingsScreenHTML": () => {
+        return window.go.main.App.GetSettingsScreenHTML();
+      },
+      /**
        * GetStaticInfo
        * @returns {Promise<string>}  - Go Type: string
        */
@@ -107,6 +122,15 @@ const go = {
        */
       "RenderSystemMenu": () => {
         return window.go.main.App.RenderSystemMenu();
+      },
+      /**
+       * SaveSetting
+       * @param {string} arg1 - Go Type: string
+       * @param {number} arg2 - Go Type: interface {}
+       * @returns {Promise<void>} 
+       */
+      "SaveSetting": (arg1, arg2) => {
+        return window.go.main.App.SaveSetting(arg1, arg2);
       },
       /**
        * SetFilters

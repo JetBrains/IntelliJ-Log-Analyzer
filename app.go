@@ -14,6 +14,7 @@ import (
 	"log_analyzer/backend/update"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 	"time"
@@ -275,20 +276,34 @@ func (b *App) ShowNoUpdatesMessage() {
 func (b *App) RenderSystemMenu() {
 	macMenu := menu.NewMenuFromItems(
 		menu.AppMenu(),
-		menu.EditMenu(),
-		menu.SubMenu("Help", menu.NewMenuFromItems(
-			menu.Separator(),
-			menu.Text("Submit Bug", keys.CmdOrCtrl("b"), func(_ *menu.CallbackData) {
-				wailsruntime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
-			}),
-			menu.Text("Check for updates", keys.CmdOrCtrl("u"), func(_ *menu.CallbackData) {
+		menu.SubMenu("File", menu.NewMenuFromItems(
+			menu.Text("Check for updates", nil, func(_ *menu.CallbackData) {
 				if !b.CheckForUpdates() {
 					b.ShowNoUpdatesMessage()
 				}
 			}),
+			menu.Text("Settings", keys.CmdOrCtrl(","), func(_ *menu.CallbackData) {
+				wailsruntime.EventsEmit(b.ctx, "ShowSettings")
+			}),
+		)),
+		menu.EditMenu(),
+		menu.SubMenu("Help", menu.NewMenuFromItems(
+			menu.Text("Submit a Bug Report", keys.CmdOrCtrl("b"), func(_ *menu.CallbackData) {
+				wailsruntime.BrowserOpenURL(b.ctx, "https://github.com/annikovk/IntelliJ-Log-Analyzer/issues/new")
+			}),
 		)),
 	)
 	windowsMenu := menu.NewMenuFromItems(
+		menu.SubMenu("File", menu.NewMenuFromItems(
+			menu.Text("Check for updates", nil, func(_ *menu.CallbackData) {
+				if !b.CheckForUpdates() {
+					b.ShowNoUpdatesMessage()
+				}
+			}),
+			menu.Text("Settings", keys.Combo("s", keys.ControlKey, keys.OptionOrAltKey), func(_ *menu.CallbackData) {
+				wailsruntime.EventsEmit(b.ctx, "ShowSettings")
+			}),
+		)),
 		menu.SubMenu("Help", menu.NewMenuFromItems(
 			menu.Separator(),
 			menu.Text("Submit Bug", keys.CmdOrCtrl("b"), func(_ *menu.CallbackData) {
@@ -306,4 +321,17 @@ func (b *App) RenderSystemMenu() {
 	} else {
 		wailsruntime.MenuSetApplicationMenu(b.ctx, windowsMenu)
 	}
+}
+
+func (b *App) GetSettingsScreenHTML() string {
+	return backend.GetSettingsScreenHTML()
+}
+func (b *App) SaveSetting(key string, value interface{}) {
+	backend.GetConfig().SaveSetting(key, value)
+	wailsruntime.EventsEmit(b.ctx, "SettingsChanged", backend.GetConfig())
+}
+func (b *App) GetSetting(key string) interface{} {
+	ptr := reflect.ValueOf(backend.GetConfig())
+	s := reflect.Indirect(ptr).FieldByName(key).Interface()
+	return s
 }

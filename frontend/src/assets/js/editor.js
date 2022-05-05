@@ -1,9 +1,9 @@
+let editors = $("#editors")
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
 // @name is the id attribute for the editor
 // @content is a async function which returns content to be displayed
 async function showEditor(name, content) {
     let id = getObjectID(name);
-    let editors = $("#editors")
     $("#editors>div").hide()
     if (!$(`#${id}`).length && !$(`.${id}`).length) {
         if (content) cerateEditor()
@@ -21,6 +21,8 @@ async function showEditor(name, content) {
             </div>
             `)
         const editor = ace.edit(id);
+        let fontSize = await window.go.main.App.GetSetting("EditorFontSize");
+        let useSoftWrap = await window.go.main.App.GetSetting("EditorDefaultSoftWrapState");
         editor.setOptions({
             mode: 'ace/mode/idea_log',
             theme: "ace/theme/idealog",
@@ -32,6 +34,8 @@ async function showEditor(name, content) {
             highlightSelectedWord: true,
             scrollPastEnd: 0.05,
         })
+        editor.setFontSize(fontSize)
+        editor.session.setUseWrapMode(useSoftWrap)
         editor.execCommand('find');
         window.runtime.LogDebug("Fetching content for " + name)
         editor.setValue(await content);
