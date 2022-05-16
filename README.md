@@ -15,10 +15,7 @@ Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time t
 
 ## Builds
 
-macOS .app file:  [download](https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/download/IntelliJ.Log.Analyzer-darwin-amd64.zip)
-
-windows .exe file:  [download](https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/download/IntelliJ.Log.Analyzer-windows-amd64.exe)
-
+Download latest release (Windows and macOS): https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/
 Linux is not currently supported. 
 
 ## What can be parsed
