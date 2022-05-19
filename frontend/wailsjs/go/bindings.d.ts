@@ -8,12 +8,14 @@ export interface go {
 		GetFilters():Promise<string>
 		GetLogs():Promise<string>
 		GetOtherFileContent(arg1:string):Promise<string>
+		GetRunningIDEsDropdownHTML():Promise<string>
 		GetSetting(arg1:string):Promise<number>
 		GetSettingsScreenHTML():Promise<string>
 		GetStaticInfo():Promise<string>
 		GetSummary():Promise<string>
 		GetThreadDumpFileContent(arg1:string,arg2:string):Promise<string>
 		GetThreadDumpsFilters(arg1:string):Promise<string>
+		InitLogDirectory(arg1:string):Promise<string>
 		OpenArchive():Promise<string>
 		OpenFolder():Promise<string>
 		OpenIndexingReport(arg1:string):Promise<void>

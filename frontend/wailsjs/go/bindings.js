@@ -41,6 +41,13 @@ const go = {
         return window.go.main.App.GetOtherFileContent(arg1);
       },
       /**
+       * GetRunningIDEsDropdownHTML
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "GetRunningIDEsDropdownHTML": () => {
+        return window.go.main.App.GetRunningIDEsDropdownHTML();
+      },
+      /**
        * GetSetting
        * @param {string} arg1 - Go Type: string
        * @returns {Promise<number>}  - Go Type: interface {}
@@ -85,6 +92,14 @@ const go = {
        */
       "GetThreadDumpsFilters": (arg1) => {
         return window.go.main.App.GetThreadDumpsFilters(arg1);
+      },
+      /**
+       * InitLogDirectory
+       * @param {string} arg1 - Go Type: string
+       * @returns {Promise<string>}  - Go Type: string
+       */
+      "InitLogDirectory": (arg1) => {
+        return window.go.main.App.InitLogDirectory(arg1);
       },
       /**
        * OpenArchive

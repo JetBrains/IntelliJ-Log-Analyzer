@@ -1,13 +1,14 @@
-//Drag and drop .zip to analyze
-$(document).ready(function () {
+const dropzone = $("body>div#dropzone").first();
+const loader = dropzone.find(".loader");
+const disclamer = dropzone.find(".disclaimer");
+const directorySelector = $("#select-dir");
+const archiveSelector = $("#select-archive")
+const fileUploader = $("#file-uploader");
+const fileAnalyzer = $("#file-analyzer");
+const IdeSelector = $("#select-running-ide")
+
+$(document).ready(async function () {
     let zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
-    let dropzone = $("body>div#dropzone")[0];
-    let loader = $("#dropzone .loader");
-    let disclamer = $("#dropzone .disclaimer");
-    let directorySelector =  $("#select-dir");
-    let archiveSelector = $("#select-archive")
-    let fileUploader = $("#file-uploader");
-    let fileAnalyzer = $("#file-analyzer");
     let lastTarget = null;
 
     //Adds all the content of a directory to zipWriter (object that contains zip archive to send to the backend)
@@ -54,16 +55,19 @@ $(document).ready(function () {
             }
         }))
     }
+
+    //inserts the list of running and installed IDEs into #select-running-ide .dropdown
+    IdeSelector.find(".options").first().html(await window.go.main.App.GetRunningIDEsDropdownHTML())
     window.addEventListener('dragenter', function (ev) {
         lastTarget = ev.target;
-        dropzone.style.visibility = ""
-        dropzone.style.opacity = 1;
+        dropzone.css('visibility', 'visible');
+        dropzone.css('opacity', '1');
 
     });
     window.addEventListener('dragleave', function (ev) {
         if (ev.target === lastTarget || ev.target === document) {
-            dropzone.style.visibility = "hidden";
-            dropzone.style.opacity = 0;
+            dropzone.css('visibility', 'hidden');
+            dropzone.css('opacity', '0');
         }
     });
     window.addEventListener('drop', async function (e) {
@@ -96,27 +100,32 @@ $(document).ready(function () {
         }
         loader.hide();
         disclamer.show();
-        dropzone.style.visibility = "hidden";
-        dropzone.style.opacity = 0;
+        dropzone.css('visibility', 'hidden');
+        dropzone.css('opacity', '0');
         return false;
     });
     window.addEventListener('dragover', function (ev) {
         ev.preventDefault();
     });
     directorySelector.on('click', async () => {
-        var openedDir = await window.go.main.App.OpenFolder()
-        if (openedDir.length > 0) {
-            fileUploader.hide();
-            fileAnalyzer.show();
-            render()
-        }
+        let path = await window.go.main.App.OpenFolder()
+        initLogDirectory(path)
     })
     archiveSelector.on('click', async () => {
-        var openedArchive = await window.go.main.App.OpenArchive()
-        if (openedArchive.length > 0) {
-            fileUploader.hide();
-            fileAnalyzer.show();
-            render()
-        }
+        let path = await window.go.main.App.OpenArchive()
+        initLogDirectory(path)
+    })
+    IdeSelector.find(".button").first().on('click', function (){
+        let path = IdeSelector.find("li.active").attr("target");
+        $(this).html("Loading...");
+        initLogDirectory(path)
     })
 })
+async function initLogDirectory(path) {
+    let openedLogsDir = await window.go.main.App.InitLogDirectory(path)
+    if (openedLogsDir.length > 0) {
+        fileUploader.hide();
+        fileAnalyzer.show();
+        render()
+    }
+}

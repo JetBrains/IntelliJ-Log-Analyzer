@@ -3,10 +3,11 @@
 <head>
     <title>wailsLogAnalyzer</title>
     <link rel="stylesheet" href="assets/css/main.min.css">
-    <link rel="stylesheet" href="assets/css/darkTheme.min.css">
-    <link rel="stylesheet" href="assets/css/lightTheme.min.css">
+    <link rel="stylesheet" href="assets/css/themes/darkTheme.min.css">
+    <link rel="stylesheet" href="assets/css/themes/lightTheme.min.css">
     <link rel="stylesheet" href="assets/css/resizer.min.css">
     <link rel="stylesheet" href="assets/css/settings.min.css">
+    <link rel="stylesheet" href="assets/css/fileUploaderScreen.min.css">
 </head>
 
 <body>
@@ -30,8 +31,12 @@
         <p> by Help | Collect Logs And Diagnostic Data</p>
     </div>
     <div id="select-running-ide">
-        <p>Select running IDE instance</p>
-        <div class="dropdown">Intellij IDEA 2021.3</div>
+        <div class="sub-header">Select  installed IDE</div>
+        <div class="dropdown">
+            <div class="title">Loading...</div>
+            <div class="options">Loading...</div>
+        </div>
+        <div class="button">Show Logs</div>
     </div>
 </div>
 
@@ -63,7 +68,7 @@
 <script src="assets/js/lib/jquery.min.js"></script>
 <script src="assets/js/lib/zip.min.js"></script>
 <script src="assets/js/main.js"></script>
-<script src="assets/js/drag-and-drop.js"></script>
+<script src="assets/js/logsChooser.js"></script>
 <script src="assets/js/editor.js"></script>
 <script src="assets/js/indexingDiagnosticPresenter.js"></script>
 <script src="assets/js/notification.js"></script>

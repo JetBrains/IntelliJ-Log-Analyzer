@@ -11,6 +11,7 @@ import (
 	"log_analyzer/backend"
 	"log_analyzer/backend/analyzer"
 	"log_analyzer/backend/analyzer/entities"
+	"log_analyzer/backend/analyzer/installedIDEs"
 	"log_analyzer/backend/update"
 	"os"
 	"path/filepath"
@@ -74,14 +75,7 @@ func (b *App) OpenFolder() string {
 		TreatPackagesAsDirectories: false,
 	},
 	)
-	if path == "" {
-		return ""
-	}
-	if err := backend.InitLogDirectory(path); err == nil {
-		return path
-	} else {
-		return ""
-	}
+	return path
 }
 func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
 	data := ConvertDataURISchemeToBase64File(DataURIScheme)
@@ -95,8 +89,11 @@ func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
 	}
 	_ = f.Close()
 	log.Println("Created file: " + f.Name())
-	if err := backend.InitLogDirectory(f.Name()); err == nil {
-		return f.Name()
+	return b.InitLogDirectory(f.Name())
+}
+func (b *App) InitLogDirectory(path string) string {
+	if err := backend.InitLogDirectory(path); err == nil {
+		return path
 	} else {
 		return ""
 	}
@@ -122,11 +119,7 @@ func (b *App) UploadArchive(DataURIScheme string) string {
 	if err != nil {
 		log.Println("Could not remove temp archive: " + err.Error())
 	}
-	if err := backend.InitLogDirectory(unzippedDir); err == nil {
-		return unzippedDir
-	} else {
-		return ""
-	}
+	return b.InitLogDirectory(unzippedDir)
 }
 func (b *App) OpenArchive() string {
 	path, _ := wailsruntime.OpenFileDialog(b.ctx, wailsruntime.OpenDialogOptions{
@@ -150,11 +143,7 @@ func (b *App) OpenArchive() string {
 	}
 	unzippedDir := backend.UnzipToTempFodler(path)
 	log.Println("Unzipped files to path: " + path)
-	if err := backend.InitLogDirectory(unzippedDir); err == nil {
-		return unzippedDir
-	} else {
-		return ""
-	}
+	return unzippedDir
 }
 
 func (b *App) GetLogs() string {
@@ -325,6 +314,9 @@ func (b *App) RenderSystemMenu() {
 
 func (b *App) GetSettingsScreenHTML() string {
 	return backend.GetSettingsScreenHTML()
+}
+func (b *App) GetRunningIDEsDropdownHTML() string {
+	return installedIDEs.GetInstalledIDEsDropdownHTML()
 }
 func (b *App) SaveSetting(key string, value interface{}) {
 	backend.GetConfig().SaveSetting(key, value)

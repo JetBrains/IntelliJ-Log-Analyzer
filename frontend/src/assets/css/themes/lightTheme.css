@@ -24,4 +24,7 @@ body {
     --notification-err-border-color: #d69696;
     --notification-warn-border-color: #bab824;
     --notification-text-color: #000000;
+    --dropdown-active-list-item-background-color: #2871c3;
+    --dropdown-active-list-item-text-background-color: #fff;
+
 }
