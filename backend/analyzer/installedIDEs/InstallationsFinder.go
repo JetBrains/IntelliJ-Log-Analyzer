@@ -13,6 +13,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"time"
 )
 
 type ideInfoFromDebugger struct {
@@ -126,20 +127,23 @@ func getRunningIdes() (ides []ideInfoFromDebugger) {
 }
 
 func getIdeInfoFromPort(url string) (ideInfoFromDebugger, error) {
-	res, err := http.Get(url)
+	client := http.Client{
+		Timeout: time.Second,
+	}
+	res, err := client.Get(url)
 	if err != nil {
-		//log.Printf(err.Error())
+		log.Printf("Error getting HTTP response. err: %s", err.Error())
 		return ideInfoFromDebugger{}, err
 	}
 	var ideInstance ideInfoFromDebugger
-	ideInstance = parseRunningIdeInfo(res)
-	defer res.Body.Close()
+	content, _ := ioutil.ReadAll(res.Body)
+	_ = res.Body.Close()
+	ideInstance = parseRunningIdeInfo(content)
 	return ideInstance, err
 }
 
-func parseRunningIdeInfo(res *http.Response) ideInfoFromDebugger {
+func parseRunningIdeInfo(body []byte) ideInfoFromDebugger {
 	ideInfo := ideInfoFromDebugger{}
-	body, _ := ioutil.ReadAll(res.Body)
 	jsonErr := json.Unmarshal(body, &ideInfo)
 	if jsonErr != nil {
 		log.Printf("Could not unmarshall JSON, %s", jsonErr.Error())
@@ -210,7 +214,7 @@ func getIdeBinaryByPackage(ideaPackage string) (ideaBinary string, err error) {
 		for operatingSystem, path := range IdeBinaryRelatedToInstallationPath {
 			currentBinaryToCheck := strings.Replace(path, "{possibleBaseFileName}", possibleBaseFileName, -1)
 			ideaBinary = ideaPackage + currentBinaryToCheck
-			if _, err := os.Open(ideaBinary); err == nil && len(ideaBinary) > 2 {
+			if FileExists(ideaBinary) {
 				if operatingSystem != runtime.GOOS {
 					log.Printf("Provided path is for %s, but repair utility is running at %s ", operatingSystem, runtime.GOOS)
 				}
@@ -267,10 +271,10 @@ func getIdeDefaultLogsDir(ideaBinary string) (defaultLogsDir string) {
 	}
 	defaultLogsDir = strings.Replace(defaultLogsDirLocation[runtime.GOOS], "{dataDirectoryName}", installationInfo.DataDirectoryName, -1)
 	defaultLogsDir = os.ExpandEnv(defaultLogsDir)
-	if _, err := os.Open(defaultLogsDir); err == nil && len(defaultLogsDir) > 2 {
+	if FileExists(defaultLogsDir) {
 		return defaultLogsDir
 	} else {
-		log.Printf("Could not detect logs directory location for %s", ideaBinary)
+		log.Printf("Could not detect logs directory location for %s. Maybe it has never run?", ideaBinary)
 		return ""
 	}
 }
@@ -393,7 +397,11 @@ func UserHomeDir() string {
 }
 func FileExists(dir string) bool {
 	//dir = filepath.Clean(dir)
-	if _, err := os.Open(dir); err == nil && len(dir) > 2 {
+	if f, err := os.Open(dir); err == nil && len(dir) > 2 {
+		err := f.Close()
+		if err != nil {
+			log.Printf("Error closing file %s. Error: %s", dir, err)
+		}
 		return true
 	}
 	return false
