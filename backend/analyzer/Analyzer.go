@@ -237,7 +237,7 @@ func (a *Analyzer) Clear() {
 	if a.IsFolderTemp {
 		err := os.RemoveAll(a.FolderToWorkWith)
 		if err != nil {
-			log.Println(err)
+			log.Printf("Removing folder '%s' failed. Error: %s", a.FolderToWorkWith, err)
 		}
 	}
 }

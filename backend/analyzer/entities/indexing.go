@@ -62,7 +62,7 @@ func getTimeStampFromIndexingFile(path string) time.Time {
 	s := fmt.Sprintf("%s-%s-%sT%s:%s:%sZ", timeStamp["Year"], timeStamp["Month"], timeStamp["Day"], timeStamp["Hours"], timeStamp["Minutes"], timeStamp["Seconds"])
 	t, err := time.Parse(time.RFC3339, s)
 	if err != nil {
-		log.Println(err)
+		log.Printf("getTimeStampFromIndexingFile failed. path: %s, error: %s", path, err)
 	}
 	return t
 }

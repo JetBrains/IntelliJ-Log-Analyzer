@@ -41,7 +41,7 @@ func (f Filters) ConvertToHTML() string {
 		ParseFS(tmplFS, "Filters.gohtml"))
 	err := t.Execute(&tpl, f)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template Filters.gohtml parsing failed. Error: %s", err.Error())
 	}
 	return tpl.String()
 }

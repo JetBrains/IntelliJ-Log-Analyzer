@@ -80,11 +80,11 @@ var (
 
 func GetIdeInstallations() (ides []IDE) {
 	runningIDEs := getRunningIdes()
-	log.Printf("----------Scanning system for IDE installations----------")
+	log.Printf("Scanning system for IDE installations")
 	var installedIdes []string
 	installedIdes, _ = findInstalledIdePackages()
 
-	for i, idePackage := range installedIdes {
+	for _, idePackage := range installedIdes {
 		info, _ := getIdeInfoByPackage(idePackage)
 		binary, _ := getIdeBinaryByPackage(idePackage)
 		info.LogsDirectory = getIdeDefaultLogsDir(binary)
@@ -96,7 +96,7 @@ func GetIdeInstallations() (ides []IDE) {
 				Running: isRunning,
 				Info:    info,
 			})
-			log.Printf("[runnning: %v] [%v] %v %v (%v-%v) - %v \n", isRunning, i, info.Name, info.Version, info.ProductCode, info.BuildNumber, beautifyPackageName(idePackage))
+			//log.Printf("[runnning: %v] [%v] %v %v (%v-%v) - %v \n", isRunning, i, info.Name, info.Version, info.ProductCode, info.BuildNumber, beautifyPackageName(idePackage))
 		}
 	}
 	//sort them by running state. Running ones first
@@ -141,7 +141,6 @@ func parseRunningIdeInfo(res *http.Response) ideInfoFromDebugger {
 	ideInfo := ideInfoFromDebugger{}
 	body, _ := ioutil.ReadAll(res.Body)
 	jsonErr := json.Unmarshal(body, &ideInfo)
-	log.Println(ideInfo)
 	if jsonErr != nil {
 		log.Printf("Could not unmarshall JSON, %s", jsonErr.Error())
 	}
@@ -257,15 +256,14 @@ func getIdeaLogPath(ideaBinary string) (ideaLogPath string) {
 func getIdeDefaultLogsDir(ideaBinary string) (defaultLogsDir string) {
 	if value := GetIdePropertyByName("idea.log.path", ideaBinary); len(value) != 0 {
 		if FileExists(value) {
-			log.Println(value)
 			return value
 		} else {
-			log.Print("'idea.log.path' property is defined, but directory does not exist")
+			log.Printf("'idea.log.path' property is defined, but directory \"%s\" does not exist", value)
 		}
 	}
 	installationInfo, err := getIdeInfoByBinary(ideaBinary)
 	if err != nil {
-		log.Println(err)
+		log.Printf("getIdeInfoByBinary failed. ideaBinary: %s, Error: %s", ideaBinary, err)
 	}
 	defaultLogsDir = strings.Replace(defaultLogsDirLocation[runtime.GOOS], "{dataDirectoryName}", installationInfo.DataDirectoryName, -1)
 	defaultLogsDir = os.ExpandEnv(defaultLogsDir)
@@ -289,30 +287,28 @@ func getIdeInfoByBinary(ideaBinary string) (parameterValue IdeInfo, err error) {
 	return getIdeInfoByPackage(getIdeIdePackageByBinary(ideaBinary))
 }
 func GetIdeProperties(ideaBinary string) (collectedOptions map[string]string) {
-	var err error
 	var ideaPackage string
 	collectedOptions = make(map[string]string)
-	ideaBinary, err = DetectInstallationByInnerPath(ideaBinary, true)
-	ideaPackage, err = DetectInstallationByInnerPath(ideaBinary, false)
-	InstallationInfo, err := getIdeInfoByBinary(ideaBinary)
-	log.Println(err)
+	ideaBinary, _ = DetectInstallationByInnerPath(ideaBinary, true)
+	ideaPackage, _ = DetectInstallationByInnerPath(ideaBinary, false)
+	InstallationInfo, _ := getIdeInfoByBinary(ideaBinary)
 	for _, possibleIdeaPropertiesFileLocation := range getOsDependentDir(possibleIdeaPropertiesFileLocations) {
 		possibleIdeaOptionsFile := strings.Replace(possibleIdeaPropertiesFileLocation, "{IDE_BasefileName}", strings.ToUpper(GetIdeBasefileName(ideaBinary)), -1)
 		possibleIdeaOptionsFile = strings.Replace(possibleIdeaOptionsFile, "{dataDirectoryName}", InstallationInfo.DataDirectoryName, -1)
 		possibleIdeaOptionsFile = strings.Replace(possibleIdeaOptionsFile, "{ideaPackage}", ideaPackage, -1)
 		possibleIdeaOptionsFile = os.ExpandEnv(possibleIdeaOptionsFile)
 		if FileExists(possibleIdeaOptionsFile) {
-			log.Println("found idea.properties file at: \"" + possibleIdeaOptionsFile + "\"")
+			//log.Println("found idea.properties file at: \"" + possibleIdeaOptionsFile + "\"")
 			fillIdePropertiesMap(possibleIdeaOptionsFile, collectedOptions)
 		} else {
-			log.Println("Checked " + possibleIdeaPropertiesFileLocation + ". There is no \"" + possibleIdeaOptionsFile + "\" file.")
+			//log.Println("Checked " + possibleIdeaPropertiesFileLocation + ". There is no \"" + possibleIdeaOptionsFile + "\" file.")
 		}
 	}
 	var listOfCollectedOptions string
 	for option, value := range collectedOptions {
 		listOfCollectedOptions = listOfCollectedOptions + option + "=" + value + "\n"
 	}
-	log.Println("Collected idea properties:\n" + listOfCollectedOptions)
+	//log.Println("Collected idea properties:\n" + listOfCollectedOptions)
 	return collectedOptions
 }
 
@@ -335,7 +331,10 @@ func DetectInstallationByInnerPath(providedPath string, returnBinary bool) (idea
 }
 func fillIdePropertiesMap(ideaOptionsFile string, optionsMap map[string]string) {
 	optionsSlice, err := ideaPropertiesFileToSliceOfStrings(ideaOptionsFile)
-	log.Println(err)
+	if err != nil {
+		log.Printf("ideaPropertiesFileToSliceOfStrings failed. ideaOptionsFile: %s, error: %s", ideaOptionsFile, err)
+	}
+
 	for _, option := range optionsSlice {
 		if idx := strings.IndexByte(option, '='); idx >= 0 {
 			optionValue := option[idx+1:]
@@ -350,7 +349,10 @@ func fillIdePropertiesMap(ideaOptionsFile string, optionsMap map[string]string) 
 }
 func ideaPropertiesFileToSliceOfStrings(ideaPropertiesFile string) (properties []string, err error) {
 	file, err := os.Open(ideaPropertiesFile)
-	log.Println(err)
+	if err != nil {
+		log.Printf("failed to open ideaPropertiesFile, file: %s, error: %s", ideaPropertiesFile, err)
+	}
+
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	var i int

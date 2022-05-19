@@ -20,7 +20,7 @@ func (f *OtherFiles) ConvertToHTML() (html string) {
 		ParseFS(tmplFS, "OtherFiles.gohtml"))
 	err := t.Execute(&tpl, *f)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template 'OtherFiles' execution error: %s", err.Error())
 	}
 	return tpl.String()
 }

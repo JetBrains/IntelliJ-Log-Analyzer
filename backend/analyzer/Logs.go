@@ -27,7 +27,7 @@ func (logs Logs) ConvertToHTML() string {
 		ParseFS(tmplFS, "Logs.gohtml"))
 	err := t.Execute(&tpl, logs)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template Logs.gohtml parsing failed. Error: %s", err.Error())
 	}
 	return tpl.String()
 }

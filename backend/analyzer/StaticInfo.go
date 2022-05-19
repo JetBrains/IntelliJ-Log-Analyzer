@@ -33,7 +33,7 @@ func (a AggregatedStaticInfo) ConvertToHTML() string {
 		ParseFS(tmplFS, "StaticInfo.gohtml"))
 	err := t.Execute(&tpl, a)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template StaticInfo.gohtml parsing failed. Error: %s", err.Error())
 	}
 	return tpl.String()
 }

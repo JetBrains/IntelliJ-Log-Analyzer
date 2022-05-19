@@ -80,7 +80,7 @@ func getTimeStampFromThreadDumpFilename(filename string) time.Time {
 	s := fmt.Sprintf("%s-%s-%sT%s:%s:%sZ", timeStamp["Year"], timeStamp["Month"], timeStamp["Day"], timeStamp["Hours"], timeStamp["Minutes"], timeStamp["Seconds"])
 	t, err := time.Parse(time.RFC3339, s)
 	if err != nil {
-		log.Println(err)
+		log.Printf("getTimeStampFromThreadDumpFilename failed. Initial string: '%s', error: %s", s, err)
 	}
 	return t
 }

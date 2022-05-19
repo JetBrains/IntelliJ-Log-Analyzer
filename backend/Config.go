@@ -46,7 +46,7 @@ func GetSettingsScreenHTML() string {
 		ParseFS(tmplFS, "Config.gohtml"))
 	err := t.Execute(&tpl, config)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template Config.gohtml execution failed. Error: %s", err.Error())
 	}
 	return tpl.String()
 }

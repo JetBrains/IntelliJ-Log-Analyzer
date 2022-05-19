@@ -17,7 +17,7 @@ func GetInstalledIDEsDropdownHTML() string {
 		ParseFS(tmplFS, "IdeDropdown.gohtml"))
 	err := t.Execute(&tpl, installedIDEs)
 	if err != nil {
-		log.Println(err.Error())
+		log.Printf("Template IdeDropdown.gohtml parsing failed. Error: %s", err.Error())
 	}
 	return tpl.String()
 }

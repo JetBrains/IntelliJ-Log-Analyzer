@@ -45,7 +45,7 @@ func parseTroubleshootingInfo(path string) (a analyzer.StaticInfo) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("ERROR: %s", err)
+			log.Printf("parseTroubleshootingInfo failed. ERROR: %s", err)
 		}
 	}
 	return a
