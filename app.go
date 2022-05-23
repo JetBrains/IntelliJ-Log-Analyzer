@@ -274,6 +274,9 @@ func (b *App) RenderSystemMenu() {
 			menu.Text("Settings", keys.CmdOrCtrl(","), func(_ *menu.CallbackData) {
 				wailsruntime.EventsEmit(b.ctx, "ShowSettings")
 			}),
+			menu.Text("Start Over", keys.CmdOrCtrl("R"), func(_ *menu.CallbackData) {
+				wailsruntime.WindowReloadApp(b.ctx)
+			}),
 		)),
 		menu.EditMenu(),
 		menu.SubMenu("Help", menu.NewMenuFromItems(
@@ -291,6 +294,9 @@ func (b *App) RenderSystemMenu() {
 			}),
 			menu.Text("Settings", keys.Combo("s", keys.ControlKey, keys.OptionOrAltKey), func(_ *menu.CallbackData) {
 				wailsruntime.EventsEmit(b.ctx, "ShowSettings")
+			}),
+			menu.Text("Start Over", keys.CmdOrCtrl("R"), func(_ *menu.CallbackData) {
+				wailsruntime.WindowReloadApp(b.ctx)
 			}),
 		)),
 		menu.SubMenu("Help", menu.NewMenuFromItems(
