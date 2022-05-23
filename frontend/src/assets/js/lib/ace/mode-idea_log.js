@@ -1,14 +1,14 @@
 define('ace/mode/idea_log', [], function (require, exports, module) {
     let oop = require("ace/lib/oop");
     let TextMode = require("ace/mode/text").Mode;
-    // let IdeaStyleFoldMode = require("./folding/idea-style").FoldMode;
+    let IdeaStyleFoldMode = require("./folding/idea-style").FoldMode;
     require("ace/ext/threadDumpPresenter");
     let Tokenizer = require("ace/tokenizer").Tokenizer;
     let CustomHighlightRules = require("ace/mode/idea_log_highlight_rules").CustomHighlightRules;
 
     let Mode = function () {
         this.HighlightRules = CustomHighlightRules;
-        this.foldingRules = new IdeaStyleFoldMode();
+        // this.foldingRules = new IdeaStyleFoldMode();
     };
     oop.inherits(Mode, TextMode);
 
