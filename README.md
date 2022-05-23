@@ -24,7 +24,8 @@ Program receives logs folder as an input and renders it for better usability.
 
 ## Builds
 
-Download the latest release (Windows and macOS): https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/
+[Latest release](https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/) (Windows and macOS). 
+
 Linux is not currently supported. 
 
 ## What can be parsed
