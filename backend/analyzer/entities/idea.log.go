@@ -23,7 +23,7 @@ func init() {
 	})
 }
 func isIdeaLog(path string) bool {
-	logMatcher := regexp.MustCompile(`idea.\d+.log`)
+	logMatcher := regexp.MustCompile(`idea\.\d+.log`)
 	if strings.Contains(path, "idea.log") || logMatcher.MatchString(path) {
 		return true
 	}
