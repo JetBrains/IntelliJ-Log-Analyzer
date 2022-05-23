@@ -17,4 +17,5 @@ body.dark {
     --scrollbar-track-color: #2b2b2b;
     --scrollbar-thumb-color: #484848;
     --scrollbar-active-thumb-color: #595959;
+    --just-changed-line-highlighting: #bbfabd;
 }

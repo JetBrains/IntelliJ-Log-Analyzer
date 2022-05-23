@@ -12,7 +12,7 @@ import (
 func init() {
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Indexing diagnostic",
-		ConvertToLogs:         parseIndexingDiagnosticFolder,
+		ConvertPathToLogs:     parseIndexingDiagnosticFolder,
 		CheckPath:             isIndexingFile,
 		CheckIgnoredPath:      isIgnortedIndexingFile,
 		GetDisplayName:        getDisplayName,

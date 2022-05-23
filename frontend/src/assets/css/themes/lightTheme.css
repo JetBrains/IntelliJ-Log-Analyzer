@@ -26,5 +26,6 @@ body {
     --notification-text-color: #000000;
     --dropdown-active-list-item-background-color: #2871c3;
     --dropdown-active-list-item-text-background-color: #fff;
+    --just-changed-line-highlighting: #2871c3;
 
 }

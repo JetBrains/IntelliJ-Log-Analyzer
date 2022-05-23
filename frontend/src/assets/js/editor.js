@@ -46,6 +46,15 @@ async function showEditor(name, content) {
         highlightEntriesTypes();
         editor.on("click", ThreadDumpLinkHandler)
         editor.on("click", IndexingDiagnosticLinkHandler)
+        editor.on('change', function(e) {
+            let marker = editor.session.highlightLines(e.start.row, e.start.row, "justchangedline", false)
+            setTimeout(() => {
+                editor.session.removeMarker(marker.id)
+            }, 2000)
+            if (editor.renderer.layerConfig.lastRow >= editor.session.getLength() - 7) {
+                editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
+            }
+        });
 
         //Checks entryType of every line and highlight this line according to type.
         //Highlighting color is configured for every DynamicEntity on init()
@@ -120,4 +129,12 @@ async function showEditor(name, content) {
             )
         }
     }
+}
+function appendToMainEditor(s) {
+    let id = getObjectID("Main editor");
+    let editor = ace.edit(id);
+    editor.session.insert({
+        row: editor.session.getLength(),
+        column: 0
+    }, s);
 }

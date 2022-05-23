@@ -92,7 +92,7 @@ func (b *App) UploadLogFile(filename string, DataURIScheme string) string {
 	return b.InitLogDirectory(f.Name())
 }
 func (b *App) InitLogDirectory(path string) string {
-	if err := backend.InitLogDirectory(path); err == nil {
+	if err := backend.InitLogDirectory(path, &b.ctx); err == nil {
 		return path
 	} else {
 		return ""
@@ -321,9 +321,13 @@ func (b *App) GetRunningIDEsDropdownHTML() string {
 func (b *App) SaveSetting(key string, value interface{}) {
 	backend.GetConfig().SaveSetting(key, value)
 	wailsruntime.EventsEmit(b.ctx, "SettingsChanged", backend.GetConfig())
+	log.Println(b.ctx)
 }
 func (b *App) GetSetting(key string) interface{} {
 	ptr := reflect.ValueOf(backend.GetConfig())
 	s := reflect.Indirect(ptr).FieldByName(key).Interface()
 	return s
+}
+func (b *App) EnableLogsLiveUpdate() {
+	backend.EnableLogsLiveUpdate()
 }

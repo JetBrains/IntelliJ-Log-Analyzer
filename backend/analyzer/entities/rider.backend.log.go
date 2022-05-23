@@ -14,7 +14,7 @@ import (
 func init() {
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider Backend Log",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderBackendLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isBackendLogVisible,
@@ -23,7 +23,7 @@ func init() {
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider DebuggerWorker",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderDebuggerWorkerLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
@@ -32,7 +32,7 @@ func init() {
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider RoslynWorker",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderRoslynWorkerLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
@@ -41,7 +41,7 @@ func init() {
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider SolutionBuilder",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderSolutionBuilderLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
@@ -50,7 +50,7 @@ func init() {
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider UnitTestLogs",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderUnitTestLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,
@@ -59,7 +59,7 @@ func init() {
 	})
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Rider MsBuildTask",
-		ConvertToLogs:         parseRiderBackendLog,
+		ConvertPathToLogs:     parseRiderBackendLog,
 		CheckPath:             isRiderMsBuildTaskLog,
 		CheckIgnoredPath:      isIgnoredRiderBackendFile,
 		DefaultVisibility:     isPathVisible,

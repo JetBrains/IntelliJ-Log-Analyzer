@@ -115,10 +115,16 @@ $(document).ready(async function () {
         let path = await window.go.main.App.OpenArchive()
         initLogDirectory(path)
     })
-    IdeSelector.find(".button").first().on('click', function (){
+    IdeSelector.find(".button").first().on('click', async function () {
         let path = IdeSelector.find("li.active").attr("target");
         $(this).html("Loading...");
-        initLogDirectory(path)
+        await initLogDirectory(path)
+        window.go.main.App.EnableLogsLiveUpdate()
+    })
+})
+document.addEventListener('DOMContentLoaded', function () {
+    window.runtime.EventsOn("LogsUpdated", function (s) {
+        appendToMainEditor(s)
     })
 })
 async function initLogDirectory(path) {

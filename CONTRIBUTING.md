@@ -56,7 +56,7 @@ If you would like to extend main log viewer with your type of logs, you'll need 
     func init() {
         CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
             Name:           "Idea Log",     // Name of your log type to distinguish it from others.
-            ConvertToLogs:  parseIdeaLog,   // function to convert idea.log file to analyzer.Logs struct
+            ConvertPathToLogs:  parseIdeaLogFile,   // function to convert idea.log file to analyzer.Logs struct
             CheckPath:      isIdeaLog,      // function that returns true in case a file/folder fits the requirement of your log type 
             GetDisplayName: getDisplayName, // functions that return string of how your log is represented in frontend 
         })

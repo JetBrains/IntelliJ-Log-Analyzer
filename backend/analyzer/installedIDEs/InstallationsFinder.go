@@ -88,7 +88,7 @@ func GetIdeInstallations() (ides []IDE) {
 	for _, idePackage := range installedIdes {
 		info, _ := getIdeInfoByPackage(idePackage)
 		binary, _ := getIdeBinaryByPackage(idePackage)
-		info.LogsDirectory = getIdeDefaultLogsDir(binary)
+		info.LogsDirectory = getIdeLogsDir(binary)
 		isRunning := checkIfInstallationRunning(runningIDEs, info)
 		if info.LogsDirectory != "" {
 			ides = append(ides, IDE{
@@ -132,7 +132,7 @@ func getIdeInfoFromPort(url string) (ideInfoFromDebugger, error) {
 	}
 	res, err := client.Get(url)
 	if err != nil {
-		log.Printf("Error getting HTTP response. err: %s", err.Error())
+		//log.Printf("Error getting HTTP response. err: %s", err.Error())
 		return ideInfoFromDebugger{}, err
 	}
 	var ideInstance ideInfoFromDebugger
@@ -242,22 +242,7 @@ func getIdeInfoByPackage(ideaPackage string) (parameterValue IdeInfo, err error)
 	return a, err
 }
 
-func beautifyPackageName(idePackage string) string {
-	if strings.Contains(idePackage, "oolbox") {
-		return "From ToolBox app"
-	}
-	return idePackage
-}
-
-func getIdeaLogPath(ideaBinary string) (ideaLogPath string) {
-	if getIdeDefaultLogsDir(ideaBinary) != "" {
-		return getIdeDefaultLogsDir(ideaBinary) + "idea.log"
-	} else {
-		return ""
-	}
-}
-
-func getIdeDefaultLogsDir(ideaBinary string) (defaultLogsDir string) {
+func getIdeLogsDir(ideaBinary string) (logsDir string) {
 	if value := GetIdePropertyByName("idea.log.path", ideaBinary); len(value) != 0 {
 		if FileExists(value) {
 			return value
@@ -269,10 +254,10 @@ func getIdeDefaultLogsDir(ideaBinary string) (defaultLogsDir string) {
 	if err != nil {
 		log.Printf("getIdeInfoByBinary failed. ideaBinary: %s, Error: %s", ideaBinary, err)
 	}
-	defaultLogsDir = strings.Replace(defaultLogsDirLocation[runtime.GOOS], "{dataDirectoryName}", installationInfo.DataDirectoryName, -1)
-	defaultLogsDir = os.ExpandEnv(defaultLogsDir)
-	if FileExists(defaultLogsDir) {
-		return defaultLogsDir
+	logsDir = strings.Replace(defaultLogsDirLocation[runtime.GOOS], "{dataDirectoryName}", installationInfo.DataDirectoryName, -1)
+	logsDir = os.ExpandEnv(logsDir)
+	if FileExists(logsDir) {
+		return logsDir
 	} else {
 		log.Printf("Could not detect logs directory location for %s. Maybe it has never run?", ideaBinary)
 		return ""
@@ -396,7 +381,6 @@ func UserHomeDir() string {
 	return os.Getenv("HOME")
 }
 func FileExists(dir string) bool {
-	//dir = filepath.Clean(dir)
 	if f, err := os.Open(dir); err == nil && len(dir) > 2 {
 		err := f.Close()
 		if err != nil {

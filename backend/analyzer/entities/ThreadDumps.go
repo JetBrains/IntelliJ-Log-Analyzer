@@ -10,7 +10,7 @@ import (
 func init() {
 	CurrentAnalyzer.AddDynamicEntity(analyzer.DynamicEntity{
 		Name:                  "Thread Dumps",
-		ConvertToLogs:         getLogEntry,
+		ConvertPathToLogs:     getLogEntry,
 		CheckPath:             isThreadDump,
 		GetDisplayName:        analyzer.GetThreadDumpDisplayName,
 		LineHighlightingColor: "#faa379",

@@ -2,6 +2,7 @@ package backend
 
 import (
 	"archive/zip"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -16,8 +17,9 @@ import (
 )
 
 //InitLogDirectory creates an instance of analyzed directory (all entities combined) and parses them
-func InitLogDirectory(path string) (err error) {
+func InitLogDirectory(path string, ctx *context.Context) (err error) {
 	entities.CurrentAnalyzer.Clear()
+	entities.CurrentAnalyzer.Context = ctx
 	entities.CurrentAnalyzer.FolderToWorkWith = path
 	timeStart := time.Now()
 	entities.CurrentAnalyzer.ParseLogDirectory(path)
@@ -137,4 +139,8 @@ func SetFilters(f map[string]bool) error {
 		}
 	}
 	return nil
+}
+
+func EnableLogsLiveUpdate() {
+	entities.CurrentAnalyzer.EnableLogsLiveUpdate()
 }

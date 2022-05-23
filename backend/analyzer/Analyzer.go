@@ -1,9 +1,11 @@
 package analyzer
 
 import (
+	"context"
 	"crypto/sha1"
 	"embed"
 	"fmt"
+	"github.com/nxadm/tail"
 	"log"
 	"os"
 	"path/filepath"
@@ -22,8 +24,10 @@ var writeSyncer = sync.Mutex{}
 var tmplFS embed.FS
 
 type Analyzer struct {
+	Context               *context.Context
 	FolderToWorkWith      string
 	IsFolderTemp          bool
+	fileWatchers          []*tail.Tail
 	LastModifiedFileTime  time.Time
 	DynamicEntities       []DynamicEntity
 	StaticEntities        []StaticEntity
@@ -40,10 +44,14 @@ type StaticEntity struct {
 	CollectedInfo       StaticInfo
 }
 
+//DynamicEntity is a type of log file. Every type is described in separate file of /entities/ folder.
+//Every type has set of functions to convert logs of that type to unified logs of IntelliJ Log Analyzer
 type DynamicEntity struct {
 	Name                  string                             // Name of the Entity. For example "idea.log", "Thread dump", or "CPU snapshot". It will be used to group same entities.
 	entityInstances       map[string]DynamicEntityProperties // entityInstances is path:DynamicEntityProperties map of every instance of entity created for every found path of this entity type.
-	ConvertToLogs         func(path string) Logs
+	ConvertPathToLogs     func(path string) Logs             //ConvertPathToLogs represents file/folder to the array of log entries.
+	ConvertStringToLogs   func(s string) (LogEntry, error)   //ConvertStringToLogs (should be defined for simple log files) represents a string as log entry. Needed when part of a log should be analyzed (for example during tailing process). Returns error if string does not fit log format.
+	GetChangeablePath     func(path string) string           //GetChangeablePath (if defined) returns the part of given path, that should be monitored for changes. For simple log file, it is the log file itself. For reports (such as thread dumps) it is directory where new reports are being added
 	CheckPath             func(path string) bool
 	CheckIgnoredPath      func(path string) bool
 	DefaultVisibility     func(path string) bool // DefaultVisibility is a function that returns true if this file should be checked in Filter (visible in "Summary" tab) by default.
@@ -77,6 +85,7 @@ func (a *Analyzer) AddDynamicEntity(entity DynamicEntity) {
 
 //ParseLogDirectory analyzes provided path for known log elements
 func (a *Analyzer) ParseLogDirectory(path string) {
+	log.Printf("Parsing log directory %s", path)
 	var wg sync.WaitGroup
 	var collectedFiles []string
 	visit := func(path string, file os.DirEntry, err error) error {
@@ -185,7 +194,7 @@ func (a *Analyzer) CollectLogsFromDynamicEntities(path string) (analyzed bool) {
 			}
 		}
 		if entity.CheckPath(path) == true {
-			logEntries := entity.ConvertToLogs(path)
+			logEntries := entity.ConvertPathToLogs(path)
 			if logEntries == nil {
 				log.Printf("Entity \"%s\" returned nothing for %s. Adding file to other files", entity.Name, path)
 			} else {
@@ -240,13 +249,20 @@ func (a *Analyzer) Clear() {
 			log.Printf("Removing folder '%s' failed. Error: %s", a.FolderToWorkWith, err)
 		}
 	}
+	a.IsFolderTemp = false
+	for _, watcher := range a.fileWatchers {
+		if watcher != nil {
+			watcher.Stop()
+		}
+	}
+	a.fileWatchers = nil
 }
 
 func (a *Analyzer) GetThreadDumps(dir string) Logs {
 	for _, entity := range a.DynamicEntities {
 		for path, _ := range entity.entityInstances {
 			if strings.Contains(path, dir) {
-				return entity.ConvertToLogs(path)
+				return entity.ConvertPathToLogs(path)
 			}
 		}
 	}

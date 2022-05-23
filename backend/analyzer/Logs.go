@@ -32,6 +32,11 @@ func (logs Logs) ConvertToHTML() string {
 	return tpl.String()
 }
 
+func (l LogEntry) ConvertToHTML() string {
+	ls := Logs{l}
+	return ls.ConvertToHTML()
+}
+
 // Append adds one log entry of entity with UUID to the struct of logs
 func (logs *Logs) Append(entityName string, instanceProperties DynamicEntityProperties, entry LogEntry) {
 	entry.EntityInstanceId = instanceProperties.Hash
