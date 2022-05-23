@@ -1,6 +1,7 @@
 package update
 
 import (
+	"bytes"
 	"github.com/blang/semver"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"log"
@@ -40,18 +41,25 @@ func DoSelfUpdateMac() bool {
 		}
 		var appPath string
 		cmdPath, err := os.Executable()
-		appPath = strings.TrimSuffix(cmdPath, "JetBrains Log Analyzer.app/Contents/MacOS/JetBrains Log Analyzer")
+		appPath = strings.TrimSuffix(cmdPath, "IntelliJ Log Analyzer.app/Contents/MacOS/IntelliJ Log Analyzer")
 		if err != nil {
 			appPath = "/Applications/"
 		}
-		err = exec.Command("ditto", "-xk", downloadPath, appPath).Run()
+		cmd := exec.Command("ditto", "-xk", downloadPath, appPath)
+		var out bytes.Buffer
+		var stderr bytes.Buffer
+		cmd.Stdout = &out
+		cmd.Stderr = &stderr
+		err = cmd.Run()
 		if err != nil {
-			log.Println("ditto error:", err)
+			log.Printf("ditto error: %s\n ouput: %s, error: %s", err, out.String(), stderr.String())
+			log.Printf("downloadPath: %s \n appPath %s", downloadPath, appPath)
 			return false
 		}
 		err = exec.Command("rm", downloadPath).Run()
 		if err != nil {
 			log.Println("removing error:", err)
+			log.Printf("downloadPath: %s", downloadPath)
 			return false
 		}
 		return true
