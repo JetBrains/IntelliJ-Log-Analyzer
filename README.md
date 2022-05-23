@@ -3,11 +3,20 @@
 
 ## About
 
-Logs highlighter and analyzer for logs collected by **Help | Collect Logs and Diagnostic Data** action of any IntelliJ-based IDE. 
+Logs highlighter and analyzer for logs collected by **Help | Collect Logs and Diagnostic Data** action of any IntelliJ-based IDE.
 
 Program receives logs folder as an input and renders it for better usability.
 
-Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time to analyze. 
+## How to use
+
+- To tail the log of installed IDE, select it in the list of installed IDEs:
+
+   <img src="https://i.imgur.com/IKYYEF3.png" width="500" alt="JetBrains Log Analyzer Select IDE">
+- Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time to analyze.
+  
+  <img src="https://media.giphy.com/media/4LpM6HvPQ5mZs7pZTL/giphy.gif" width="500" alt="JetBrains Log Analyzer Select IDE">
+
+- Click "Select directory" or "Select .zip" to open file/folder using OS file browser. 
 
 ## Demo 
 
@@ -15,7 +24,7 @@ Drag&Drop file, folder, or archive to IntelliJ Log Analyzer window at any time t
 
 ## Builds
 
-Download latest release (Windows and macOS): https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/
+Download the latest release (Windows and macOS): https://github.com/annikovk/IntelliJ-Log-Analyzer/releases/latest/
 Linux is not currently supported. 
 
 ## What can be parsed
