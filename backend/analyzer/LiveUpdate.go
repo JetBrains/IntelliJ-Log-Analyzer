@@ -22,7 +22,7 @@ func (a *Analyzer) EnableLogsLiveUpdate() {
 				if entity.GetChangeablePath != nil {
 					if changeablePath := entity.GetChangeablePath(path); changeablePath != "" {
 						if s, err := os.Stat(changeablePath); !s.IsDir() && err == nil && entity.ConvertStringToLogs != nil {
-							a.addWatcher(changeablePath, entityIndex)
+							go a.addWatcher(changeablePath, entityIndex)
 						}
 					}
 				}
@@ -32,6 +32,11 @@ func (a *Analyzer) EnableLogsLiveUpdate() {
 }
 
 func (a *Analyzer) addWatcher(logFile string, entityIndex int) {
+	for _, watcher := range a.fileWatchers {
+		if watcher.Filename == logFile {
+			return
+		}
+	}
 	t, err := tail.TailFile(logFile, tail.Config{
 		Follow:   true,
 		Location: &tail.SeekInfo{Offset: 0, Whence: io.SeekEnd}, // <- line changed
@@ -40,9 +45,7 @@ func (a *Analyzer) addWatcher(logFile string, entityIndex int) {
 		log.Println(err)
 	}
 	a.fileWatchers = append(a.fileWatchers, t)
-	for _, watcher := range a.fileWatchers {
-		log.Printf("file watcher: %v", watcher)
-	}
+	log.Printf("Enabled File watcher for: %v", logFile)
 
 	previousLogEntry := ""
 	// t.Lines channel sends new lines of a file to "for" loop.

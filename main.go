@@ -25,7 +25,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:             "JetBrains Log analyzer",
+		Title:             "IntelliJ Log analyzer",
 		Width:             1280,
 		Height:            800,
 		MinWidth:          720,

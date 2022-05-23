@@ -109,7 +109,7 @@ func GetIdeInstallations() (ides []IDE) {
 
 func checkIfInstallationRunning(runningIDEs []ideInfoFromDebugger, info IdeInfo) bool {
 	for _, e := range runningIDEs {
-		if e.BuildNumber == info.BuildNumber && e.ProductName == info.Name {
+		if e.BuildNumber == info.BuildNumber && strings.Contains(info.Name, e.ProductName) {
 			return true
 		}
 	}
@@ -136,6 +136,7 @@ func getIdeInfoFromPort(url string) (ideInfoFromDebugger, error) {
 		return ideInfoFromDebugger{}, err
 	}
 	var ideInstance ideInfoFromDebugger
+	log.Printf("Got HTTP response from: %s", url)
 	content, _ := ioutil.ReadAll(res.Body)
 	_ = res.Body.Close()
 	ideInstance = parseRunningIdeInfo(content)
