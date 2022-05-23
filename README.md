@@ -32,6 +32,7 @@ Linux is not currently supported.
 
 For now,the following files are recognized: 
 - idea.log files (including idea.log.1, etc)
+- Rider log files (including <PID>.backend.log, <PID>.DesignAutomator.msbuild-task.log, JetBrainsLog.ReSharperBuild<date>_<PID>.log, etc)
 - build-log folder
 - threadDumps folders
 - indexing-diagnostic folders
