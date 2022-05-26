@@ -2,12 +2,22 @@
     {{ $runningLabelSet := false}}
     {{ $installedLabelSet := false}}
     {{range $key, $value := .}}
-        {{if .Running}}  {{if not $runningLabelSet}}
-            <span>Running IDE instances</span> {{$runningLabelSet = true}}
-        {{end}} {{end}}
-        {{if not .Running}} {{if not $installedLabelSet}}<span>Other IDEs</span> {{$installedLabelSet = true}}{{end}}{{end}}
-        <li {{if eq $key 0}}class="active"
-            {{end}}target="{{$value.Info.LogsDirectory}}">{{$value.Info.Name}} {{$value.Info.Version}} ({{$value.Info.BuildNumber}})
-        </li>
+        {{if eq $value.Info.LogsDirectory ""}}
+        {{else}}
+            {{if .Running}}
+                {{if not $runningLabelSet}}
+                    <span>Running IDE instances</span> {{$runningLabelSet = true}}
+                {{end}}
+            {{end}}
+            {{if not .Running}}
+                {{if not $installedLabelSet}}
+                    <span>Installed IDEs</span> {{$installedLabelSet = true}}
+                {{end}}
+            {{end}}
+            <li {{if eq $key 0}}class="active" {{end}}
+                target="{{$value.Info.LogsDirectory}}">{{$value.Info.Name}} {{$value.Info.Version}}
+                ({{$value.Info.BuildNumber}})
+            </li>
+        {{end}}
     {{end}}
 </ul>
