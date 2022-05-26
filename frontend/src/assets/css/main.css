@@ -4,13 +4,6 @@ html {
 }
 
 @font-face {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 400;
-    src: local(""),
-    url("/assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
-}
-@font-face {
     font-family: "JetBrains Mono";
     font-style: normal;
     font-weight: 400;
@@ -27,9 +20,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     margin: 0;
-    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    font-family:  -apple-system, BlinkMacSystemFont, "Segoe UI", serif;
     overscroll-behavior: none;
     overflow: auto;
     width: 100%;
@@ -49,7 +40,7 @@ input {
     width: 8px;
     height: 8px;
 }
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track:horizontal {
     background: var(--scrollbar-track-color);
     border-radius: 7px;
 }
@@ -92,7 +83,7 @@ input {
 #file-analyzer {
     position: relative;
     display: none;
-    padding: 0px 0px 20px 0px;
+    padding: 0 0 20px 0;
     height: 100%;
     width: 100%;
 }
@@ -208,7 +199,7 @@ input {
 
 #file-analyzer .search-box {
     width: 100%;
-    font-family: SF Pro Text;
+    /*font-family: SF Pro Text;*/
     font-size: 13px;
     line-height: 16px;
     background: #FFFFFF;
@@ -363,7 +354,7 @@ input {
     /* IJ macOS / Default */
     font-weight: 500;
     font-size: 13px;
-    line-height: 16px;
+    line-height: 14px;
     /* identical to box height, or 123% */
     text-align: center;
     /* IJ/text/default */
@@ -377,16 +368,16 @@ input {
 .dropdown {
     box-sizing: border-box;
     height: 24px;
-    padding: 4px 8px;
+    min-width: auto;
+    padding: 4px 28px 4px 8px;
     background: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 3px;
-    font-family: 'SF Pro Text', serif;
     font-style: normal;
     font-weight: 500;
     color: var(--text-color);
     position: relative;
-
+    cursor: pointer;
 }
 
 .dropdown > .title {
@@ -394,9 +385,8 @@ input {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    font-weight: 500;
     font-size: 13px;
-    line-height: 16px;
+    line-height: 14px;
     text-align: center;
     /* IJ/text/default */
     color: var(--text-color);
@@ -423,7 +413,8 @@ input {
 
 .dropdown > .options {
     display: none;
-    top: 24px;
+    z-index: 10;
+    top: 26px;
     left: 0;
     position: absolute;
     text-align: left;
@@ -433,7 +424,6 @@ input {
     line-height: 24px;
     width: auto;
     white-space: nowrap;
-    /*border: 1px solid var(--border-color);*/
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
     padding: 4px 8px;
 }
@@ -471,7 +461,7 @@ input {
     padding-bottom: 4px;
     font-size: 18px;
     color: var(--text-color);
-    font-weight: bold;
+    font-weight: 400;
 }
 
 
