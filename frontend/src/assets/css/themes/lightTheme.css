@@ -5,6 +5,8 @@ body {
     --text-color: #192033;
     --editor-background-color: #ffffff;
     --editor-text-color: #000000;
+    --editor-text-selection-color: #a6d1ff;
+    --editor-text-selection-inactive-color: #dae9ff;
     --editor-gutter-background-color: #f9f9f9;
     --editor-gutter-text-color: #AAA;
     --editor-date-color: #0000ff;
@@ -24,7 +26,7 @@ body {
     --notification-err-border-color: #d69696;
     --notification-warn-border-color: #bab824;
     --notification-text-color: #000000;
-    --dropdown-active-list-item-background-color: #2871c3;
+    --dropdown-active-list-item-background-color: #2675bf;
     --dropdown-active-list-item-text-background-color: #fff;
     --just-changed-line-highlighting: #2871c3;
 

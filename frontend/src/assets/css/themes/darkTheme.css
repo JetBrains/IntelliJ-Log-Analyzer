@@ -5,6 +5,8 @@ body.dark {
     --text-color: #dedede;
     --editor-background-color: #2b2b2b;
     --editor-text-color: #dedede;
+    --editor-text-selection-color: #254a91;
+    --editor-text-selection-inactive-color: #1c3460;
     --editor-gutter-background-color: #313335;
     --editor-gutter-text-color: #a5a7aa;
     --editor-date-color: #679b4f;
@@ -18,4 +20,5 @@ body.dark {
     --scrollbar-thumb-color: #484848;
     --scrollbar-active-thumb-color: #595959;
     --just-changed-line-highlighting: #bbfabd;
+    --dropdown-active-list-item-background-color: #2f65ca;
 }

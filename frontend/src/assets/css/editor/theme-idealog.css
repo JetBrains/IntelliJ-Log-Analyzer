@@ -118,8 +118,8 @@
 
 .editor .ace_marker-layer .ace_selection, .ace_editor .ace_marker-layer .ace_selected-word {
     /*background: rgb(181, 213, 255);*/
-    background: rgb(250, 209, 54);
-    box-shadow: 0 0 3px 0px black;
+    background-color: var(--editor-text-selection-color);
+    box-shadow: 0 0 1px 0px black;
 }
 
 .editor.ace_multiselect .ace_selection.ace_start {
@@ -149,7 +149,7 @@
 }
 
 .editor .ace_marker-layer .ace_selected-word {
-    background: rgba(250, 209, 54, 0.3);
+    background: var(--editor-text-selection-inactive-color);
     box-shadow: 0 0 1px 0px black;
 }
 
