@@ -39,6 +39,7 @@ func (a *Analyzer) addWatcher(logFile string, entityIndex int) {
 	}
 	t, err := tail.TailFile(logFile, tail.Config{
 		Follow:   true,
+		Poll:     true,
 		Location: &tail.SeekInfo{Offset: 0, Whence: io.SeekEnd}, // <- line changed
 	})
 	if err != nil {
