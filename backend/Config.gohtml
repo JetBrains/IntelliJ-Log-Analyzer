@@ -7,13 +7,19 @@
         <div class="settings-section">
             <div class="settings-section-content">
                 <div class="settings-section-content-item">
-                    <label for="editorTheme">Theme</label>
-                    <select id="editorTheme" name="EditorTheme"
-                            onChange="SaveSetting(this.name, this.options[this.selectedIndex].value)">
-                        <option value="light" {{if eq .EditorTheme "light"}}selected{{end}}>Light</option>
-                        <option value="dark" {{if eq .EditorTheme "dark"}}selected{{end}}>Dark</option>
-                        <option value="system" {{if eq .EditorTheme "system"}}selected{{end}}>Sync with OS</option>
-                    </select>
+                    <div class="label">Theme</div>
+                    <div class="dropdown" setting="EditorTheme">
+                      <div class="title">
+                          {{if eq .EditorTheme "system"}}Sync with OS{{end}}
+                          {{if eq .EditorTheme "light"}}Light{{end}}
+                          {{if eq .EditorTheme "dark"}}Dark{{end}}
+                      </div>
+                        <div class="options">
+                            <li value="light" {{if eq .EditorTheme "light"}}class="active"{{end}}>Light</li>
+                            <li value="dark" {{if eq .EditorTheme "dark"}}class="active"{{end}}>Dark</li>
+                            <li value="system" {{if eq .EditorTheme "system"}}class="active"{{end}}>Sync with OS</li>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,28 +34,30 @@
                 </div>
                 <div class="settings-section-content-item">
                     <label for="editorFontSize">Font Size</label>
-                    <select id="editorFontSize" name="EditorFontSize"
-                            onChange="SaveSetting(this.name, parseInt(this.options[this.selectedIndex].value))">
-                        <option value="10" {{if eq .EditorFontSize 10}}selected{{end}}>10px</option>
-                        <option value="12" {{if eq .EditorFontSize 12}}selected{{end}}>12px</option>
-                        <option value="14" {{if eq .EditorFontSize 14}}selected{{end}}>14px</option>
-                        <option value="16" {{if eq .EditorFontSize 16}}selected{{end}}>16px</option>
-                        <option value="18" {{if eq .EditorFontSize 18}}selected{{end}}>18px</option>
-                        <option value="20" {{if eq .EditorFontSize 20}}selected{{end}}>20px</option>
-                        <option value="22" {{if eq .EditorFontSize 22}}selected{{end}}>22px</option>
-                        <option value="24" {{if eq .EditorFontSize 24}}selected{{end}}>24px</option>
-                        <option value="26" {{if eq .EditorFontSize 26}}selected{{end}}>26px</option>
-                        <option value="28" {{if eq .EditorFontSize 28}}selected{{end}}>28px</option>
-                        <option value="30" {{if eq .EditorFontSize 30}}selected{{end}}>30px</option>
-                        <option value="32" {{if eq .EditorFontSize 32}}selected{{end}}>32px</option>
-                        <option value="34" {{if eq .EditorFontSize 34}}selected{{end}}>34px</option>
-                        <option value="36" {{if eq .EditorFontSize 36}}selected{{end}}>36px</option>
-                        <option value="38" {{if eq .EditorFontSize 38}}selected{{end}}>38px</option>
-                        <option value="40" {{if eq .EditorFontSize 40}}selected{{end}}>40px</option>
-                        <option value="42" {{if eq .EditorFontSize 42}}selected{{end}}>42px</option>
-                        <option value="44" {{if eq .EditorFontSize 44}}selected{{end}}>44px</option>
-                        <option value="46" {{if eq .EditorFontSize 46}}selected{{end}}>46px</option>
-                    </select>
+                    <div class="dropdown" setting="EditorFontSize">
+                        <div class="title">{{.EditorFontSize}}px</div>
+                        <div class="options">
+                            <li value="10" {{if eq .EditorFontSize 10}}class="active"{{end}}>10px</li>
+                            <li value="12" {{if eq .EditorFontSize 12}}class="active"{{end}}>12px</li>
+                            <li value="14" {{if eq .EditorFontSize 14}}class="active"{{end}}>14px</li>
+                            <li value="16" {{if eq .EditorFontSize 16}}class="active"{{end}}>16px</li>
+                            <li value="18" {{if eq .EditorFontSize 18}}class="active"{{end}}>18px</li>
+                            <li value="20" {{if eq .EditorFontSize 20}}class="active"{{end}}>20px</li>
+                            <li value="22" {{if eq .EditorFontSize 22}}class="active"{{end}}>22px</li>
+                            <li value="24" {{if eq .EditorFontSize 24}}class="active"{{end}}>24px</li>
+                            <li value="26" {{if eq .EditorFontSize 26}}class="active"{{end}}>26px</li>
+                            <li value="28" {{if eq .EditorFontSize 28}}class="active"{{end}}>28px</li>
+                            <li value="30" {{if eq .EditorFontSize 30}}class="active"{{end}}>30px</li>
+                            <li value="32" {{if eq .EditorFontSize 32}}class="active"{{end}}>32px</li>
+                            <li value="34" {{if eq .EditorFontSize 34}}class="active"{{end}}>34px</li>
+                            <li value="36" {{if eq .EditorFontSize 36}}class="active"{{end}}>36px</li>
+                            <li value="38" {{if eq .EditorFontSize 38}}class="active"{{end}}>38px</li>
+                            <li value="40" {{if eq .EditorFontSize 40}}class="active"{{end}}>40px</li>
+                            <li value="42" {{if eq .EditorFontSize 42}}class="active"{{end}}>42px</li>
+                            <li value="44" {{if eq .EditorFontSize 44}}class="active"{{end}}>44px</li>
+                            <li value="46" {{if eq .EditorFontSize 46}}class="active"{{end}}>46px</li>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

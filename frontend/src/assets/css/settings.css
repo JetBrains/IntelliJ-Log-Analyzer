@@ -42,10 +42,18 @@
 #settings-overlay .settings-section-content {
     padding-left: 8px;
 }
-#settings-overlay .settings-section-content .settings-section-content-item{
+#settings-overlay .settings-section-content .settings-section-content-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    height: 32px;
     padding-top: 4px;
 }
-#settings-overlay .settings-section-content .settings-section-content-item label{
+#settings-overlay .settings-section-content .settings-section-content-item .dropdown {
+    width: 120px;
+}
+#settings-overlay .settings-section-content .settings-section-content-item .label{
     width: 44%;
     display: inline-block;
 }

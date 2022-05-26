@@ -12,11 +12,12 @@ $(document).ready(function () {
         dropdown.find('.title').first().html(dropdown.find("li.active").first().html())
     }
 
-// Set dropdown title from active component in options
+    // Set dropdown title from active component in options
     $(document).on("DOMSubtreeModified", ".dropdown .options", function () {
         setDropDownTitle(this)
     })
-//Dropdown set active li element
+
+    //Dropdown set active li element
     $(document).on("click", ".dropdown li", function () {
         $(this).siblings().each(function () {
             $(this).removeClass("active")
@@ -25,8 +26,15 @@ $(document).ready(function () {
         setDropDownTitle(this)
     })
 
-//Show/hide options list on dropdown click
-    $(document).on("click", ".dropdown", function () {
-        $(this).find('.options').first().toggle()
+    //Show/hide options list on click. Also closes all but current dropdowns
+    $(document).on("click", function (e) {
+        $(this).find('.dropdown .options:visible').each(function () {
+            if (!$(this).siblings(".dropdown .title").is($(e.target))) {
+                $(this).hide()
+            }
+        })
+        if (e.target.classList.contains("title") || e.target.classList.contains("dropdown")) {
+            $(e.target).closest(".dropdown").find('.options').first().toggle()
+        }
     })
 })

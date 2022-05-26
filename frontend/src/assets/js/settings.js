@@ -43,3 +43,11 @@ function SaveSetting(id, option) {
     window.go.main.App.SaveSetting(id, option);
 }
 
+$(document).on("DOMSubtreeModified", ".settings-section-content-item .dropdown", function () {
+    let settingId = $(this).attr("setting")
+    let settingValue = $(this).find("li.active").first().attr("value")
+    if (parseInt(settingValue)) {
+        settingValue = parseInt(settingValue)
+    }
+    window.go.main.App.SaveSetting(settingId, settingValue);
+})
