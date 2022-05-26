@@ -37,6 +37,12 @@ body {
     font-size: 28px;
     align-items: stretch;
 }
+input {
+    border: unset;
+}
+:focus-visible {
+    outline: unset;
+}
 
 ::-webkit-scrollbar {
     background: var(--scrollbar-track-color);
