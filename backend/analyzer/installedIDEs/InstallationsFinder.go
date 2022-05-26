@@ -13,6 +13,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -117,12 +118,18 @@ func checkIfInstallationRunning(runningIDEs []ideInfoFromDebugger, info IdeInfo)
 }
 
 func getRunningIdes() (ides []ideInfoFromDebugger) {
+	var wg sync.WaitGroup
 	for i := 63342; i < 63392; i++ {
-		url := fmt.Sprintf("http://localhost:%d/api/about", i)
-		if ideInfo, err := getIdeInfoFromPort(url); err == nil {
-			ides = append(ides, ideInfo)
-		}
+		wg.Add(1)
+		go func(i int) {
+			url := fmt.Sprintf("http://localhost:%d/api/about", i)
+			if ideInfo, err := getIdeInfoFromPort(url); err == nil {
+				ides = append(ides, ideInfo)
+			}
+			defer wg.Done()
+		}(i)
 	}
+	wg.Wait()
 	return ides
 }
 
@@ -136,10 +143,10 @@ func getIdeInfoFromPort(url string) (ideInfoFromDebugger, error) {
 		return ideInfoFromDebugger{}, err
 	}
 	var ideInstance ideInfoFromDebugger
-	log.Printf("Got HTTP response from: %s", url)
 	content, _ := ioutil.ReadAll(res.Body)
 	_ = res.Body.Close()
 	ideInstance = parseRunningIdeInfo(content)
+	log.Printf("Found running IDE %v at url %v", ideInstance, url)
 	return ideInstance, err
 }
 
