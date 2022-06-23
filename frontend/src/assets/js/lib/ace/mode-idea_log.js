@@ -100,8 +100,8 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
             return this.getCommentRegionBlock(session, lineConetnt, row);
         };
         // once "fold" gutter icon is clicked, getCommentRegionBlock scans strings until it finds "IDE SHUTDOWN"
-        this.getCommentRegionBlock = function (session, lineConent, row) {
-            let startColumn = lineConent.search(this.startRegionRe);
+        this.getCommentRegionBlock = function (session, line, row) {
+            let startColumn = line.search(this.startRegionRe);
             let maxRow = session.getLength();
             let startRow = row;
             let lineWebserverStopped = /.*web server stopped.*/;
