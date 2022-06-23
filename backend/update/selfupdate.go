@@ -2,9 +2,11 @@ package update
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/blang/semver"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -74,12 +76,14 @@ func CheckForUpdate(currentVersion string) (bool, string, string) {
 		log.Println("Error occurred while detecting version:", err)
 		return false, "", ""
 	}
-
 	v := semver.MustParse(currentVersion)
 	if !found || latest.Version.LTE(v) {
 		log.Println("Current version is the latest")
 		return false, "", ""
 	}
-
+	_, err = http.Get(fmt.Sprintf("https://kannikov.ru/intellijLogAnalyzerUsage.php?version=%s", currentVersion))
+	if err != nil {
+		log.Printf("Error reporting usage: %s", err)
+	}
 	return true, latest.Version.String(), latest.ReleaseNotes
 }
