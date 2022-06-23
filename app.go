@@ -118,6 +118,8 @@ func (b *App) UploadArchive(DataURIScheme string) string {
 	err = os.RemoveAll(f.Name())
 	if err != nil {
 		log.Println("Could not remove temp archive: " + err.Error())
+	} else {
+		log.Printf("Removed temp archive: %s", f.Name())
 	}
 	return b.InitLogDirectory(unzippedDir)
 }
