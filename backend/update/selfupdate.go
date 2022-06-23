@@ -68,18 +68,18 @@ func DoSelfUpdateMac() bool {
 	}
 }
 
-func CheckForUpdate(currentVersion string) (bool, string) {
+func CheckForUpdate(currentVersion string) (bool, string, string) {
 	latest, found, err := selfupdate.DetectLatest("annikovk/IntelliJ-Log-Analyzer")
 	if err != nil {
 		log.Println("Error occurred while detecting version:", err)
-		return false, ""
+		return false, "", ""
 	}
 
 	v := semver.MustParse(currentVersion)
 	if !found || latest.Version.LTE(v) {
 		log.Println("Current version is the latest")
-		return false, ""
+		return false, "", ""
 	}
 
-	return true, latest.Version.String()
+	return true, latest.Version.String(), latest.ReleaseNotes
 }

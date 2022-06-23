@@ -213,13 +213,14 @@ func ConvertDataURISchemeToBase64File(DataURIScheme string) (data []byte) {
 }
 
 func (b *App) CheckForUpdates() bool {
-	updateAvailable, version := update.CheckForUpdate(Version)
+	updateAvailable, version, releaseNotes := update.CheckForUpdate(Version)
 	if updateAvailable {
 		log.Printf("Update to version %s available. ", version)
+		message := "Version " + version + " is available\n\n Release notes:\n" + releaseNotes
 		dialog, _ := wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
 			Type:          "QuestionDialog",
 			Title:         "Update available",
-			Message:       "Version " + version + " is available",
+			Message:       message,
 			Buttons:       []string{"Update", "Cancel"},
 			DefaultButton: "Update",
 			CancelButton:  "Cancel",
