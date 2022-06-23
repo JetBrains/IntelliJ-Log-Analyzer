@@ -8,7 +8,7 @@ define('ace/mode/idea_log', [], function (require, exports, module) {
 
     let Mode = function () {
         this.HighlightRules = CustomHighlightRules;
-        // this.foldingRules = new IdeaStyleFoldMode();
+        this.foldingRules = new IdeaStyleFoldMode();
     };
     oop.inherits(Mode, TextMode);
 
