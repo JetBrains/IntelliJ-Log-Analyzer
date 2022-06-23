@@ -6,7 +6,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/nxadm/tail v1.4.8
 	github.com/rhysd/go-github-selfupdate v1.2.3
-	github.com/wailsapp/wails/v2 v2.0.0-beta.36
+	github.com/wailsapp/wails/v2 v2.0.0-beta.37
 )
 
 require (
