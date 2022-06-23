@@ -6,44 +6,20 @@ async function showEditor(name, content) {
     let id = getObjectID(name);
     $("#editors>div").hide()
     if (!$(`#${id}`).length && !$(`.${id}`).length) {
-        if (content) cerateEditor()
+        if (content) {
+            let editor = await cerateEditor()
+            setEditorOptions(editor, {
+                foldOnLoad: true,
+                fontSize: await window.go.main.App.GetSetting("EditorFontSize"),
+                useSoftWrap: await window.go.main.App.GetSetting("EditorDefaultSoftWrapState")
+            })
+            bindEditorListeners(editor)
+        }
     }
     editors.find(`.${id}`).show()
     return id
+    function bindEditorListeners(editor) {
 
-    async function cerateEditor() {
-        editors.append(`    
-            <div class=${id}>
-                <div class="search-box" linked-editor="${id}"></div>
-                <div id="${id}" class="editor">
-                    <div class="loader">Loading...</div>
-                </div>
-            </div>
-            `)
-        const editor = ace.edit(id);
-        let fontSize = await window.go.main.App.GetSetting("EditorFontSize");
-        let useSoftWrap = await window.go.main.App.GetSetting("EditorDefaultSoftWrapState");
-        editor.setOptions({
-            mode: 'ace/mode/idea_log',
-            theme: "ace/theme/idealog",
-            readOnly: true,
-            selectionStyle: "text",
-            showLineNumbers: true,
-            showGutter: true,
-            showPrintMargin: false,
-            highlightSelectedWord: true,
-            scrollPastEnd: 0.05,
-        })
-        editor.setFontSize(fontSize)
-        editor.session.setUseWrapMode(useSoftWrap)
-        editor.execCommand('find');
-        window.runtime.LogDebug("Fetching content for " + name)
-        editor.setValue(await content);
-        editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
-        editor.clearSelection();
-        await createStyleGutterMarkers(0, editor.session.getLength())
-        editor.session.foldAll(0, editor.session.getLength() - 4, 1);
-        highlightEntriesTypes();
         editor.on("click", ThreadDumpLinkHandler)
         editor.on("click", IndexingDiagnosticLinkHandler)
         editor.on('change', function(e) {
@@ -55,6 +31,43 @@ async function showEditor(name, content) {
                 editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
             }
         });
+    }
+    async function setEditorOptions(editor, optList) {
+        editor.setFontSize(optList.fontSize)
+        editor.session.setUseWrapMode(optList.useSoftWrap)
+        editor.session.foldAll(0, editor.session.getLength()-2, 1)
+        console.log("Folded all");
+    }
+    async function cerateEditor() {
+        editors.append(`    
+            <div class=${id}>
+                <div class="search-box" linked-editor="${id}"></div>
+                <div id="${id}" class="editor">
+                    <div class="loader">Loading...</div>
+                </div>
+            </div>
+            `)
+        let editor = ace.edit(id);
+        await editor.setOptions({
+            mode: 'ace/mode/idea_log',
+            theme: "ace/theme/idealog",
+            readOnly: true,
+            selectionStyle: "text",
+            showLineNumbers: true,
+            showGutter: true,
+            showPrintMargin: false,
+            highlightSelectedWord: true,
+            scrollPastEnd: 0.05,
+        })
+        editor.execCommand('find');
+        window.runtime.LogDebug("Fetching content for " + name)
+        editor.setValue(await content);
+        editor.renderer.scrollToLine(Number.POSITIVE_INFINITY)
+        editor.clearSelection();
+        await createStyleGutterMarkers(0, editor.session.getLength())
+        highlightEntriesTypes();
+        console.log("Created editor for " + name)
+        return editor
 
         //Checks entryType of every line and highlight this line according to type.
         //Highlighting color is configured for every DynamicEntity on init()

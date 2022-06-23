@@ -2,8 +2,6 @@ define('ace/mode/idea_log', [], function (require, exports, module) {
     let oop = require("ace/lib/oop");
     let TextMode = require("ace/mode/text").Mode;
     let IdeaStyleFoldMode = require("./folding/idea-style").FoldMode;
-    require("ace/ext/threadDumpPresenter");
-    let Tokenizer = require("ace/tokenizer").Tokenizer;
     let CustomHighlightRules = require("ace/mode/idea_log_highlight_rules").CustomHighlightRules;
 
     let Mode = function () {
@@ -12,9 +10,6 @@ define('ace/mode/idea_log', [], function (require, exports, module) {
     };
     oop.inherits(Mode, TextMode);
 
-    (function () {
-
-    }).call(Mode.prototype);
 
     exports.Mode = Mode;
 });
@@ -88,53 +83,51 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
     (function () {
         this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
         this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
-        this.singleLineBlockCommentRe = /^\s*(\/\*).*\*\/\s*$/;
-        this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
         this.startRegionRe = /-+ IDE STARTED -+/;
+        this.lineIdeShutdown = /-+ IDE SHUTDOWN -+/;
         this._getFoldWidgetBase = this.getFoldWidget;
         this.getFoldWidget = function (session, foldStyle, row) {
             var line = session.getLine(row);
-
-            if (this.singleLineBlockCommentRe.test(line)) {
-                if (!this.startRegionRe.test(line) && !this.tripleStarBlockCommentRe.test(line))
-                    return "";
-            }
-
             var fw = this._getFoldWidgetBase(session, foldStyle, row);
 
+            //once folding region is on the screen, return start
             if (!fw && this.startRegionRe.test(line) || row === 0)
                 return "start"; // lineCommentRegionStart
-
             return fw;
         };
         this.getFoldWidgetRange = function (session, foldStyle, row, forceMultiline) {
-            var line = session.getLine(row);
-            if (this.startRegionRe.test(line) || row === 0)
-                return this.getCommentRegionBlock(session, line, row);
+            var lineConetnt = session.getLine(row)
+            return this.getCommentRegionBlock(session, lineConetnt, row);
         };
-        this.getCommentRegionBlock = function (session, line, row) {
-            let startColumn = line.search(this.startRegionRe);
+        // once "fold" gutter icon is clicked, getCommentRegionBlock scans strings until it finds "IDE SHUTDOWN"
+        this.getCommentRegionBlock = function (session, lineConent, row) {
+            let startColumn = lineConent.search(this.startRegionRe);
             let maxRow = session.getLength();
             let startRow = row;
-
-            let lineIdeShutdown = /-+ IDE SHUTDOWN -+/;
             let lineWebserverStopped = /.*web server stopped.*/;
             let depth = 1;
             while (++row < maxRow) {
                 line = session.getLine(row);
-                let lineMatchIdeShutdown = lineIdeShutdown.exec(line);
+                let lineMatchIdeShutdown = this.lineIdeShutdown.exec(line);
                 let lineMatchIdeStart = this.startRegionRe.test(line);
+                //collapse region from IDE STARTED to line before next IDE STARTED
                 if (lineMatchIdeStart) {
                     depth--;
                     row = row - 1
                     line = session.getLine(row);
                 }
+                //collapse region from IDE STARTED to IDE SHUTDOWN
                 if (lineMatchIdeShutdown && lineMatchIdeShutdown[0]) {
                     depth--;
+                    //IF webserverstopped is found after IDE SHUTDOWN, collapse region from IDE STARTED to webserverstopped
                     if (lineWebserverStopped.exec(session.getLine(row + 1))) {
                         row = row + 1
                         line = session.getLine(row);
                     }
+                }
+                if (row === maxRow -1 && startColumn !== -1) {
+                    line = session.getLine(row);
+                    depth--;
                 }
                 if (!depth) break;
             }
