@@ -173,17 +173,141 @@
 
 })();
 
-define("ace/lib/fixoldbrowsers",["require","exports","module"], function(require, exports, module) {
-    "use strict";
-    if (typeof Element != "undefined" && !Element.prototype.remove) {
-        Object.defineProperty(Element.prototype, "remove", {
+define("ace/lib/es6-shim",["require","exports","module"], function (require, exports, module) {
+    function defineProp(obj, name, val) {
+        Object.defineProperty(obj, name, {
+            value: val,
             enumerable: false,
             writable: true,
-            configurable: true,
-            value: function() { this.parentNode && this.parentNode.removeChild(this); }
+            configurable: true
         });
     }
+    if (!String.prototype.startsWith) {
+        defineProp(
+            String.prototype,
+            "startsWith",
+            function (searchString, position) {
+                position = position || 0;
+                return this.lastIndexOf(searchString, position) === position;
+            }
+        );
+    }
+    if (!String.prototype.endsWith) {
+        defineProp(String.prototype, "endsWith", function (searchString, position) {
+            var subjectString = this;
+            if (position === undefined || position > subjectString.length) {
+                position = subjectString.length;
+            }
+            position -= searchString.length;
+            var lastIndex = subjectString.indexOf(searchString, position);
+            return lastIndex !== -1 && lastIndex === position;
+        });
+    }
+    if (!String.prototype.repeat) {
+        defineProp(String.prototype, "repeat", function (count) {
+            var result = "";
+            var string = this;
+            while (count > 0) {
+                if (count & 1) result += string;
 
+                if ((count >>= 1)) string += string;
+            }
+            return result;
+        });
+    }
+    if (!String.prototype.includes) {
+        defineProp(String.prototype, "includes", function (str, position) {
+            return this.indexOf(str, position) != -1;
+        });
+    }
+    if (!Object.assign) {
+        Object.assign = function (target) {
+            if (target === undefined || target === null) {
+                throw new TypeError("Cannot convert undefined or null to object");
+            }
+
+            var output = Object(target);
+            for (var index = 1; index < arguments.length; index++) {
+                var source = arguments[index];
+                if (source !== undefined && source !== null) {
+                    Object.keys(source).forEach(function (key) {
+                        output[key] = source[key];
+                    });
+                }
+            }
+            return output;
+        };
+    }
+    if (!Object.values) {
+        Object.values = function (o) {
+            return Object.keys(o).map(function (k) {
+                return o[k];
+            });
+        };
+    }
+    if (!Array.prototype.find) {
+        defineProp(Array.prototype, "find", function (predicate) {
+            var len = this.length;
+            var thisArg = arguments[1];
+            for (var k = 0; k < len; k++) {
+                var kValue = this[k];
+                if (predicate.call(thisArg, kValue, k, this)) {
+                    return kValue;
+                }
+            }
+        });
+    }
+    if (!Array.prototype.findIndex) {
+        defineProp(Array.prototype, "findIndex", function (predicate) {
+            var len = this.length;
+            var thisArg = arguments[1];
+            for (var k = 0; k < len; k++) {
+                var kValue = this[k];
+                if (predicate.call(thisArg, kValue, k, this)) {
+                    return k;
+                }
+            }
+        });
+    }
+    if (!Array.prototype.includes) {
+        defineProp(Array.prototype, "includes", function (item, position) {
+            return this.indexOf(item, position) != -1;
+        });
+    }
+    if (!Array.prototype.fill) {
+        defineProp(Array.prototype, "fill", function (value) {
+            var O = this;
+            var len = O.length >>> 0;
+            var start = arguments[1];
+            var relativeStart = start >> 0;
+            var k =
+                relativeStart < 0
+                    ? Math.max(len + relativeStart, 0)
+                    : Math.min(relativeStart, len);
+            var end = arguments[2];
+            var relativeEnd = end === undefined ? len : end >> 0;
+            var final =
+                relativeEnd < 0
+                    ? Math.max(len + relativeEnd, 0)
+                    : Math.min(relativeEnd, len);
+            while (k < final) {
+                O[k] = value;
+                k++;
+            }
+            return O;
+        });
+    }
+    if (!Array.of) {
+        defineProp(Array, "of", function () {
+            return Array.prototype.slice.call(arguments);
+        });
+    }
+});
+
+define("ace/lib/fixoldbrowsers",["require","exports","module","ace/lib/es6-shim"], function(require, exports, module) {
+    "use strict";
+
+    require("./es6-shim");
 
 });
 
@@ -370,9 +494,18 @@ define("ace/lib/dom",["require","exports","module","ace/lib/useragent"], functio
         var index = 0, sheets;
         doc = doc || document;
         if ((sheets = doc.querySelectorAll("style"))) {
-            while (index < sheets.length)
-                if (sheets[index++].id === id)
+            while (index < sheets.length) {
+                if (sheets[index++].id === id) {
                     return true;
+                }
+            }
+        }
+    };
+
+    exports.removeElementById = function(id, doc) {
+        doc = doc || document;
+        if(doc.getElementById(id)) {
+            doc.getElementById(id).remove();
         }
     };
 
@@ -742,47 +875,28 @@ define("ace/lib/event",["require","exports","module","ace/lib/keys","ace/lib/use
     };
 
     exports.addMouseWheelListener = function(el, callback, destroyer) {
-        if ("onmousewheel" in el) {
-            addListener(el, "mousewheel", function(e) {
-                var factor = 8;
-                if (e.wheelDeltaX !== undefined) {
-                    e.wheelX = -e.wheelDeltaX / factor;
-                    e.wheelY = -e.wheelDeltaY / factor;
-                } else {
-                    e.wheelX = 0;
-                    e.wheelY = -e.wheelDelta / factor;
-                }
-                callback(e);
-            }, destroyer);
-        } else if ("onwheel" in el) {
-            addListener(el, "wheel",  function(e) {
-                var factor = 0.35;
-                switch (e.deltaMode) {
-                    case e.DOM_DELTA_PIXEL:
-                        e.wheelX = e.deltaX * factor || 0;
-                        e.wheelY = e.deltaY * factor || 0;
-                        break;
-                    case e.DOM_DELTA_LINE:
-                    case e.DOM_DELTA_PAGE:
-                        e.wheelX = (e.deltaX || 0) * 5;
-                        e.wheelY = (e.deltaY || 0) * 5;
-                        break;
-                }
-
-                callback(e);
-            }, destroyer);
-        } else {
-            addListener(el, "DOMMouseScroll", function(e) {
-                if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
-                    e.wheelX = (e.detail || 0) * 5;
-                    e.wheelY = 0;
-                } else {
-                    e.wheelX = 0;
-                    e.wheelY = (e.detail || 0) * 5;
-                }
-                callback(e);
-            }, destroyer);
-        }
+        addListener(el, "wheel",  function(e) {
+            var factor = 0.15;
+            var deltaX = e.deltaX || 0;
+            var deltaY = e.deltaY || 0;
+            switch (e.deltaMode) {
+                case e.DOM_DELTA_PIXEL:
+                    e.wheelX = deltaX * factor;
+                    e.wheelY = deltaY * factor;
+                    break;
+                case e.DOM_DELTA_LINE:
+                    var linePixels = 15;
+                    e.wheelX = deltaX * linePixels;
+                    e.wheelY = deltaY * linePixels;
+                    break;
+                case e.DOM_DELTA_PAGE:
+                    var pagePixels = 150;
+                    e.wheelX = deltaX * pagePixels;
+                    e.wheelY = deltaY * pagePixels;
+                    break;
+            }
+            callback(e);
+        }, destroyer);
     };
 
     exports.addMultiMouseDownListener = function(elements, timeouts, eventHandler, callbackName, destroyer) {
@@ -2118,6 +2232,11 @@ define("ace/keyboard/textinput",["require","exports","module","ace/lib/event","a
                 document.removeEventListener("selectionchange", detectArrowKeys);
             });
         }
+
+        this.destroy = function() {
+            if (text.parentElement)
+                text.parentElement.removeChild(text);
+        };
     };
 
     exports.TextInput = TextInput;
@@ -2407,6 +2526,8 @@ define("ace/tooltip",["require","exports","module","ace/lib/oop","ace/lib/dom"],
 
     var oop = require("./lib/oop");
     var dom = require("./lib/dom");
+
+    var CLASSNAME = "ace_tooltip";
     function Tooltip (parentNode) {
         this.isOpen = false;
         this.$element = null;
@@ -2416,7 +2537,7 @@ define("ace/tooltip",["require","exports","module","ace/lib/oop","ace/lib/dom"],
     (function() {
         this.$init = function() {
             this.$element = dom.createElement("div");
-            this.$element.className = "ace_tooltip";
+            this.$element.className = CLASSNAME;
             this.$element.style.display = "none";
             this.$parentNode.appendChild(this.$element);
             return this.$element;
@@ -2451,6 +2572,7 @@ define("ace/tooltip",["require","exports","module","ace/lib/oop","ace/lib/dom"],
         this.hide = function() {
             if (this.isOpen) {
                 this.getElement().style.display = "none";
+                this.getElement().className = CLASSNAME;
                 this.isOpen = false;
             }
         };
@@ -2532,6 +2654,12 @@ define("ace/mouse/default_gutter_handler",["require","exports","module","ace/lib
             tooltipAnnotation = annotation.text.join("<br/>");
 
             tooltip.setHtml(tooltipAnnotation);
+
+            var annotationClassName = annotation.className;
+            if (annotationClassName) {
+                tooltip.setClassName(annotationClassName.trim());
+            }
+
             tooltip.show();
             editor._signal("showGutterTooltip", tooltip);
             editor.on("mousewheel", hideTooltip);
@@ -3881,7 +4009,7 @@ define("ace/config",["require","exports","module","ace/lib/lang","ace/lib/oop","
         return str.replace(/-(.)/g, function(m, m1) { return m1.toUpperCase(); });
     }
 
-    exports.version = "1.4.14";
+    exports.version = "1.6.0";
 
 });
 
@@ -3911,6 +4039,9 @@ define("ace/mouse/mouse_handler",["require","exports","module","ace/lib/event","
             if (windowBlurred)
                 window.focus();
             editor.focus();
+            setTimeout(function () {
+                if (!editor.isFocused()) editor.focus();
+            });
         };
 
         var mouseTarget = editor.renderer.getMouseEventTarget();
@@ -5536,8 +5667,10 @@ define("ace/tokenizer",["require","exports","module","ace/config"], function(req
                 var rule = state[i];
                 if (rule.defaultToken)
                     mapping.defaultToken = rule.defaultToken;
-                if (rule.caseInsensitive)
-                    flag = "gi";
+                if (rule.caseInsensitive && flag.indexOf("i") === -1)
+                    flag += "i";
+                if (rule.unicode && flag.indexOf("u") === -1)
+                    flag += "u";
                 if (rule.regex == null)
                     continue;
 
@@ -7614,6 +7747,14 @@ define("ace/background_tokenizer",["require","exports","module","ace/lib/oop","a
             return this.lines[row] = data.tokens;
         };
 
+        this.cleanup = function() {
+            this.running = false;
+            this.lines = [];
+            this.states = [];
+            this.currentLine = 0;
+            this.removeAllListeners();
+        };
+
     }).call(BackgroundTokenizer.prototype);
 
     exports.BackgroundTokenizer = BackgroundTokenizer;
@@ -7646,6 +7787,7 @@ define("ace/search_highlight",["require","exports","module","ace/lib/lang","ace/
             if (!this.regExp)
                 return;
             var start = config.firstRow, end = config.lastRow;
+            var renderedMarkerRanges = {};
 
             for (var i = start; i <= end; i++) {
                 var ranges = this.cache[i];
@@ -7660,8 +7802,13 @@ define("ace/search_highlight",["require","exports","module","ace/lib/lang","ace/
                 }
 
                 for (var j = ranges.length; j --; ) {
+                    var rangeToAddMarkerTo = ranges[j].toScreenRange(session);
+                    var rangeAsString = rangeToAddMarkerTo.toString();
+                    if (renderedMarkerRanges[rangeAsString]) continue;
+
+                    renderedMarkerRanges[rangeAsString] = true;
                     markerLayer.drawSingleLineMarker(
-                        html, ranges[j].toScreenRange(session), this.clazz, config);
+                        html, rangeToAddMarkerTo, this.clazz, config);
                 }
             }
         };
@@ -9275,6 +9422,13 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
         this.$foldData.toString = function() {
             return this.join("\n");
         };
+        this.bgTokenizer = new BackgroundTokenizer((new TextMode()).getTokenizer(), this);
+
+        var _self = this;
+        this.bgTokenizer.on("update", function(e) {
+            _self._signal("tokenizerUpdate", e);
+        });
+
         this.on("changeFold", this.onChangeFold.bind(this));
         this.$onChange = this.onChange.bind(this);
 
@@ -9288,6 +9442,8 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
         config.resetOptions(this);
         this.setMode(mode);
         config._signal("session", this);
+
+        this.destroyed = false;
     };
 
 
@@ -9303,8 +9459,7 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
             this.doc = doc;
             doc.on("change", this.$onChange);
 
-            if (this.bgTokenizer)
-                this.bgTokenizer.setDocument(this.getDocument());
+            this.bgTokenizer.setDocument(this.getDocument());
 
             this.resetCaches();
         };
@@ -9349,7 +9504,7 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
             this.$wrapData = [];
             this.$rowLengthCache = [];
             this.$resetRowCache(0);
-            if (this.bgTokenizer)
+            if (!this.destroyed)
                 this.bgTokenizer.start(0);
         };
 
@@ -9378,7 +9533,7 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
                 this.$informUndoManager.schedule();
             }
 
-            this.bgTokenizer && this.bgTokenizer.$updateOnChange(delta);
+            this.bgTokenizer.$updateOnChange(delta);
             this._signal("change", delta);
         };
         this.setValue = function(text) {
@@ -9741,16 +9896,7 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
                 tokenizer.on("update", onReloadTokenizer);
             }
 
-            if (!this.bgTokenizer) {
-                this.bgTokenizer = new BackgroundTokenizer(tokenizer);
-                var _self = this;
-                this.bgTokenizer.on("update", function(e) {
-                    _self._signal("tokenizerUpdate", e);
-                });
-            } else {
-                this.bgTokenizer.setTokenizer(tokenizer);
-            }
-
+            this.bgTokenizer.setTokenizer(tokenizer);
             this.bgTokenizer.setDocument(this.getDocument());
 
             this.tokenRe = mode.tokenRe;
@@ -10818,9 +10964,10 @@ define("ace/edit_session",["require","exports","module","ace/lib/oop","ace/lib/l
         };
 
         this.destroy = function() {
-            if (this.bgTokenizer) {
+            if (!this.destroyed) {
                 this.bgTokenizer.setDocument(null);
-                this.bgTokenizer = null;
+                this.bgTokenizer.cleanup();
+                this.destroyed = true;
             }
             this.$stopWorker();
             this.removeAllListeners();
@@ -11525,7 +11672,10 @@ define("ace/commands/command_manager",["require","exports","module","ace/lib/oop
         MultiHashHandler.call(this, commands, platform);
         this.byName = this.commands;
         this.setDefaultHandler("exec", function(e) {
-            return e.command.exec(e.editor, e.args || {});
+            if (!e.args) {
+                return e.command.exec(e.editor, {}, e.event, true);
+            }
+            return e.command.exec(e.editor, e.args, e.event, false);
         });
     };
 
@@ -12542,7 +12692,7 @@ define("ace/editor",["require","exports","module","ace/lib/fixoldbrowsers","ace/
 
         this._$emitInputEvent = lang.delayedCall(function() {
             this._signal("input", {});
-            if (this.session && this.session.bgTokenizer)
+            if (this.session && !this.session.destroyed)
                 this.session.bgTokenizer.scheduleStart();
         }.bind(this));
 
@@ -12809,7 +12959,7 @@ define("ace/editor",["require","exports","module","ace/lib/fixoldbrowsers","ace/
             oldSession && oldSession._signal("changeEditor", {oldEditor: this});
             session && session._signal("changeEditor", {editor: this});
 
-            if (session && session.bgTokenizer)
+            if (session && !session.destroyed)
                 session.bgTokenizer.scheduleStart();
         };
         this.getSession = function() {
@@ -12865,7 +13015,7 @@ define("ace/editor",["require","exports","module","ace/lib/fixoldbrowsers","ace/
             setTimeout(function () {
                 self.$highlightPending = false;
                 var session = self.session;
-                if (!session || !session.bgTokenizer) return;
+                if (!session || session.destroyed) return;
                 if (session.$bracketHighlight) {
                     session.$bracketHighlight.markerIds.forEach(function(id) {
                         session.removeMarker(id);
@@ -12908,7 +13058,7 @@ define("ace/editor",["require","exports","module","ace/lib/fixoldbrowsers","ace/
                 self.$highlightTagPending = false;
 
                 var session = self.session;
-                if (!session || !session.bgTokenizer) return;
+                if (!session || session.destroyed) return;
 
                 var pos = self.getCursorPosition();
                 var iterator = new TokenIterator(self.session, pos.row, pos.column);
@@ -13008,11 +13158,6 @@ define("ace/editor",["require","exports","module","ace/lib/fixoldbrowsers","ace/
             }, 50);
         };
         this.focus = function() {
-            var _self = this;
-            setTimeout(function() {
-                if (!_self.isFocused())
-                    _self.textInput.focus();
-            });
             this.textInput.focus();
         };
         this.isFocused = function() {
@@ -16236,7 +16381,7 @@ define("ace/layer/text",["require","exports","module","ace/lib/oop","ace/lib/dom
 
         this.$renderToken = function(parent, screenColumn, token, value) {
             var self = this;
-            var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
+            var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
 
             var valueFragment = this.dom.createFragment(this.element);
 
@@ -16400,15 +16545,15 @@ define("ace/layer/text",["require","exports","module","ace/lib/oop","ace/lib/dom
 
         this.$renderSimpleLine = function(parent, tokens) {
             var screenColumn = 0;
-            var token = tokens[0];
-            var value = token.value;
-            if (this.displayIndentGuides)
-                value = this.renderIndentGuide(parent, value);
-            if (value)
-                screenColumn = this.$renderToken(parent, screenColumn, token, value);
-            for (var i = 1; i < tokens.length; i++) {
-                token = tokens[i];
-                value = token.value;
+
+            for (var i = 0; i < tokens.length; i++) {
+                var token = tokens[i];
+                var value = token.value;
+                if (i == 0 && this.displayIndentGuides) {
+                    value = this.renderIndentGuide(parent, value);
+                    if (!value)
+                        continue;
+                }
                 if (screenColumn + value.length > this.MAX_LINE_LENGTH)
                     return this.$renderOverflowMessage(parent, screenColumn, token, value);
                 screenColumn = this.$renderToken(parent, screenColumn, token, value);
@@ -17231,9 +17376,6 @@ z-index: 1000;\
 }\
 .ace_dragging.ace_dark .ace_scroller:before{\
 background: rgba(0, 0, 0, 0.01);\
-}\
-.ace_selecting, .ace_selecting * {\
-cursor: text !important;\
 }\
 .ace_gutter {\
 position: absolute;\
@@ -19198,7 +19340,7 @@ define("ace/worker/worker_client",["require","exports","module","ace/lib/oop","a
             try {
                 if (data.data && data.data.err)
                     data.data.err = {message: data.data.err.message, stack: data.data.err.stack, code: data.data.err.code};
-                this.$worker.postMessage({event: event, data: {data: data.data}});
+                this.$worker && this.$worker.postMessage({event: event, data: {data: data.data}});
             }
             catch(ex) {
                 console.error(ex.stack);
