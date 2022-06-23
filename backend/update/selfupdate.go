@@ -71,6 +71,10 @@ func DoSelfUpdateMac() bool {
 }
 
 func CheckForUpdate(currentVersion string) (bool, string, string) {
+	_, err := http.Get(fmt.Sprintf("https://kannikov.ru/intellijLogAnalyzerUsage.php?version=%s", currentVersion))
+	if err != nil {
+		log.Printf("Error reporting usage: %s", err)
+	}
 	latest, found, err := selfupdate.DetectLatest("annikovk/IntelliJ-Log-Analyzer")
 	if err != nil {
 		log.Println("Error occurred while detecting version:", err)
@@ -80,10 +84,6 @@ func CheckForUpdate(currentVersion string) (bool, string, string) {
 	if !found || latest.Version.LTE(v) {
 		log.Println("Current version is the latest")
 		return false, "", ""
-	}
-	_, err = http.Get(fmt.Sprintf("https://kannikov.ru/intellijLogAnalyzerUsage.php?version=%s", currentVersion))
-	if err != nil {
-		log.Printf("Error reporting usage: %s", err)
 	}
 	return true, latest.Version.String(), latest.ReleaseNotes
 }
