@@ -38,3 +38,10 @@ $(document).ready(function () {
         }
     })
 })
+//Program-wide key bindings
+$(document).keydown(function (e) {
+    if ((e.key === "f") && (e.ctrlKey||e.metaKey)) {
+        e.preventDefault();
+        $("#editors>div").find(".search-box:visible input").focus();
+    }
+});
