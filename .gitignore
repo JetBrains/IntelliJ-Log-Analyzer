@@ -8,3 +8,4 @@
 # The black hole that is...
 node_modules
 /frontend/src/assets/css/*.min.css
+/go.sum
