@@ -1,4 +1,4 @@
-let editors = $("#editors")
+const editors = $("#editors");
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
 // @name is the id attribute for the editor
 // @content is a async function which returns content to be displayed

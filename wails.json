@@ -1,6 +1,7 @@
 {
   "name": "IntelliJ Log Analyzer",
   "wailsjsdir": "./frontend",
+  "assetdir":"frontend/src",
   "info": {
     "companyName": "JetBrains",
     "productName": "IntelliJ Log Analyzer",
@@ -13,5 +14,5 @@
     "email": "konstantin.annikov@jetbrains.com"
   },
   "debounceMS": 100,
-  "devserverurl": "http://localhost:34115"
+  "devserverurl": "https://localhost:34115"
 }

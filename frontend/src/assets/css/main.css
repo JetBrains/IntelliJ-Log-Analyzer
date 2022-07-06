@@ -31,6 +31,12 @@ body {
 input {
     border: unset;
 }
+.link {
+    color: var(--hyperlink-color);
+    text-decoration: underline;
+    cursor: pointer !important;
+    pointer-events: auto;
+}
 :focus-visible {
     outline: unset;
 }
@@ -184,6 +190,23 @@ input {
     list-style: none;
     font-size: 12px;
     white-space: nowrap;
+    width: 100%;
+}
+
+#file-analyzer #summary .file-checkbox .show-in-editor{
+    display: none;
+    cursor: pointer;
+
+}
+#file-analyzer #summary .file-checkbox:hover .show-in-editor{
+    display: block;
+    position: absolute;
+    left: 100px;
+    min-width: 500px;
+    padding-right: 20px;
+    padding-left: 4px;
+    top: 0;
+    background-color: var(--background-color);;
 }
 
 #file-analyzer #log-holder {

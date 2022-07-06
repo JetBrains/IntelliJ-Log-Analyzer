@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"bytes"
+	"golang.org/x/exp/slices"
 	"log"
 	"reflect"
 	"sort"
@@ -65,4 +66,9 @@ func (logs Logs) ApplyFilters(filters *Filters) {
 		a := filtersList[entry.EntityInstanceId]
 		logs[i].Visible = a
 	}
+}
+
+func (logs Logs) GetFirstInstanceString(instance *DynamicEntityProperties) string {
+	idx := slices.IndexFunc(logs, func(c LogEntry) bool { return c.EntityInstanceId == instance.Hash })
+	return logs[idx].ConvertToHTML()
 }

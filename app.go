@@ -195,6 +195,11 @@ func (b *App) SetFilters(a map[string]bool) string {
 	return "failure"
 }
 
+func (b *App) GetEntityInstanceFirstString(id string) string {
+	instance := entities.CurrentAnalyzer.DynamicEntities.GetInstanceByID(id)
+	return entities.CurrentAnalyzer.AggregatedLogs.GetFirstInstanceString(instance)
+}
+
 func (b *App) GetEntityNamesWithLineHighlightingColors() string {
 	jsonMap := make(map[string]string)
 	for entityName, entityEntries := range *backend.GetFilters() {
@@ -252,7 +257,6 @@ func (b *App) CheckForUpdates() bool {
 		return false
 	}
 }
-
 func (b *App) ShowNoUpdatesMessage() {
 	wailsruntime.MessageDialog(b.ctx, wailsruntime.MessageDialogOptions{
 		"InfoDialog",

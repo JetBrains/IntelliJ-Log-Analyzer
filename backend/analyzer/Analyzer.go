@@ -29,7 +29,7 @@ type Analyzer struct {
 	IsFolderTemp          bool
 	fileWatchers          []*tail.Tail
 	LastModifiedFileTime  time.Time
-	DynamicEntities       []DynamicEntity
+	DynamicEntities       DynamicEntities
 	StaticEntities        []StaticEntity
 	Filters               Filters
 	OtherFiles            OtherFiles
@@ -43,6 +43,7 @@ type StaticEntity struct {
 	CheckPath           func(path string) bool
 	CollectedInfo       StaticInfo
 }
+type DynamicEntities []DynamicEntity
 
 //DynamicEntity is a type of log file. Every type is described in separate file of /entities/ folder.
 //Every type has set of functions to convert logs of that type to unified logs of IntelliJ Log Analyzer
@@ -265,6 +266,17 @@ func (a *Analyzer) GetThreadDumps(dir string) Logs {
 		for path, _ := range entity.entityInstances {
 			if strings.Contains(path, dir) {
 				return entity.ConvertPathToLogs(path)
+			}
+		}
+	}
+	return nil
+}
+
+func (e *DynamicEntities) GetInstanceByID(id string) *DynamicEntityProperties {
+	for _, dynamicEntity := range *e {
+		for _, entityInstance := range dynamicEntity.entityInstances {
+			if id == entityInstance.Hash {
+				return &entityInstance
 			}
 		}
 	}
