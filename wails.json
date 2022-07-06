@@ -5,7 +5,7 @@
   "info": {
     "companyName": "JetBrains",
     "productName": "IntelliJ Log Analyzer",
-    "productVersion": "1.1.3",
+    "productVersion": "1.1.4",
     "copyright": "Copyright 2022 Konstantin Annikov",
     "comments": "Utility to visualize logs of any JetBrains IDE"
   },
