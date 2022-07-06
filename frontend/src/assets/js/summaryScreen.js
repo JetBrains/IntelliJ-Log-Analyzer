@@ -24,16 +24,17 @@ async function renderMainScreen() {
     function addSummaryToolWindowListeners() {
         $("#summary .link.show-in-editor").on("click",async function (e){
             e.preventDefault()
-            let editor = ace.edit(window.mainEditorID)
+
             const entityInstanceID = $(this.closest("label")).attr("for")
             const FirstInstanceString = await window.go.main.App.GetEntityInstanceFirstString(entityInstanceID)
-            const range = findStringByContent(FirstInstanceString)
-            editor.gotoLine(range[0].end.row, 0, true);
+            focusStringByContent(FirstInstanceString)
+
         })
     }
-    function findStringByContent(FirstInstanceString) {
+    function focusStringByContent(FirstInstanceString) {
+        let editor = ace.edit(window.mainEditorID)
         for (let i = FirstInstanceString.length-10; i > 0; i--) {
-            let stringpart = str.substring(i,FirstInstanceString.length)
+            let stringpart = FirstInstanceString.substring(i,FirstInstanceString.length)
             let ranges = editor.findAll(stringpart,{
                 wrap: true,
                 caseSensitive: true,
@@ -41,7 +42,9 @@ async function renderMainScreen() {
                 regExp: false,
             })
             if (ranges===1){
-                return  editor.getSelection().getAllRanges();
+                const range =  editor.getSelection().getAllRanges();
+                editor.gotoLine(range[0].end.row, 0, true);
+                break;
             }
         }
         return null
