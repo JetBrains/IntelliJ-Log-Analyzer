@@ -3,19 +3,20 @@ function RenameAndCompress() {
   local name=$1
   local version=$2
   local platformname=$3
-  local path="./build/bin/"
-    for file in $path"$name".app; do
-        local extension="${file##*.}"
-        local standartName="$name"-"$version"-"$platformname"."$extension"
-        mv "$file" "$path""$standartName"
-        zip -jvr $path"$standartName".zip $path"$standartName"
-        rm -r $path"$standartName"
-    done
-    for file in $path"$name".exe; do
-            local extension="${file##*.}"
-            local standartName="$name"-"$version"-"$platformname"."$extension"
-            mv "$file" "$path""$standartName"
-    done
+  local pwd=$(pwd)
+  cd "./build/bin/"
+  for file in "$name".app; do
+      local extension="${file##*.}"
+      local standartName="$name"-"$version"-"$platformname"
+      zip -vr "$standartName".zip "$file"
+      rm -r "$file"
+  done
+  for file in "$name".exe; do
+          local extension="${file##*.}"
+          local standartName="$name"-"$version"-"$platformname"."$extension"
+          mv "$file" "$standartName"
+  done
+  cd $pwd
 }
 
 cd ..
@@ -27,7 +28,6 @@ ls -l ./build/bin/*
 for platform in  "darwin/arm64" "windows/amd64" "darwin/amd64"
 do
   platformname=$(echo $platform | sed 's/\//-/g')
-
   wails build -platform $platform -ldflags "-X 'main.Version=$version'"
   RenameAndCompress "$name" "$version" "$platformname"
 done
