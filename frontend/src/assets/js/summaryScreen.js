@@ -19,7 +19,6 @@ async function renderMainScreen() {
     if (await window.go.main.App.GetStaticInfo()) {
         await showToolWindow("Static Info", "staticinfo", "bot", "", window.go.main.App.GetStaticInfo())
     }
-    window.mainEditorID = await showEditor("Main Editor", window.go.main.App.GetLogs());
     setSidebarState();
     function addSummaryToolWindowListeners() {
         $("#summary .link.show-in-editor").on("click",async function (e){
@@ -33,15 +32,17 @@ async function renderMainScreen() {
     }
     function focusStringByContent(FirstInstanceString) {
         let editor = ace.edit(window.mainEditorID)
-        for (let i = FirstInstanceString.length-10; i > 0; i--) {
+        FirstInstanceString = FirstInstanceString.replace(styleMarkerNeedle, "")
+        for (let i = 0; i < FirstInstanceString.length; i++) {
             let stringpart = FirstInstanceString.substring(i,FirstInstanceString.length)
+            console.log(stringpart)
             let ranges = editor.findAll(stringpart,{
                 wrap: true,
                 caseSensitive: true,
                 wholeWord: true,
                 regExp: false,
             })
-            if (ranges===1){
+            if (ranges >= 1) {
                 const range =  editor.getSelection().getAllRanges();
                 editor.gotoLine(range[0].end.row, 0, true);
                 break;
@@ -56,4 +57,5 @@ async function renderMainScreen() {
             }
         })
     }
+    window.mainEditorID = await showEditor("Main Editor", window.go.main.App.GetLogs());
 }

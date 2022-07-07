@@ -1,4 +1,6 @@
+const styleMarkerNeedle = /(^\s*<entryType>)(.*)(<\/entryType>\s*)/
 const editors = $("#editors");
+
 //showEditor dhows editor if it exists, or generate new editor if it does not exist
 // @name is the id attribute for the editor
 // @content is a async function which returns content to be displayed
@@ -110,9 +112,8 @@ async function showEditor(name, content) {
             if (!mappedColors) {
                 mappedColors = JSON.parse(await window.go.main.App.GetEntityNamesWithLineHighlightingColors())
             }
-            let needle = /(^\s*<entryType>)(.*)(<\/entryType>\s*)/
             editor.$search.setOptions({
-                needle: needle,
+                needle: styleMarkerNeedle,
                 caseSensitive: true,
                 range: new ace.Range(lineStart, 0, lineEnd, Number.POSITIVE_INFINITY),
                 wholeWord: false,
@@ -120,7 +121,7 @@ async function showEditor(name, content) {
             });
             let range = editor.$search.findAll(editor.session)
             for (const rangeKey in range) {
-                let groupName = editor.getSession().doc.getTextRange(range[rangeKey]).match(needle)[2]
+                let groupName = editor.getSession().doc.getTextRange(range[rangeKey]).match(styleMarkerNeedle)[2]
                 if (mappedColors[groupName]) {
                     if (mappedColors[groupName] !== true) {
                         let cssClass = getObjectID(groupName)
