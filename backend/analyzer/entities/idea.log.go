@@ -47,32 +47,49 @@ func parseIdeaLogFile(path string) analyzer.Logs {
 	reader, _ := os.Open(path)
 	defer reader.Close()
 	scanner := bufio.NewScanner(reader)
-	logToPass := []analyzer.LogEntry{}
+	logs := []analyzer.LogEntry{}
 	for scanner.Scan() {
 		currentString := scanner.Text()
 		if entry, err := parseIdeaLogString(currentString); err == nil {
-			logToPass = append(logToPass, entry)
-		} else if len(logToPass) > 0 {
-			logToPass[len(logToPass)-1].Text = logToPass[len(logToPass)-1].Text + "\n" + currentString
+			logs = append(logs, entry)
+		} else if len(logs) > 0 {
+			logs[len(logs)-1].Text = logs[len(logs)-1].Text + "\n" + entry.Text
 		}
 	}
-	return logToPass
+	return logs
 }
 
 func parseIdeaLogString(logEntryAsString string) (currentEntry analyzer.LogEntry, err error) {
-	logParts := analyzer.GetRegexNamedCapturedGroups(`(?s)(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-(?P<Class>.*?\s)-(?P<Body>.*)`, logEntryAsString)
+	logParts := analyzer.GetRegexNamedCapturedGroups(`(?s)(?P<Year>\d{4})-(?P<Month>\d{2})-(?P<Day>\d{2})\s+(?P<Hours>\d{2}):(?P<Minutes>\d{2}):(?P<Seconds>\d{2})[.,](?P<MiliSeconds>\d{3})\s+\[\s*(?P<Duration>\d+)\]\s+(?P<Severity>[A-Z]+)\s+\-\s*(?P<Class>.*?)\s*-(?P<Body>.*)`, logEntryAsString)
 	if logParts["Year"] == "" {
 		return analyzer.LogEntry{
-			Severity: "PARSE_ERROR",
-			Time:     time.Now().AddDate(0, 0, 1),
-			Text:     logEntryAsString,
-			Visible:  true,
+			Text: logEntryAsString,
 		}, errors.New("Could not parse idea.log string: " + logEntryAsString)
 	}
+
 	currentEntry.Time, _ = time.Parse(time.RFC3339Nano, fmt.Sprintf("%s-%s-%sT%s:%s:%s.%sZ", logParts["Year"], logParts["Month"], logParts["Day"], logParts["Hours"], logParts["Minutes"], logParts["Seconds"], logParts["MiliSeconds"]))
 	currentEntry.Severity = strings.TrimSpace(logParts["Severity"])
-	currentEntry.Text = logParts["Class"] + "—" + logParts["Body"]
-	return currentEntry, nil
+	currentEntry.Text = logParts["Class"] + " —" + logParts["Body"]
+
+	if logParts["Class"] == "STDERR" {
+		currentEntry.Text = strings.TrimPrefix(currentEntry.Text, "STDERR —")
+		if !strings.Contains(logParts["Body"], "\t") {
+			return analyzer.LogEntry{
+				Severity: "EXCPT",
+				Time:     currentEntry.Time,
+				Text:     currentEntry.Text,
+				Visible:  true,
+			}, nil
+		}
+		return analyzer.LogEntry{
+			Severity: "PARSE_ERROR",
+			Time:     currentEntry.Time,
+			Text:     currentEntry.Text,
+			Visible:  true,
+		}, errors.New("found STDERR in the entry body")
+	}
+
+	return currentEntry, err
 }
 
 func getIdeaLogChangeablePath(path string) string {

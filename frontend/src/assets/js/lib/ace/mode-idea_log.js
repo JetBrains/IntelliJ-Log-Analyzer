@@ -24,15 +24,15 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
             "start": [{
                 regex: /^$/,
                 token: "empty_line"
+            },{
+                regex: /ERROR|PARSE_ERROR|FREEZE|STDERR|EXCPT/,
+                token: "loglevel.error",
             }, {
-                regex: /\s—\s(.*?)\s—\s/,
+                regex: /\s+—\s+(.*?)\s+—\s+/,
                 token: "variable.class"
             }, {
                 regex: /INFO|INDEX|SEVERE|VERB|TRACE/,
                 token: "loglevel.info",
-            },{
-                regex: /ERROR|PARSE_ERROR|FREEZE|STDERR/,
-                token: "loglevel.error",
             },{
                 regex: /WARN|STDERR/,
                 token: "loglevel.warn",
