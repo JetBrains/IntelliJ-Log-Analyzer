@@ -46,7 +46,7 @@ define('ace/mode/idea_log_highlight_rules', [], function (require, exports, modu
                 regex: /(\d{2}\s(Jan|JAN|Feb|FEB|Mar|MAR|Apr|APR|May|MAY|Jun|JUN|Jul|JUL|Aug|AUG|Sep|SEP|Oct|OCT|Nov|NOV|Dec|DEC)\s+\d{4}\s+\d{1,2}:\d{2}:\d{2}([,|:]\d{3})*)|\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}[,|:]\d{3}/,
                 token: "date"
             }, {
-                regex: /^\s*at.*$|STDERR.*at\s.*$/,
+                regex: /^\s*at\s+.*$|STDERR.*at\s.*$/,
                 token: "loglevel.warn"
             }, {
                 defaultToken: "text"
@@ -81,8 +81,8 @@ define("ace/mode/folding/idea-style", [], function (require, exports, module) {
     oop.inherits(FoldMode, BaseFoldMode);
 
     (function () {
-        this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-        this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+        this.foldingStartMarker = //;
+        this.foldingStopMarker = //;
         this.startRegionRe = /-+ IDE STARTED -+/;
         this.lineIdeShutdown = /-+ IDE SHUTDOWN -+/;
         this._getFoldWidgetBase = this.getFoldWidget;
