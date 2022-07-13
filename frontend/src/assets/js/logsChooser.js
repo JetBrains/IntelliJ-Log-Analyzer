@@ -122,11 +122,7 @@ $(document).ready(async function () {
         window.go.main.App.EnableLogsLiveUpdate()
     })
 })
-document.addEventListener('DOMContentLoaded', function () {
-    window.runtime.EventsOn("LogsUpdated", function (s) {
-        appendToMainEditor(s)
-    })
-})
+
 async function initLogDirectory(path) {
     let openedLogsDir = await window.go.main.App.InitLogDirectory(path)
     if (openedLogsDir.length > 0) {
