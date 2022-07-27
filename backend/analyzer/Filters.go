@@ -4,6 +4,7 @@ import (
 	"bytes"
 	_ "embed"
 	"encoding/binary"
+	"encoding/json"
 	"log"
 	"reflect"
 	"sort"
@@ -34,6 +35,12 @@ type FilterEntry struct {
 func (f *Filters) IsEmpty() bool {
 	return reflect.ValueOf(*f).IsZero()
 }
+func (f Filters) ConvertToJSON() string {
+	f.setFiltersGroupsState()
+	marshal, _ := json.Marshal(f)
+	return string(marshal)
+}
+
 func (f Filters) ConvertToHTML() string {
 	f.setFiltersGroupsState()
 	var tpl bytes.Buffer
