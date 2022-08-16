@@ -24,7 +24,7 @@ Program receives logs folder as an input and renders it for better usability.
     
 ## Demo 
 
-[![JetBrains Log Analyzer](https://img.youtube.com/vi/lFmM109i_gw/maxresdefault.jpg | width=60)](https://www.youtube.com/watch?v=lFmM109i_gw "JetBrains Log Analyzer")
+[![JetBrains Log Analyzer](https://img.youtube.com/vi/lFmM109i_gw/maxresdefault.jpg)](https://www.youtube.com/watch?v=lFmM109i_gw "JetBrains Log Analyzer")
 
 
 ## What can be parsed
